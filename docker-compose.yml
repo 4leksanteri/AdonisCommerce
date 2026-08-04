@@ -19,6 +19,13 @@ services:
     volumes:
       - redis_data:/data
 
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
   api:
     build:
       context: .
@@ -27,6 +34,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - mailpit
     environment:
       HOST: 0.0.0.0
       DB_HOST: postgres
@@ -35,6 +43,8 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_DATABASE: ${POSTGRES_DB}
       REDIS_HOST: redis
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
       CHOKIDAR_USEPOLLING: "true"
     ports:
       - "3333:3333"
