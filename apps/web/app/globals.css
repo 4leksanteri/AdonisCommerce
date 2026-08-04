@@ -25,3 +25,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Browsers force their own background/text color on autofilled inputs,
+ * ignoring the app's styling entirely. The box-shadow inset trick is the
+ * only reliable cross-browser override; the long transition delays the
+ * color swap so it doesn't flash yellow before this rule applies.
+ *
+ * HeroUI's input "border" isn't a real CSS border for this variant (it's
+ * transparent/0px) — the visible edge comes entirely from --field-shadow
+ * layered through box-shadow. Replacing box-shadow outright (instead of
+ * composing with it) wipes that out. The fill is listed last so it sits
+ * underneath the existing shadow/ring layers instead of covering them.
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:autofill {
+  --tw-shadow: var(--field-shadow);
+  -webkit-box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+    var(--tw-ring-shadow), var(--tw-shadow), 0 0 0 1000px var(--field-background, var(--default)) inset;
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+    var(--tw-ring-shadow), var(--tw-shadow), 0 0 0 1000px var(--field-background, var(--default)) inset;
+  -webkit-text-fill-color: var(--field-foreground, var(--foreground));
+  caret-color: var(--field-foreground, var(--foreground));
+  transition: background-color 600000s 0s, color 600000s 0s;
+}

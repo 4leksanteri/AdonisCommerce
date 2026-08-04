@@ -61,8 +61,12 @@ services:
     restart: unless-stopped
     depends_on:
       - api
+      - redis
     environment:
       WATCHPACK_POLLING: "true"
+      API_INTERNAL_URL: http://api:3333
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "${WEB_PORT:-3000}:3000"
     volumes:
