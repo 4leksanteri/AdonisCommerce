@@ -7,9 +7,9 @@ const email = () => vine.string().email().maxLength(254)
 const password = () => vine.string().minLength(8).maxLength(32)
 
 /**
- * Validator to use when performing self-signup
+ * Validator to use when performing self-registration
  */
-export const signupValidator = vine.create({
+export const registerValidator = vine.create({
   fullName: vine.string().nullable(),
   email: email().unique({ table: 'users', column: 'email' }),
   password: password(),

@@ -26,4 +26,8 @@ export default class AccessTokensController {
       message: 'Logged out successfully',
     }
   }
+
+  async show({ auth, serialize }: HttpContext) {
+    return serialize(UserTransformer.transform(auth.getUserOrFail()))
+  }
 }
