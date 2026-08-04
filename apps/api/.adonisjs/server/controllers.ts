@@ -5,5 +5,7 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  NewPassword: () => import('#controllers/new_password_controller'),
+  PasswordResetLink: () => import('#controllers/password_reset_link_controller'),
   RegisteredUser: () => import('#controllers/registered_user_controller'),
 }

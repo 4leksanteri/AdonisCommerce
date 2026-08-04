@@ -6,6 +6,8 @@ export type ScannedRoutes = {
   ALL: {
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
+    'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }
+    'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
   }
@@ -18,6 +20,8 @@ export type ScannedRoutes = {
   POST: {
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
+    'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }
+    'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
   }
 }

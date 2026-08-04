@@ -11,5 +11,11 @@ export interface ApiDefinition {
       show: typeof routes['auth.access_tokens.show']
       destroy: typeof routes['auth.access_tokens.destroy']
     }
+    passwordResetLink: {
+      store: typeof routes['auth.password_reset_link.store']
+    }
+    newPassword: {
+      store: typeof routes['auth.new_password.store']
+    }
   }
 }

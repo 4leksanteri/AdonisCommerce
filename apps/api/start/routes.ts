@@ -19,6 +19,8 @@ router
   .group(() => {
     router.post('register', [controllers.RegisteredUser, 'store'])
     router.post('login', [controllers.AccessTokens, 'store'])
+    router.post('forgot-password', [controllers.PasswordResetLink, 'store'])
+    router.post('reset-password', [controllers.NewPassword, 'store'])
 
     router
       .group(() => {

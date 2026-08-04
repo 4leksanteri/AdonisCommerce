@@ -24,3 +24,22 @@ export const loginValidator = vine.create({
   email: email(),
   password: vine.string(),
 })
+
+/**
+ * Validator to use when requesting a password reset link.
+ * Intentionally has no `.unique()`/existence check — the response
+ * must stay identical whether or not the email is registered.
+ */
+export const forgotPasswordValidator = vine.create({
+  email: email(),
+})
+
+/**
+ * Validator to use when submitting a new password via a reset token
+ */
+export const resetPasswordValidator = vine.create({
+  email: email(),
+  token: vine.string(),
+  password: password(),
+  passwordConfirmation: password().sameAs('password'),
+})

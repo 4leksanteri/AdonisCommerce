@@ -18,6 +18,18 @@ const routes = {
     tokens: [{"old":"/api/auth/login","type":0,"val":"api","end":""},{"old":"/api/auth/login","type":0,"val":"auth","end":""},{"old":"/api/auth/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['auth.access_tokens.store']['types'],
   },
+  'auth.password_reset_link.store': {
+    methods: ["POST"],
+    pattern: '/api/auth/forgot-password',
+    tokens: [{"old":"/api/auth/forgot-password","type":0,"val":"api","end":""},{"old":"/api/auth/forgot-password","type":0,"val":"auth","end":""},{"old":"/api/auth/forgot-password","type":0,"val":"forgot-password","end":""}],
+    types: placeholder as Registry['auth.password_reset_link.store']['types'],
+  },
+  'auth.new_password.store': {
+    methods: ["POST"],
+    pattern: '/api/auth/reset-password',
+    tokens: [{"old":"/api/auth/reset-password","type":0,"val":"api","end":""},{"old":"/api/auth/reset-password","type":0,"val":"auth","end":""},{"old":"/api/auth/reset-password","type":0,"val":"reset-password","end":""}],
+    types: placeholder as Registry['auth.new_password.store']['types'],
+  },
   'auth.access_tokens.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/auth/me',
