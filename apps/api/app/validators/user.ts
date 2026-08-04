@@ -32,6 +32,7 @@ export const loginValidator = vine.create({
  */
 export const forgotPasswordValidator = vine.create({
   email: email(),
+  locale: vine.enum(['en', 'fi']).optional(),
 })
 
 /**

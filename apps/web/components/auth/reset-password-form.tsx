@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button, FieldError, Form, Input, Label, Spinner, TextField } from "@heroui/react";
+import { Link } from "@/i18n/navigation";
 import { resetPasswordAction } from "@/lib/auth/actions";
+import { translateApiErrors } from "@/lib/translate-api-error";
 
 export function ResetPasswordForm({ email, token }: { email: string; token: string }) {
+  const t = useTranslations("ResetPasswordPage");
+  const tValidation = useTranslations("Validation");
+  const tApiMessages = useTranslations("ApiMessages");
+
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -23,10 +29,15 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
     setIsPending(false);
 
     if (result.errors) {
-      setErrorMessages(result.errors);
+      setErrorMessages(
+        translateApiErrors(result.errors, {
+          apiMessage: (code) => tApiMessages(code as Parameters<typeof tApiMessages>[0]),
+          validationRule: (key) => tValidation(`rules.${key}` as Parameters<typeof tValidation>[0]),
+        })
+      );
       return;
     }
-    setSuccessMessage(result.message);
+    setSuccessMessage(tApiMessages(result.code as Parameters<typeof tApiMessages>[0]));
   }
 
   if (successMessage) {
@@ -36,7 +47,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
           <p>{successMessage}</p>
         </div>
         <Link href="/" className="text-center text-sm font-medium text-foreground underline">
-          Back to home
+          {t("backToHome")}
         </Link>
       </div>
     );
@@ -58,16 +69,16 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
         minLength={8}
         name="password"
         type="password"
-        validate={(value) => (value.length >= 8 ? null : "Password must be at least 8 characters")}
+        validate={(value) => (value.length >= 8 ? null : tValidation("passwordTooShort"))}
       >
-        <Label>New password</Label>
-        <Input placeholder="Enter your new password" className="border border-border" />
+        <Label>{t("newPasswordLabel")}</Label>
+        <Input placeholder={t("newPasswordPlaceholder")} className="border border-border" />
         <FieldError />
       </TextField>
 
       <TextField isRequired isDisabled={isPending} name="passwordConfirmation" type="password">
-        <Label>Confirm new password</Label>
-        <Input placeholder="Re-enter your new password" className="border border-border" />
+        <Label>{t("confirmNewPasswordLabel")}</Label>
+        <Input placeholder={t("confirmNewPasswordPlaceholder")} className="border border-border" />
         <FieldError />
       </TextField>
 
@@ -75,7 +86,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
         {({ isPending: pending }) => (
           <>
             {pending && <Spinner color="current" size="sm" />}
-            Reset password
+            {t("resetButton")}
           </>
         )}
       </Button>

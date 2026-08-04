@@ -108,7 +108,7 @@ export default defineConfig({
   | the production build.
   |
   */
-  metaFiles: [],
+  metaFiles: [{ pattern: 'resources/lang/**', reloadServer: true }],
 
   hooks: {
     init: [

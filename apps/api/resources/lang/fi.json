@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "logIn": "Kirjaudu sisään",
+    "myAccount": "Oma tili",
+    "orders": "Tilaukset",
+    "logOut": "Kirjaudu ulos"
+  },
+  "AuthModal": {
+    "logInHeading": "Kirjaudu sisään",
+    "registerHeading": "Luo tili",
+    "forgotPasswordHeading": "Palauta salasana",
+    "fullNameLabel": "Koko nimi",
+    "fullNamePlaceholder": "Maija Meikäläinen",
+    "emailLabel": "Sähköposti",
+    "emailPlaceholder": "sina@esimerkki.com",
+    "passwordLabel": "Salasana",
+    "passwordPlaceholder": "Anna salasanasi",
+    "confirmPasswordLabel": "Vahvista salasana",
+    "confirmPasswordPlaceholder": "Anna salasanasi uudelleen",
+    "logInButton": "Kirjaudu sisään",
+    "createAccountButton": "Luo tili",
+    "sendResetLinkButton": "Lähetä palautuslinkki",
+    "noAccount": "Eikö sinulla ole tiliä?",
+    "registerLink": "Rekisteröidy",
+    "haveAccount": "Onko sinulla jo tili?",
+    "logInLink": "Kirjaudu sisään",
+    "forgotPasswordLink": "Unohtuiko salasana?",
+    "rememberedPassword": "Muistitko salasanasi?",
+    "backToLogin": "Takaisin kirjautumiseen"
+  },
+  "ResetPasswordPage": {
+    "heading": "Palauta salasana",
+    "invalidLink": "Tämä salasanan palautuslinkki on virheellinen. Pyydä uusi linkki.",
+    "backToHome": "Takaisin etusivulle",
+    "newPasswordLabel": "Uusi salasana",
+    "newPasswordPlaceholder": "Anna uusi salasanasi",
+    "confirmNewPasswordLabel": "Vahvista uusi salasana",
+    "confirmNewPasswordPlaceholder": "Anna uusi salasanasi uudelleen",
+    "resetButton": "Palauta salasana"
+  },
+  "Validation": {
+    "invalidEmail": "Anna kelvollinen sähköpostiosoite",
+    "passwordTooShort": "Salasanan tulee olla vähintään 8 merkkiä pitkä",
+    "rules": {
+      "required": "Tämä kenttä on pakollinen",
+      "email": "Anna kelvollinen sähköpostiosoite",
+      "minLength": "Tämä arvo on liian lyhyt",
+      "databaseUnique": "Tämä sähköpostiosoite on jo rekisteröity"
+    }
+  },
+  "ApiMessages": {
+    "PASSWORD_RESET_LINK_SENT": "Jos tällä sähköpostiosoitteella on tili, salasanan palautuslinkki on lähetetty.",
+    "PASSWORD_RESET_SUCCESS": "Salasana palautettu onnistuneesti.",
+    "PASSWORD_RESET_TOKEN_INVALID": "Tämä salasanan palautuslinkki on virheellinen tai vanhentunut.",
+    "E_INVALID_CREDENTIALS": "Virheellinen sähköposti tai salasana.",
+    "GENERIC_ERROR": "Jotain meni pieleen. Yritä uudelleen."
+  }
+}

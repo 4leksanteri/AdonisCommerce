@@ -6,6 +6,12 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'translations.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/translations/:locale',
+    tokens: [{"old":"/api/translations/:locale","type":0,"val":"api","end":""},{"old":"/api/translations/:locale","type":0,"val":"translations","end":""},{"old":"/api/translations/:locale","type":1,"val":"locale","end":""}],
+    types: placeholder as Registry['translations.show']['types'],
+  },
   'auth.registered_user.store': {
     methods: ["POST"],
     pattern: '/api/auth/register',

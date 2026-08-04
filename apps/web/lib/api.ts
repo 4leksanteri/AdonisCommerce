@@ -3,13 +3,25 @@ import { getSessionToken } from "./auth/session";
 
 const API_URL = process.env.API_INTERNAL_URL;
 
+/**
+ * `code` comes from our own custom-thrown API errors (e.g. PASSWORD_RESET_TOKEN_INVALID).
+ * `rule`/`field` come from VineJS validation failures (e.g. rule "email", field "email").
+ * Never both — the frontend maps whichever is present to a translation key.
+ */
+export type ApiErrorItem = {
+  message: string;
+  code?: string;
+  rule?: string;
+  field?: string;
+};
+
 export class ApiError extends Error {
-  messages: string[];
+  items: ApiErrorItem[];
   status: number;
 
-  constructor(messages: string[], status: number) {
-    super(messages.join(", "));
-    this.messages = messages;
+  constructor(items: ApiErrorItem[], status: number) {
+    super(items.map((item) => item.message).join(", "));
+    this.items = items;
     this.status = status;
   }
 }
@@ -33,11 +45,10 @@ export async function apiFetch<T>(
 
   if (!response.ok) {
     const body = await response.json().catch(() => null);
-    const messages: string[] =
-      body?.errors?.map((error: { message: string }) => error.message) ?? [
-        "Something went wrong. Please try again.",
-      ];
-    throw new ApiError(messages, response.status);
+    const items: ApiErrorItem[] = body?.errors ?? [
+      { code: "GENERIC_ERROR", message: "Something went wrong. Please try again." },
+    ];
+    throw new ApiError(items, response.status);
   }
 
   if (response.status === 204) return undefined as T;

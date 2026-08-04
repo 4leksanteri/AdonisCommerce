@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Button,
   FieldError,
@@ -14,24 +15,30 @@ import {
 } from "@heroui/react";
 import { loginAction, registerAction, forgotPasswordAction } from "@/lib/auth/actions";
 import { useAuth } from "@/lib/auth/context";
+import { translateApiErrors } from "@/lib/translate-api-error";
 
 type Mode = "login" | "register" | "forgot-password";
 
 const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-const HEADINGS: Record<Mode, string> = {
-  login: "Log in",
-  register: "Create an account",
-  "forgot-password": "Reset your password",
-};
-
 export function AuthModal() {
   const { setUser } = useAuth();
   const state = useOverlayState();
+  const locale = useLocale();
+  const t = useTranslations("AuthModal");
+  const tValidation = useTranslations("Validation");
+  const tApiMessages = useTranslations("ApiMessages");
+
   const [mode, setMode] = useState<Mode>("login");
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const headings: Record<Mode, string> = {
+    login: t("logInHeading"),
+    register: t("registerHeading"),
+    "forgot-password": t("forgotPasswordHeading"),
+  };
 
   function switchMode(next: Mode) {
     setMode(next);
@@ -48,6 +55,15 @@ export function AuthModal() {
     }
   }
 
+  function showErrors(errors: Parameters<typeof translateApiErrors>[0]) {
+    setErrorMessages(
+      translateApiErrors(errors, {
+        apiMessage: (code) => tApiMessages(code as Parameters<typeof tApiMessages>[0]),
+        validationRule: (key) => tValidation(`rules.${key}` as Parameters<typeof tValidation>[0]),
+      })
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessages([]);
@@ -57,14 +73,14 @@ export function AuthModal() {
 
     if (mode === "forgot-password") {
       setIsPending(true);
-      const result = await forgotPasswordAction(email);
+      const result = await forgotPasswordAction(email, locale);
       setIsPending(false);
 
       if (result.errors) {
-        setErrorMessages(result.errors);
+        showErrors(result.errors);
         return;
       }
-      setSuccessMessage(result.message);
+      setSuccessMessage(tApiMessages(result.code as Parameters<typeof tApiMessages>[0]));
       return;
     }
 
@@ -83,7 +99,7 @@ export function AuthModal() {
     setIsPending(false);
 
     if (result.errors) {
-      setErrorMessages(result.errors);
+      showErrors(result.errors);
       return;
     }
 
@@ -94,7 +110,7 @@ export function AuthModal() {
   return (
     <>
       <Button variant="secondary" onPress={state.open}>
-        Log in
+        {t("logInButton")}
       </Button>
 
       <Modal.Backdrop isOpen={state.isOpen} onOpenChange={handleOpenChange}>
@@ -102,7 +118,7 @@ export function AuthModal() {
           <Modal.Dialog className="sm:max-w-sm">
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>{HEADINGS[mode]}</Modal.Heading>
+              <Modal.Heading>{headings[mode]}</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
               {successMessage ? (
@@ -116,7 +132,7 @@ export function AuthModal() {
                       className="font-medium text-foreground underline"
                       onClick={() => switchMode("login")}
                     >
-                      Back to log in
+                      {t("backToLogin")}
                     </button>
                   </p>
                 </>
@@ -133,8 +149,8 @@ export function AuthModal() {
 
                     {mode === "register" && (
                       <TextField isRequired isDisabled={isPending} name="fullName" type="text">
-                        <Label>Full name</Label>
-                        <Input placeholder="Jane Doe" className="border border-border" />
+                        <Label>{t("fullNameLabel")}</Label>
+                        <Input placeholder={t("fullNamePlaceholder")} className="border border-border" />
                         <FieldError />
                       </TextField>
                     )}
@@ -144,10 +160,10 @@ export function AuthModal() {
                       isDisabled={isPending}
                       name="email"
                       type="email"
-                      validate={(value) => (EMAIL_PATTERN.test(value) ? null : "Enter a valid email")}
+                      validate={(value) => (EMAIL_PATTERN.test(value) ? null : tValidation("invalidEmail"))}
                     >
-                      <Label>Email</Label>
-                      <Input placeholder="you@example.com" className="border border-border" />
+                      <Label>{t("emailLabel")}</Label>
+                      <Input placeholder={t("emailPlaceholder")} className="border border-border" />
                       <FieldError />
                     </TextField>
 
@@ -158,12 +174,10 @@ export function AuthModal() {
                         minLength={8}
                         name="password"
                         type="password"
-                        validate={(value) =>
-                          value.length >= 8 ? null : "Password must be at least 8 characters"
-                        }
+                        validate={(value) => (value.length >= 8 ? null : tValidation("passwordTooShort"))}
                       >
-                        <Label>Password</Label>
-                        <Input placeholder="Enter your password" className="border border-border" />
+                        <Label>{t("passwordLabel")}</Label>
+                        <Input placeholder={t("passwordPlaceholder")} className="border border-border" />
                         <FieldError />
                         {mode === "login" && (
                           <button
@@ -172,7 +186,7 @@ export function AuthModal() {
                             className="mt-1.5 text-sm font-medium text-foreground underline disabled:pointer-events-none disabled:opacity-50"
                             onClick={() => switchMode("forgot-password")}
                           >
-                            Forgot password?
+                            {t("forgotPasswordLink")}
                           </button>
                         )}
                       </TextField>
@@ -180,8 +194,8 @@ export function AuthModal() {
 
                     {mode === "register" && (
                       <TextField isRequired isDisabled={isPending} name="passwordConfirmation" type="password">
-                        <Label>Confirm password</Label>
-                        <Input placeholder="Re-enter your password" className="border border-border" />
+                        <Label>{t("confirmPasswordLabel")}</Label>
+                        <Input placeholder={t("confirmPasswordPlaceholder")} className="border border-border" />
                         <FieldError />
                       </TextField>
                     )}
@@ -190,9 +204,9 @@ export function AuthModal() {
                       {({ isPending: pending }) => (
                         <>
                           {pending && <Spinner color="current" size="sm" />}
-                          {mode === "login" && "Log in"}
-                          {mode === "register" && "Create account"}
-                          {mode === "forgot-password" && "Send reset link"}
+                          {mode === "login" && t("logInButton")}
+                          {mode === "register" && t("createAccountButton")}
+                          {mode === "forgot-password" && t("sendResetLinkButton")}
                         </>
                       )}
                     </Button>
@@ -201,40 +215,40 @@ export function AuthModal() {
                   <p className="mt-4 text-center text-sm text-muted">
                     {mode === "login" && (
                       <>
-                        Don&apos;t have an account?{" "}
+                        {t("noAccount")}{" "}
                         <button
                           type="button"
                           disabled={isPending}
                           className="font-medium text-foreground underline disabled:pointer-events-none disabled:opacity-50"
                           onClick={() => switchMode("register")}
                         >
-                          Register
+                          {t("registerLink")}
                         </button>
                       </>
                     )}
                     {mode === "register" && (
                       <>
-                        Already have an account?{" "}
+                        {t("haveAccount")}{" "}
                         <button
                           type="button"
                           disabled={isPending}
                           className="font-medium text-foreground underline disabled:pointer-events-none disabled:opacity-50"
                           onClick={() => switchMode("login")}
                         >
-                          Log in
+                          {t("logInLink")}
                         </button>
                       </>
                     )}
                     {mode === "forgot-password" && (
                       <>
-                        Remembered your password?{" "}
+                        {t("rememberedPassword")}{" "}
                         <button
                           type="button"
                           disabled={isPending}
                           className="font-medium text-foreground underline disabled:pointer-events-none disabled:opacity-50"
                           onClick={() => switchMode("login")}
                         >
-                          Log in
+                          {t("logInLink")}
                         </button>
                       </>
                     )}

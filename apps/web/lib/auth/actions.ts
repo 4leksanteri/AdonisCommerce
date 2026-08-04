@@ -1,10 +1,12 @@
 "use server";
 
-import { apiFetch, ApiError } from "@/lib/api";
+import { apiFetch, ApiError, type ApiErrorItem } from "@/lib/api";
 import { createSession, clearSession } from "./session";
 import type { User } from "./types";
 
-type AuthActionResult = { user: User; errors?: undefined } | { user?: undefined; errors: string[] };
+const GENERIC_ERROR: ApiErrorItem = { code: "GENERIC_ERROR", message: "Something went wrong." };
+
+type AuthActionResult = { user: User; errors?: undefined } | { user?: undefined; errors: ApiErrorItem[] };
 
 export async function loginAction(email: string, password: string): Promise<AuthActionResult> {
   try {
@@ -15,7 +17,7 @@ export async function loginAction(email: string, password: string): Promise<Auth
     await createSession(res.data.token);
     return { user: res.data.user };
   } catch (error) {
-    return { errors: error instanceof ApiError ? error.messages : ["Something went wrong."] };
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }
 }
 
@@ -33,7 +35,7 @@ export async function registerAction(
     await createSession(res.data.token);
     return { user: res.data.user };
   } catch (error) {
-    return { errors: error instanceof ApiError ? error.messages : ["Something went wrong."] };
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }
 }
 
@@ -42,17 +44,17 @@ export async function logoutAction(): Promise<void> {
   await clearSession();
 }
 
-type MessageActionResult = { message: string; errors?: undefined } | { message?: undefined; errors: string[] };
+type MessageActionResult = { code: string; errors?: undefined } | { code?: undefined; errors: ApiErrorItem[] };
 
-export async function forgotPasswordAction(email: string): Promise<MessageActionResult> {
+export async function forgotPasswordAction(email: string, locale: string): Promise<MessageActionResult> {
   try {
-    const res = await apiFetch<{ message: string }>("/api/auth/forgot-password", {
+    const res = await apiFetch<{ code: string }>("/api/auth/forgot-password", {
       method: "POST",
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, locale }),
     });
-    return { message: res.message };
+    return { code: res.code };
   } catch (error) {
-    return { errors: error instanceof ApiError ? error.messages : ["Something went wrong."] };
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }
 }
 
@@ -63,12 +65,12 @@ export async function resetPasswordAction(
   passwordConfirmation: string
 ): Promise<MessageActionResult> {
   try {
-    const res = await apiFetch<{ message: string }>("/api/auth/reset-password", {
+    const res = await apiFetch<{ code: string }>("/api/auth/reset-password", {
       method: "POST",
       body: JSON.stringify({ email, token, password, passwordConfirmation }),
     });
-    return { message: res.message };
+    return { code: res.code };
   } catch (error) {
-    return { errors: error instanceof ApiError ? error.messages : ["Something went wrong."] };
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }
 }

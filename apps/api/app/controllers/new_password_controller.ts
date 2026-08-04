@@ -10,7 +10,12 @@ export default class NewPasswordController {
     const isValid = await PasswordResetToken.verify(email, token)
     if (!isValid) {
       return response.badRequest({
-        errors: [{ message: 'This password reset link is invalid or has expired.' }],
+        errors: [
+          {
+            code: 'PASSWORD_RESET_TOKEN_INVALID',
+            message: 'This password reset link is invalid or has expired.',
+          },
+        ],
       })
     }
 
@@ -21,6 +26,7 @@ export default class NewPasswordController {
     await PasswordResetToken.consume(email)
 
     return {
+      code: 'PASSWORD_RESET_SUCCESS',
       message: 'Password reset successfully.',
     }
   }

@@ -8,4 +8,5 @@ export const controllers = {
   NewPassword: () => import('#controllers/new_password_controller'),
   PasswordResetLink: () => import('#controllers/password_reset_link_controller'),
   RegisteredUser: () => import('#controllers/registered_user_controller'),
+  Translations: () => import('#controllers/translations_controller'),
 }

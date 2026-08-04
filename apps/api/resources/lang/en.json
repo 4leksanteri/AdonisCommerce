@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "logIn": "Log in",
+    "myAccount": "My account",
+    "orders": "Orders",
+    "logOut": "Log out"
+  },
+  "AuthModal": {
+    "logInHeading": "Log in",
+    "registerHeading": "Create an account",
+    "forgotPasswordHeading": "Reset your password",
+    "fullNameLabel": "Full name",
+    "fullNamePlaceholder": "Jane Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "logInButton": "Log in",
+    "createAccountButton": "Create account",
+    "sendResetLinkButton": "Send reset link",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register",
+    "haveAccount": "Already have an account?",
+    "logInLink": "Log in",
+    "forgotPasswordLink": "Forgot password?",
+    "rememberedPassword": "Remembered your password?",
+    "backToLogin": "Back to log in"
+  },
+  "ResetPasswordPage": {
+    "heading": "Reset your password",
+    "invalidLink": "This password reset link is invalid. Please request a new one.",
+    "backToHome": "Back to home",
+    "newPasswordLabel": "New password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmNewPasswordLabel": "Confirm new password",
+    "confirmNewPasswordPlaceholder": "Re-enter your new password",
+    "resetButton": "Reset password"
+  },
+  "Validation": {
+    "invalidEmail": "Enter a valid email",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "rules": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "minLength": "This value is too short",
+      "databaseUnique": "This email is already registered"
+    }
+  },
+  "ApiMessages": {
+    "PASSWORD_RESET_LINK_SENT": "If an account exists for this email, a password reset link has been sent.",
+    "PASSWORD_RESET_SUCCESS": "Password reset successfully.",
+    "PASSWORD_RESET_TOKEN_INVALID": "This password reset link is invalid or has expired.",
+    "E_INVALID_CREDENTIALS": "Invalid email or password.",
+    "GENERIC_ERROR": "Something went wrong. Please try again."
+  }
+}

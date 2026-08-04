@@ -4,6 +4,7 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
+    'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }
@@ -12,9 +13,11 @@ export type ScannedRoutes = {
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
   }
   GET: {
+    'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
+    'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
   }
   POST: {

@@ -15,6 +15,8 @@ router.get('/', () => {
   return { hello: 'world' }
 })
 
+router.get('/api/translations/:locale', [controllers.Translations, 'show'])
+
 router
   .group(() => {
     router.post('register', [controllers.RegisteredUser, 'store'])
