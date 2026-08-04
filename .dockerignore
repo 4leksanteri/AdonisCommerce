@@ -1,0 +1,18 @@
+node_modules
+**/node_modules
+.git
+.next
+**/.next
+tmp
+**/tmp
+build
+**/build
+.turbo
+*.log
+.DS_Store
+
+# Secrets — never bake these into an image layer
+.env
+.env.local
+apps/*/.env
+apps/*/.env.local

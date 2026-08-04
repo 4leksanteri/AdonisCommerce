@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Env files (secrets — .env.example and .env.test stay committed)
+.env
+.env.local
+.env.*.local
+
+# Build outputs / caches
+.next/
+dist/
+build/
+.turbo/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
