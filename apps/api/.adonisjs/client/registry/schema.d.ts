@@ -91,4 +91,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
     }
   }
+  'sellers.sellers.store': {
+    methods: ["POST"]
+    pattern: '/api/sellers'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/seller').becomeSellerValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/seller').becomeSellerValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'sellers.sellers.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/sellers/me'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['show']>>>
+    }
+  }
 }

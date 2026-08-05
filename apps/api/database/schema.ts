@@ -45,6 +45,29 @@ export class PasswordResetTokenSchema extends BaseModel {
   declare token: string
 }
 
+export class SellerSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
+  $columns = SellerSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare payoutStatus: string
+  @column()
+  declare shopName: string
+  @column()
+  declare slug: string
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns

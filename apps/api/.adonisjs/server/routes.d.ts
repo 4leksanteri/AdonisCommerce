@@ -11,14 +11,18 @@ export type ScannedRoutes = {
     'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.store': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.show': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
@@ -26,6 +30,7 @@ export type ScannedRoutes = {
     'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }
     'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.store': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -33,3 +33,12 @@ router
   })
   .prefix('/api/auth')
   .as('auth')
+
+router
+  .group(() => {
+    router.post('/', [controllers.Sellers, 'store'])
+    router.get('me', [controllers.Sellers, 'show'])
+  })
+  .prefix('/api/sellers')
+  .as('sellers')
+  .use(middleware.auth())

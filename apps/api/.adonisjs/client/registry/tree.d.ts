@@ -21,4 +21,10 @@ export interface ApiDefinition {
       store: typeof routes['auth.new_password.store']
     }
   }
+  sellers: {
+    sellers: {
+      store: typeof routes['sellers.sellers.store']
+      show: typeof routes['sellers.sellers.show']
+    }
+  }
 }

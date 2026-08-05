@@ -20,6 +20,7 @@ export default class AccessTokensController {
       throw error
     }
 
+    await user.load((preloader) => preloader.load('seller'))
     const token = await User.accessTokens.create(user)
 
     return serialize({
@@ -40,6 +41,8 @@ export default class AccessTokensController {
   }
 
   async show({ auth, serialize }: HttpContext) {
-    return serialize(UserTransformer.transform(auth.getUserOrFail()))
+    const user = auth.getUserOrFail()
+    await user.load((preloader) => preloader.load('seller'))
+    return serialize(UserTransformer.transform(user))
   }
 }

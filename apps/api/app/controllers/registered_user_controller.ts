@@ -8,6 +8,7 @@ export default class RegisteredUserController {
     const { fullName, email, password } = await request.validateUsing(registerValidator)
 
     const user = await User.create({ fullName, email, password, role: 'customer' })
+    await user.load((preloader) => preloader.load('seller'))
     const token = await User.accessTokens.create(user)
 
     return serialize({
