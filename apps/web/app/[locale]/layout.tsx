@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { AuthProvider } from "@/lib/auth/context";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { getCurrentUser } from "@/lib/auth/queries";
 import "../globals.css";
 
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
           <AuthProvider initialUser={user}>
             <Header />
             {children}
+            <Footer />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

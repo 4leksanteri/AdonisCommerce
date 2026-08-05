@@ -54,5 +54,17 @@
     "PASSWORD_RESET_TOKEN_INVALID": "This password reset link is invalid or has expired.",
     "E_INVALID_CREDENTIALS": "Invalid email or password.",
     "GENERIC_ERROR": "Something went wrong. Please try again."
+  },
+  "Footer": {
+    "changeLanguage": "Change language"
+  },
+  "Cart": {
+    "openCart": "Open cart",
+    "heading": "Your cart",
+    "empty": "Your cart is empty",
+    "quantity": "Qty",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout"
   }
 }

@@ -54,5 +54,17 @@
     "PASSWORD_RESET_TOKEN_INVALID": "Tämä salasanan palautuslinkki on virheellinen tai vanhentunut.",
     "E_INVALID_CREDENTIALS": "Virheellinen sähköposti tai salasana.",
     "GENERIC_ERROR": "Jotain meni pieleen. Yritä uudelleen."
+  },
+  "Footer": {
+    "changeLanguage": "Vaihda kieltä"
+  },
+  "Cart": {
+    "openCart": "Avaa ostoskori",
+    "heading": "Ostoskorisi",
+    "empty": "Ostoskorisi on tyhjä",
+    "quantity": "Määrä",
+    "remove": "Poista",
+    "subtotal": "Välisumma",
+    "checkout": "Kassalle"
   }
 }

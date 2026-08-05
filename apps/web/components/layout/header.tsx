@@ -1,40 +1,13 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
-import { Avatar, Dropdown, Label } from "@heroui/react";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
+import { Avatar, Button, Dropdown, Label } from "@heroui/react";
+import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth/context";
 import { AuthModal } from "@/components/auth/modal";
 import { logoutAction } from "@/lib/auth/actions";
 import { Container } from "@/components/ui/container";
-
-function LocaleSwitcher() {
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  return (
-    <Dropdown>
-      <Dropdown.Trigger aria-label="Change language" className="rounded-full px-2 text-sm font-medium">
-        {locale.toUpperCase()}
-      </Dropdown.Trigger>
-      <Dropdown.Popover placement="bottom end">
-        <Dropdown.Menu
-          selectionMode="single"
-          selectedKeys={new Set([locale])}
-          onAction={(key) => router.replace(pathname, { locale: String(key) })}
-        >
-          {routing.locales.map((code) => (
-            <Dropdown.Item key={code} id={code} textValue={code.toUpperCase()}>
-              <Label>{code.toUpperCase()}</Label>
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown>
-  );
-}
+import { CartPopover } from "@/components/cart/popover";
 
 export function Header() {
   const { user, setUser } = useAuth();
@@ -52,12 +25,12 @@ export function Header() {
           Ecommerce
         </Link>
 
-        <div className="flex items-center gap-3">
-          <LocaleSwitcher />
+        <div className="flex items-center gap-2">
+          <CartPopover />
 
           {user ? (
             <Dropdown>
-              <Dropdown.Trigger aria-label="Account menu" className="rounded-full">
+              <Dropdown.Trigger aria-label="Account menu" className="ml-1 rounded-full">
                 <Avatar>
                   <Avatar.Fallback>{user.initials}</Avatar.Fallback>
                 </Avatar>

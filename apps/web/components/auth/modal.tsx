@@ -109,7 +109,7 @@ export function AuthModal() {
 
   return (
     <>
-      <Button variant="secondary" onPress={state.open}>
+      <Button variant="outline" onPress={state.open}>
         {t("logInButton")}
       </Button>
 
