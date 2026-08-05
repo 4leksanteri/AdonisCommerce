@@ -1,5 +1,5 @@
 export type Seller = {
-  id: number;
+  id: string;
   shopName: string;
   slug: string;
   description: string | null;
@@ -9,7 +9,7 @@ export type Seller = {
 };
 
 export type User = {
-  id: number;
+  id: string;
   fullName: string | null;
   email: string;
   role: string;

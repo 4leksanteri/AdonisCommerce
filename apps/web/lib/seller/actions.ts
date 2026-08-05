@@ -44,7 +44,7 @@ export async function createProductAction(input: CreateProductInput): Promise<Cr
 }
 
 export async function updateProductAction(
-  productId: number,
+  productId: string,
   input: CreateProductInput
 ): Promise<CreateProductResult> {
   try {
@@ -74,7 +74,7 @@ type UploadProductImagesResult =
   | { images?: undefined; errors: ApiErrorItem[] };
 
 export async function uploadProductImagesAction(
-  productId: number,
+  productId: string,
   formData: FormData
 ): Promise<UploadProductImagesResult> {
   try {
@@ -91,8 +91,8 @@ export async function uploadProductImagesAction(
 type DeleteProductImageResult = { errors?: ApiErrorItem[] };
 
 export async function deleteProductImageAction(
-  productId: number,
-  imageId: number
+  productId: string,
+  imageId: string
 ): Promise<DeleteProductImageResult> {
   try {
     await apiFetch<void>(`/api/products/${productId}/images/${imageId}`, { method: "DELETE" });

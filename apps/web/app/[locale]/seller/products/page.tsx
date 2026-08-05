@@ -50,7 +50,7 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
             return (
               <Link
                 key={product.id}
-                href={{ pathname: "/seller/products/[id]", params: { id: String(product.id) } }}
+                href={{ pathname: "/seller/products/[id]", params: { id: product.id } }}
                 className="flex items-center justify-between gap-4 p-4 no-underline hover:bg-surface"
               >
                 <div className="flex items-center gap-4">

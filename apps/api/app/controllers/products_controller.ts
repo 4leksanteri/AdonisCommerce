@@ -140,7 +140,7 @@ export default class ProductsController {
 
     const { title, description, options, variants } =
       await request.validateUsing(createProductValidator)
-    const slug = await Product.generateUniqueSlug(title)
+    const slug = await Product.generateUniqueSlug(seller.id, title)
 
     const product = await db.transaction(async (trx) => {
       const newProduct = new Product()
@@ -179,7 +179,7 @@ export default class ProductsController {
       })
     }
 
-    const slug = await Product.generateUniqueSlug('Untitled product')
+    const slug = await Product.generateUniqueSlug(seller.id, 'Untitled product')
     const product = await Product.create({
       sellerId: seller.id,
       title: 'Untitled product',
@@ -230,7 +230,9 @@ export default class ProductsController {
     // would bump an unchanged title to `-2` (its own row counts as a clash)
     // and churn the product's public URL on every save.
     const slug =
-      product.title === title ? product.slug : await Product.generateUniqueSlug(title, product.id)
+      product.title === title
+        ? product.slug
+        : await Product.generateUniqueSlug(seller.id, title, product.id)
 
     await db.transaction(async (trx) => {
       product.useTransaction(trx)

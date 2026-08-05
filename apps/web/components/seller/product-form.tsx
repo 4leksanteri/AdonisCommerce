@@ -63,7 +63,7 @@ function toVariantDrafts(product?: Product): Map<string, VariantDraft> {
   const drafts = new Map<string, VariantDraft>();
   if (!product) return drafts;
 
-  const optionIndexByValueId = new Map<number, number>();
+  const optionIndexByValueId = new Map<string, number>();
   product.options.forEach((option, index) => {
     for (const value of option.values) optionIndexByValueId.set(value.id, index);
   });
@@ -107,10 +107,10 @@ export function ProductForm({ product }: { product?: Product }) {
   // When creating, this is lazily filled the moment the seller picks their
   // first image — it gives us a real id to attach images to before the rest
   // of the form is done. If still null at submit, we do a one-shot create.
-  const [productId, setProductId] = useState<number | null>(product?.id ?? null);
+  const [productId, setProductId] = useState<string | null>(product?.id ?? null);
   const [images, setImages] = useState<ProductImage[]>(product?.images ?? []);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
-  const [removingImageId, setRemovingImageId] = useState<number | null>(null);
+  const [removingImageId, setRemovingImageId] = useState<string | null>(null);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.name.trim().length > 0 && option.values.length > 0),
@@ -205,7 +205,7 @@ export function ProductForm({ product }: { product?: Product }) {
     setImages((prev) => [...prev, ...uploadResult.images]);
   }
 
-  async function handleRemoveImage(imageId: number) {
+  async function handleRemoveImage(imageId: string) {
     // Images only ever exist against a saved product (a draft one while
     // creating), so there is always an id to delete against here.
     if (productId === null) return;

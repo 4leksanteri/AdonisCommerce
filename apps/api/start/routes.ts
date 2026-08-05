@@ -58,8 +58,8 @@ router
   .prefix('/api/products')
   .as('products')
   // Ids reach these routes straight from user-typed URLs on the frontend.
-  // Matching on digits turns a junk id into a 404 at the router, instead of
-  // Postgres blowing up on `where id = 'abc'` further down.
-  .where('id', router.matchers.number())
-  .where('imageId', router.matchers.number())
+  // Matching the uuid shape turns a junk id into a 404 at the router, instead
+  // of Postgres blowing up on `where id = 'abc'` further down.
+  .where('id', router.matchers.uuid())
+  .where('imageId', router.matchers.uuid())
   .use(middleware.auth())

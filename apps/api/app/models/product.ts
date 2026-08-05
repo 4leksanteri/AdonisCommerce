@@ -20,16 +20,21 @@ export default class Product extends ProductSchema {
   declare images: HasMany<typeof ProductImage>
 
   /**
+   * Slugs only have to be unique within a shop, so collisions are resolved
+   * against that seller's own products — another seller already owning
+   * "ceramic-mug" is not a clash. Mirrors the (seller_id, slug) unique index.
+   *
    * `excludeId` keeps a product from colliding with itself when re-slugging
    * on edit — without it, saving would walk the suffix up on every save.
    */
-  static async generateUniqueSlug(title: string, excludeId?: number) {
+  static async generateUniqueSlug(sellerId: string, title: string, excludeId?: string) {
     const base = slugify(title) || 'product'
     let slug = base
     let suffix = 1
 
     while (
       await this.query()
+        .where('sellerId', sellerId)
         .where('slug', slug)
         .if(excludeId !== undefined, (query) => query.whereNot('id', excludeId!))
         .first()

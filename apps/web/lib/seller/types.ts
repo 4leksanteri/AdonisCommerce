@@ -1,18 +1,18 @@
 export type ProductOptionValue = {
-  id: number;
+  id: string;
   value: string;
   position: number;
 };
 
 export type ProductOption = {
-  id: number;
+  id: string;
   name: string;
   position: number;
   values: ProductOptionValue[];
 };
 
 export type ProductVariant = {
-  id: number;
+  id: string;
   sku: string | null;
   price: string;
   stockQuantity: number;
@@ -21,13 +21,13 @@ export type ProductVariant = {
 };
 
 export type ProductImage = {
-  id: number;
+  id: string;
   position: number;
   url: string;
 };
 
 export type Product = {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   description: string | null;

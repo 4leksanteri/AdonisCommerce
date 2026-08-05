@@ -19,13 +19,13 @@ export class AuthAccessTokenSchema extends BaseModel {
   @column()
   declare hash: string
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column.dateTime()
   declare lastUsedAt: DateTime | null
   @column()
   declare name: string | null
   @column()
-  declare tokenableId: number
+  declare tokenableId: string
   @column()
   declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -40,7 +40,7 @@ export class PasswordResetTokenSchema extends BaseModel {
   @column()
   declare email: string
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare token: string
 }
@@ -51,13 +51,13 @@ export class ProductImageSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare path: string
   @column()
   declare position: number
   @column()
-  declare productId: number
+  declare productId: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }
@@ -68,11 +68,11 @@ export class ProductOptionValueSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare position: number
   @column()
-  declare productOptionId: number
+  declare productOptionId: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
   @column()
@@ -85,13 +85,13 @@ export class ProductOptionSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare name: string
   @column()
   declare position: number
   @column()
-  declare productId: number
+  declare productId: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }
@@ -100,11 +100,11 @@ export class ProductVariantOptionValueSchema extends BaseModel {
   static $columns = ['id', 'productOptionValueId', 'productVariantId'] as const
   $columns = ProductVariantOptionValueSchema.$columns
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
-  declare productOptionValueId: number
+  declare productOptionValueId: string
   @column()
-  declare productVariantId: number
+  declare productVariantId: string
 }
 
 export class ProductVariantSchema extends BaseModel {
@@ -113,11 +113,11 @@ export class ProductVariantSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare price: string
   @column()
-  declare productId: number
+  declare productId: string
   @column()
   declare sku: string | null
   @column()
@@ -134,9 +134,9 @@ export class ProductSchema extends BaseModel {
   @column()
   declare description: string | null
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
-  declare sellerId: number
+  declare sellerId: string
   @column()
   declare slug: string
   @column()
@@ -155,7 +155,7 @@ export class SellerSchema extends BaseModel {
   @column()
   declare description: string | null
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column()
   declare payoutStatus: string
   @column()
@@ -167,7 +167,7 @@ export class SellerSchema extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
   @column()
-  declare userId: number
+  declare userId: string
 }
 
 export class UserSchema extends BaseModel {
@@ -180,7 +180,7 @@ export class UserSchema extends BaseModel {
   @column()
   declare fullName: string | null
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
   @column({ serializeAs: null })
   declare password: string
   @column()
