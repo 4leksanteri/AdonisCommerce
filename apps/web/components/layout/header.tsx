@@ -9,7 +9,7 @@ import { logoutAction } from "@/lib/auth/actions";
 import { Container } from "@/components/ui/container";
 import { CartPopover } from "@/components/cart/popover";
 
-export function Header() {
+export function Header({ platformName }: { platformName: string }) {
   const { user, setUser } = useAuth();
   const t = useTranslations("Header");
   const router = useRouter();
@@ -23,7 +23,7 @@ export function Header() {
     <header className="border-b border-border">
       <Container className="flex h-16 items-center justify-between">
         <Link href="/" className="text-lg font-semibold text-foreground">
-          Ecommerce
+          {platformName}
         </Link>
 
         <div className="flex items-center gap-2">

@@ -36,6 +36,7 @@ services:
       - redis
       - mailpit
     environment:
+      APP_NAME: ${APP_NAME}
       HOST: 0.0.0.0
       DB_HOST: postgres
       DB_PORT: 5432
@@ -63,6 +64,7 @@ services:
       - api
       - redis
     environment:
+      APP_NAME: ${APP_NAME}
       WATCHPACK_POLLING: "true"
       API_INTERNAL_URL: http://api:3333
       REDIS_HOST: redis

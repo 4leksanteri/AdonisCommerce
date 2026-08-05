@@ -23,7 +23,7 @@ const mailConfig = defineConfig({
    * the brand name to be used within the emails
    */
   globals: {
-    brandName: 'Acme'
+    brandName: env.get('APP_NAME'),
   },
 
   /**

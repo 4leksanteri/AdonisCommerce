@@ -19,9 +19,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const APP_NAME = process.env.APP_NAME ?? "Ecommerce";
+
 export const metadata: Metadata = {
-  title: "Ecommerce",
-  description: "Ecommerce",
+  title: APP_NAME,
+  description: APP_NAME,
 };
 
 export function generateStaticParams() {
@@ -47,9 +49,9 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AuthProvider initialUser={user}>
-            <Header />
+            <Header platformName={APP_NAME} />
             {children}
-            <Footer />
+            <Footer platformName={APP_NAME} />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
