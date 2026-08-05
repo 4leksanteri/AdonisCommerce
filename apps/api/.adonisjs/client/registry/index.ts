@@ -60,6 +60,12 @@ const routes = {
     tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['sellers.sellers.show']['types'],
   },
+  'sellers.sellers.update': {
+    methods: ["PATCH"],
+    pattern: '/api/sellers/me',
+    tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
+    types: placeholder as Registry['sellers.sellers.update']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

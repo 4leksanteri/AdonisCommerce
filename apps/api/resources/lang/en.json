@@ -3,6 +3,7 @@
     "logIn": "Log in",
     "myAccount": "My account",
     "orders": "Orders",
+    "sellerDashboard": "Seller dashboard",
     "logOut": "Log out"
   },
   "AuthModal": {
@@ -57,6 +58,36 @@
   },
   "Footer": {
     "changeLanguage": "Change language"
+  },
+  "SellerPanel": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "settings": "Shop settings"
+    },
+    "dashboard": {
+      "heading": "Welcome back, {shopName}",
+      "subheading": "Here's the current status of your shop.",
+      "moreComingSoon": "Product and order management are coming soon."
+    },
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending review",
+      "rejected": "Rejected"
+    },
+    "payout": {
+      "not_connected": "Payouts not connected",
+      "connected": "Payouts connected",
+      "restricted": "Payouts restricted"
+    },
+    "settings": {
+      "heading": "Shop settings",
+      "subheading": "Update your shop's public details.",
+      "shopNameLabel": "Shop name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Tell customers about your shop",
+      "saveButton": "Save changes",
+      "saveSuccess": "Shop settings updated."
+    }
   },
   "Cart": {
     "openCart": "Open cart",

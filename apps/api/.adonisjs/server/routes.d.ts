@@ -13,6 +13,7 @@ export type ScannedRoutes = {
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.update': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
@@ -31,6 +32,9 @@ export type ScannedRoutes = {
     'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
+  }
+  PATCH: {
+    'sellers.sellers.update': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

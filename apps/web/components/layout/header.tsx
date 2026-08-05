@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Avatar, Button, Dropdown, Label } from "@heroui/react";
-import { Link } from "@/i18n/navigation";
+import { Avatar, Dropdown, Label } from "@heroui/react";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth/context";
 import { AuthModal } from "@/components/auth/modal";
 import { logoutAction } from "@/lib/auth/actions";
@@ -12,6 +12,7 @@ import { CartPopover } from "@/components/cart/popover";
 export function Header() {
   const { user, setUser } = useAuth();
   const t = useTranslations("Header");
+  const router = useRouter();
 
   async function handleLogout() {
     setUser(null);
@@ -39,6 +40,7 @@ export function Header() {
                 <Dropdown.Menu
                   onAction={(key) => {
                     if (key === "logout") handleLogout();
+                    if (key === "seller-dashboard") router.push("/seller");
                   }}
                 >
                   <Dropdown.Item id="account" textValue="My account">
@@ -47,6 +49,11 @@ export function Header() {
                   <Dropdown.Item id="orders" textValue="Orders">
                     <Label>{t("orders")}</Label>
                   </Dropdown.Item>
+                  {user.seller && (
+                    <Dropdown.Item id="seller-dashboard" textValue="Seller dashboard">
+                      <Label>{t("sellerDashboard")}</Label>
+                    </Dropdown.Item>
+                  )}
                   <Dropdown.Item id="logout" textValue="Log out" variant="danger">
                     <Label>{t("logOut")}</Label>
                   </Dropdown.Item>

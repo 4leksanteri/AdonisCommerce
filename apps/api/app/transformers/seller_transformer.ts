@@ -9,6 +9,7 @@ export default class SellerTransformer extends BaseTransformer<Seller> {
       'slug',
       'description',
       'status',
+      'payoutStatus',
       'createdAt',
     ])
   }

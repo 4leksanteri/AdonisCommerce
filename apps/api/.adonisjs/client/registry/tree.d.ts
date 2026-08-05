@@ -25,6 +25,7 @@ export interface ApiDefinition {
     sellers: {
       store: typeof routes['sellers.sellers.store']
       show: typeof routes['sellers.sellers.show']
+      update: typeof routes['sellers.sellers.update']
     }
   }
 }

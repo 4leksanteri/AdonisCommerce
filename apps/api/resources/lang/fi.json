@@ -3,6 +3,7 @@
     "logIn": "Kirjaudu sisään",
     "myAccount": "Oma tili",
     "orders": "Tilaukset",
+    "sellerDashboard": "Myyjän hallintapaneeli",
     "logOut": "Kirjaudu ulos"
   },
   "AuthModal": {
@@ -57,6 +58,36 @@
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
+  },
+  "SellerPanel": {
+    "nav": {
+      "dashboard": "Yleisnäkymä",
+      "settings": "Kaupan asetukset"
+    },
+    "dashboard": {
+      "heading": "Tervetuloa takaisin, {shopName}",
+      "subheading": "Tässä kauppasi nykyinen tila.",
+      "moreComingSoon": "Tuotteiden ja tilausten hallinta tulossa pian."
+    },
+    "status": {
+      "approved": "Hyväksytty",
+      "pending": "Odottaa tarkistusta",
+      "rejected": "Hylätty"
+    },
+    "payout": {
+      "not_connected": "Maksuja ei ole yhdistetty",
+      "connected": "Maksut yhdistetty",
+      "restricted": "Maksut rajoitettu"
+    },
+    "settings": {
+      "heading": "Kaupan asetukset",
+      "subheading": "Päivitä kauppasi julkiset tiedot.",
+      "shopNameLabel": "Kaupan nimi",
+      "descriptionLabel": "Kuvaus",
+      "descriptionPlaceholder": "Kerro asiakkaille kaupastasi",
+      "saveButton": "Tallenna muutokset",
+      "saveSuccess": "Kaupan asetukset päivitetty."
+    }
   },
   "Cart": {
     "openCart": "Avaa ostoskori",

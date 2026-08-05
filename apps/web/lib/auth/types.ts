@@ -4,6 +4,7 @@ export type Seller = {
   slug: string;
   description: string | null;
   status: string;
+  payoutStatus: string;
   createdAt: string;
 };
 

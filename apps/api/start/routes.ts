@@ -38,6 +38,7 @@ router
   .group(() => {
     router.post('/', [controllers.Sellers, 'store'])
     router.get('me', [controllers.Sellers, 'show'])
+    router.patch('me', [controllers.Sellers, 'update'])
   })
   .prefix('/api/sellers')
   .as('sellers')

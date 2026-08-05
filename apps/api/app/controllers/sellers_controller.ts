@@ -38,4 +38,16 @@ export default class SellersController {
 
     return serialize(SellerTransformer.transform(seller))
   }
+
+  async update({ request, auth, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const { shopName, description } = await request.validateUsing(becomeSellerValidator)
+
+    const seller = await Seller.query().where('userId', user.id).firstOrFail()
+    seller.shopName = shopName
+    seller.description = description ?? null
+    await seller.save()
+
+    return serialize(SellerTransformer.transform(seller))
+  }
 }

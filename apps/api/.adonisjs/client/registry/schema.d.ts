@@ -115,4 +115,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['show']>>>
     }
   }
+  'sellers.sellers.update': {
+    methods: ["PATCH"]
+    pattern: '/api/sellers/me'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/seller').becomeSellerValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/seller').becomeSellerValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }
