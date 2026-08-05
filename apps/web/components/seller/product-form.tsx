@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   Button,
@@ -18,8 +19,16 @@ import {
   toast,
 } from "@heroui/react";
 import { useRouter } from "@/i18n/navigation";
-import { createProductAction } from "@/lib/seller/actions";
+import {
+  createDraftProductAction,
+  createProductAction,
+  updateProductAction,
+  uploadProductImagesAction,
+  type CreateProductInput,
+} from "@/lib/seller/actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
+import type { ApiErrorItem } from "@/lib/api";
+import type { ProductImage } from "@/lib/seller/types";
 
 type OptionDraft = { name: string; values: string[] };
 type VariantDraft = { price: string; stockQuantity: string; sku: string };
@@ -47,6 +56,13 @@ export function ProductForm() {
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
+  // Lazily created the moment the seller picks their first image — gives
+  // us a real id to attach images to before the rest of the form is done.
+  // If never set, final submit does a plain one-shot create instead.
+  const [productId, setProductId] = useState<number | null>(null);
+  const [images, setImages] = useState<ProductImage[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+
   const validOptions = useMemo(
     () => options.filter((option) => option.name.trim().length > 0 && option.values.length > 0),
     [options]
@@ -56,6 +72,15 @@ export function ProductForm() {
     () => cartesianProduct(validOptions.map((option) => option.values)),
     [validOptions]
   );
+
+  function showErrors(errors: ApiErrorItem[]) {
+    setErrorMessages(
+      translateApiErrors(errors, {
+        apiMessage: (code) => tApiMessages(code as Parameters<typeof tApiMessages>[0]),
+        validationRule: (key) => tValidation(`rules.${key}` as Parameters<typeof tValidation>[0]),
+      })
+    );
+  }
 
   function addOption() {
     setOptions((prev) => [...prev, { name: "", values: [] }]);
@@ -97,11 +122,45 @@ export function ProductForm() {
     });
   }
 
+  async function handleImagesSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    e.target.value = "";
+
+    setErrorMessages([]);
+    setIsUploadingImages(true);
+
+    let currentProductId = productId;
+    if (currentProductId === null) {
+      const draftResult = await createDraftProductAction();
+      if (draftResult.errors) {
+        setIsUploadingImages(false);
+        showErrors(draftResult.errors);
+        return;
+      }
+      currentProductId = draftResult.product.id;
+      setProductId(currentProductId);
+    }
+
+    const formData = new FormData();
+    for (const file of Array.from(files)) formData.append("images", file);
+
+    const uploadResult = await uploadProductImagesAction(currentProductId, formData);
+    setIsUploadingImages(false);
+
+    if (uploadResult.errors) {
+      showErrors(uploadResult.errors);
+      return;
+    }
+
+    setImages((prev) => [...prev, ...uploadResult.images]);
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessages([]);
 
-    const payload = {
+    const payload: CreateProductInput = {
       title,
       description,
       options: validOptions,
@@ -118,16 +177,11 @@ export function ProductForm() {
     };
 
     setIsPending(true);
-    const result = await createProductAction(payload);
+    const result = productId === null ? await createProductAction(payload) : await updateProductAction(productId, payload);
     setIsPending(false);
 
     if (result.errors) {
-      setErrorMessages(
-        translateApiErrors(result.errors, {
-          apiMessage: (code) => tApiMessages(code as Parameters<typeof tApiMessages>[0]),
-          validationRule: (key) => tValidation(`rules.${key}` as Parameters<typeof tValidation>[0]),
-        })
-      );
+      showErrors(result.errors);
       return;
     }
 
@@ -156,6 +210,33 @@ export function ProductForm() {
           <Label>{t("descriptionLabel")}</Label>
           <TextArea className="h-24 border border-border" placeholder={t("descriptionPlaceholder")} />
         </TextField>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <div>
+          <h2 className="font-medium text-foreground">{t("imagesHeading")}</h2>
+          <p className="text-sm text-muted">{t("imagesHint")}</p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {images.map((image) => (
+            <div key={image.id} className="h-24 w-24 overflow-hidden rounded-lg border border-border">
+              <Image src={image.url} alt="" width={96} height={96} unoptimized className="h-full w-full object-cover" />
+            </div>
+          ))}
+
+          <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border text-center text-xs text-muted hover:text-foreground">
+            {isUploadingImages ? <Spinner size="sm" /> : <span>{t("addImage")}</span>}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              multiple
+              className="hidden"
+              disabled={isPending || isUploadingImages}
+              onChange={handleImagesSelected}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -305,7 +386,7 @@ export function ProductForm() {
         </Table>
       </div>
 
-      <Button type="submit" isPending={isPending} className="self-start">
+      <Button type="submit" isPending={isPending} isDisabled={isUploadingImages} className="self-start">
         {({ isPending: pending }) => (
           <>
             {pending && <Spinner color="current" size="sm" />}

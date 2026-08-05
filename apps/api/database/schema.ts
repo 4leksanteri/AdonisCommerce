@@ -45,6 +45,23 @@ export class PasswordResetTokenSchema extends BaseModel {
   declare token: string
 }
 
+export class ProductImageSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'path', 'position', 'productId', 'updatedAt'] as const
+  $columns = ProductImageSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare path: string
+  @column()
+  declare position: number
+  @column()
+  declare productId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class ProductOptionValueSchema extends BaseModel {
   static $columns = ['createdAt', 'id', 'position', 'productOptionId', 'updatedAt', 'value'] as const
   $columns = ProductOptionValueSchema.$columns

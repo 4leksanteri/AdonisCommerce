@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
@@ -44,13 +45,29 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
             const max = Math.max(...prices);
             const priceLabel = min === max ? `€${min.toFixed(2)}` : `€${min.toFixed(2)}–€${max.toFixed(2)}`;
 
+            const thumbnail = product.images[0];
+
             return (
               <div key={product.id} className="flex items-center justify-between gap-4 p-4">
-                <div>
-                  <p className="font-medium text-foreground">{product.title}</p>
-                  <p className="text-sm text-muted">
-                    {t("variantCount", { count: product.variants.length })} · {priceLabel}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+                    {thumbnail && (
+                      <Image
+                        src={thumbnail.url}
+                        alt=""
+                        width={48}
+                        height={48}
+                        unoptimized
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">{product.title}</p>
+                    <p className="text-sm text-muted">
+                      {t("variantCount", { count: product.variants.length })} · {priceLabel}
+                    </p>
+                  </div>
                 </div>
                 <Chip color={statusColor(product.status)}>
                   <Chip.Label>{tStatus(product.status as Parameters<typeof tStatus>[0])}</Chip.Label>

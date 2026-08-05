@@ -16,6 +16,7 @@ router.get('/', () => {
 })
 
 router.get('/api/translations/:locale', [controllers.Translations, 'show'])
+router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 
 router
   .group(() => {
@@ -48,6 +49,9 @@ router
   .group(() => {
     router.get('/', [controllers.Products, 'index'])
     router.post('/', [controllers.Products, 'store'])
+    router.post('/draft', [controllers.Products, 'storeDraft'])
+    router.patch('/:id', [controllers.Products, 'update'])
+    router.post('/:id/images', [controllers.ProductImages, 'store'])
   })
   .prefix('/api/products')
   .as('products')

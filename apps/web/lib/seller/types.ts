@@ -20,6 +20,12 @@ export type ProductVariant = {
   optionValues: ProductOptionValue[];
 };
 
+export type ProductImage = {
+  id: number;
+  position: number;
+  url: string;
+};
+
 export type Product = {
   id: number;
   title: string;
@@ -29,4 +35,5 @@ export type Product = {
   createdAt: string;
   options: ProductOption[];
   variants: ProductVariant[];
+  images: ProductImage[];
 };

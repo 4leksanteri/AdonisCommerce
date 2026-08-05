@@ -38,6 +38,11 @@ services:
     environment:
       APP_NAME: ${APP_NAME}
       HOST: 0.0.0.0
+      # HOST must be 0.0.0.0 for the server to accept connections from
+      # outside the container, but that's not a reachable client-facing
+      # address — APP_URL is used to build public URLs (e.g. image links)
+      # and needs the host-published port instead.
+      APP_URL: http://localhost:3333
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: ${POSTGRES_USER}

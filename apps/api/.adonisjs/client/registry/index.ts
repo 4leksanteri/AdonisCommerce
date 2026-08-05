@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/api/translations/:locale","type":0,"val":"api","end":""},{"old":"/api/translations/:locale","type":0,"val":"translations","end":""},{"old":"/api/translations/:locale","type":1,"val":"locale","end":""}],
     types: placeholder as Registry['translations.show']['types'],
   },
+  'uploads.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/uploads/:filename',
+    tokens: [{"old":"/uploads/:filename","type":0,"val":"uploads","end":""},{"old":"/uploads/:filename","type":1,"val":"filename","end":""}],
+    types: placeholder as Registry['uploads.show']['types'],
+  },
   'auth.registered_user.store': {
     methods: ["POST"],
     pattern: '/api/auth/register',
@@ -77,6 +83,24 @@ const routes = {
     pattern: '/api/products',
     tokens: [{"old":"/api/products","type":0,"val":"api","end":""},{"old":"/api/products","type":0,"val":"products","end":""}],
     types: placeholder as Registry['products.products.store']['types'],
+  },
+  'products.products.store_draft': {
+    methods: ["POST"],
+    pattern: '/api/products/draft',
+    tokens: [{"old":"/api/products/draft","type":0,"val":"api","end":""},{"old":"/api/products/draft","type":0,"val":"products","end":""},{"old":"/api/products/draft","type":0,"val":"draft","end":""}],
+    types: placeholder as Registry['products.products.store_draft']['types'],
+  },
+  'products.products.update': {
+    methods: ["PATCH"],
+    pattern: '/api/products/:id',
+    tokens: [{"old":"/api/products/:id","type":0,"val":"api","end":""},{"old":"/api/products/:id","type":0,"val":"products","end":""},{"old":"/api/products/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['products.products.update']['types'],
+  },
+  'products.product_images.store': {
+    methods: ["POST"],
+    pattern: '/api/products/:id/images',
+    tokens: [{"old":"/api/products/:id/images","type":0,"val":"api","end":""},{"old":"/api/products/:id/images","type":0,"val":"products","end":""},{"old":"/api/products/:id/images","type":1,"val":"id","end":""},{"old":"/api/products/:id/images","type":0,"val":"images","end":""}],
+    types: placeholder as Registry['products.product_images.store']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

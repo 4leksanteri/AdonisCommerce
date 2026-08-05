@@ -5,6 +5,9 @@ export interface ApiDefinition {
   translations: {
     show: typeof routes['translations.show']
   }
+  uploads: {
+    show: typeof routes['uploads.show']
+  }
   auth: {
     registeredUser: {
       store: typeof routes['auth.registered_user.store']
@@ -32,6 +35,11 @@ export interface ApiDefinition {
     products: {
       index: typeof routes['products.products.index']
       store: typeof routes['products.products.store']
+      storeDraft: typeof routes['products.products.store_draft']
+      update: typeof routes['products.products.update']
+    }
+    productImages: {
+      store: typeof routes['products.product_images.store']
     }
   }
 }

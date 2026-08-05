@@ -4,6 +4,10 @@ build
 tmp/*
 !tmp/.gitkeep
 
+# Uploaded files (local disk storage)
+storage/uploads/*
+!storage/uploads/.gitkeep
+
 # Secrets
 .env
 .env.local

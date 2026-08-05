@@ -32,11 +32,14 @@ export async function apiFetch<T>(
   tokenOverride?: string | null
 ): Promise<T> {
   const token = tokenOverride !== undefined ? tokenOverride : await getSessionToken();
+  // FormData bodies (file uploads) need the browser/fetch-generated
+  // multipart boundary — setting our own Content-Type would break that.
+  const isFormData = options.body instanceof FormData;
 
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
