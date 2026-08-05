@@ -54,7 +54,12 @@
     "PASSWORD_RESET_SUCCESS": "Password reset successfully.",
     "PASSWORD_RESET_TOKEN_INVALID": "This password reset link is invalid or has expired.",
     "E_INVALID_CREDENTIALS": "Invalid email or password.",
-    "GENERIC_ERROR": "Something went wrong. Please try again."
+    "GENERIC_ERROR": "Something went wrong. Please try again.",
+    "NOT_A_SELLER": "You need a seller account to manage products.",
+    "PRODUCT_NOT_FOUND": "Product not found.",
+    "PRODUCT_IMAGE_NOT_FOUND": "Image not found.",
+    "NO_FILES": "No images were uploaded.",
+    "INVALID_FILE": "That file couldn't be uploaded. Use a JPG, PNG or WebP under 5 MB."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -123,7 +128,16 @@
       "priceLabel": "Price",
       "stockLabel": "Stock",
       "skuLabel": "SKU",
-      "createButton": "Create product"
+      "createButton": "Create product",
+      "editHeading": "Edit product",
+      "editSubheading": "Update this product and its variants.",
+      "saveButton": "Save changes",
+      "createSuccess": "Product created.",
+      "saveSuccess": "Changes saved.",
+      "removeImage": "Remove image",
+      "statusHeading": "Availability",
+      "statusLabel": "Listed in your shop",
+      "statusHint": "Turn this off to hide the product from your shop without deleting it. You can list it again at any time."
     }
   },
   "Cart": {

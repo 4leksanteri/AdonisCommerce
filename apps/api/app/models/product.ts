@@ -19,12 +19,21 @@ export default class Product extends ProductSchema {
   @hasMany(() => ProductImage)
   declare images: HasMany<typeof ProductImage>
 
-  static async generateUniqueSlug(title: string) {
+  /**
+   * `excludeId` keeps a product from colliding with itself when re-slugging
+   * on edit — without it, saving would walk the suffix up on every save.
+   */
+  static async generateUniqueSlug(title: string, excludeId?: number) {
     const base = slugify(title) || 'product'
     let slug = base
     let suffix = 1
 
-    while (await this.query().where('slug', slug).first()) {
+    while (
+      await this.query()
+        .where('slug', slug)
+        .if(excludeId !== undefined, (query) => query.whereNot('id', excludeId!))
+        .first()
+    ) {
       suffix += 1
       slug = `${base}-${suffix}`
     }

@@ -175,6 +175,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/products_controller').default['storeDraft']>>>
     }
   }
+  'products.products.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/products/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/products_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/products_controller').default['show']>>>
+    }
+  }
   'products.products.update': {
     methods: ["PATCH"]
     pattern: '/api/products/:id'
@@ -197,6 +209,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/product_images_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/product_images_controller').default['store']>>>
+    }
+  }
+  'products.product_images.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/products/:id/images/:imageId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { id: ParamValue; imageId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/product_images_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/product_images_controller').default['destroy']>>>
     }
   }
 }

@@ -3,6 +3,9 @@ import vine from '@vinejs/vine'
 export const createProductValidator = vine.create({
   title: vine.string().trim().minLength(2).maxLength(150),
   description: vine.string().trim().maxLength(5000).optional(),
+  // Only the seller-settable states — `draft` is assigned server-side by
+  // `storeDraft` and left behind the moment the product is first saved.
+  status: vine.enum(['active', 'archived']).optional(),
   options: vine
     .array(
       vine.object({

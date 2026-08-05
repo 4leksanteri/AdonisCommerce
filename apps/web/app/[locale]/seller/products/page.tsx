@@ -48,7 +48,11 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
             const thumbnail = product.images[0];
 
             return (
-              <div key={product.id} className="flex items-center justify-between gap-4 p-4">
+              <Link
+                key={product.id}
+                href={{ pathname: "/seller/products/[id]", params: { id: String(product.id) } }}
+                className="flex items-center justify-between gap-4 p-4 no-underline hover:bg-surface"
+              >
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
                     {thumbnail && (
@@ -72,7 +76,7 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
                 <Chip color={statusColor(product.status)}>
                   <Chip.Label>{tStatus(product.status as Parameters<typeof tStatus>[0])}</Chip.Label>
                 </Chip>
-              </div>
+              </Link>
             );
           })}
         </div>

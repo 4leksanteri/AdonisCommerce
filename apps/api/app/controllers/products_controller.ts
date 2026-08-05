@@ -13,6 +13,21 @@ type ProductInput = Awaited<ReturnType<typeof createProductValidator.validate>>
 
 export default class ProductsController {
   /**
+   * Base query with every relation the transformer needs preloaded. Options,
+   * their values and images are ordered by `position` so the seller-facing
+   * form rebuilds them in the order the seller arranged them; variants keep
+   * insertion order, which is the option-combination order they were built in.
+   */
+  private productQuery() {
+    return Product.query()
+      .preload('options', (query) =>
+        query.orderBy('position').preload('values', (values) => values.orderBy('position'))
+      )
+      .preload('variants', (query) => query.preload('optionValues'))
+      .preload('images', (query) => query.orderBy('position'))
+  }
+
+  /**
    * Recreates a product's options/variants from scratch inside `trx`. Used
    * by both `store` (fresh product) and `update` (finalizing a draft) —
    * `update` deletes the existing rows first, so this always starts clean.
@@ -80,14 +95,35 @@ export default class ProductsController {
       })
     }
 
-    const products = await Product.query()
+    const products = await this.productQuery()
       .where('sellerId', seller.id)
       .orderBy('createdAt', 'desc')
-      .preload('options', (query) => query.preload('values'))
-      .preload('variants', (query) => query.preload('optionValues'))
-      .preload('images')
 
     return serialize(ProductTransformer.transform(products))
+  }
+
+  async show({ auth, response, params, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const seller = await Seller.query().where('userId', user.id).first()
+
+    if (!seller) {
+      return response.forbidden({
+        errors: [{ code: 'NOT_A_SELLER', message: 'You need a seller account to view products.' }],
+      })
+    }
+
+    const product = await this.productQuery()
+      .where('id', params.id)
+      .where('sellerId', seller.id)
+      .first()
+
+    if (!product) {
+      return response.notFound({
+        errors: [{ code: 'PRODUCT_NOT_FOUND', message: 'Product not found.' }],
+      })
+    }
+
+    return serialize(ProductTransformer.transform(product))
   }
 
   async store({ request, auth, response, serialize }: HttpContext) {
@@ -121,14 +157,9 @@ export default class ProductsController {
       return newProduct
     })
 
-    await product.load((preloader) =>
-      preloader
-        .load('options', (query) => query.preload('values'))
-        .load('variants', (query) => query.preload('optionValues'))
-        .load('images')
+    return serialize(
+      ProductTransformer.transform(await this.productQuery().where('id', product.id).firstOrFail())
     )
-
-    return serialize(ProductTransformer.transform(product))
   }
 
   /**
@@ -157,14 +188,9 @@ export default class ProductsController {
       slug,
     })
 
-    await product.load((preloader) =>
-      preloader
-        .load('options', (query) => query.preload('values'))
-        .load('variants', (query) => query.preload('optionValues'))
-        .load('images')
+    return serialize(
+      ProductTransformer.transform(await this.productQuery().where('id', product.id).firstOrFail())
     )
-
-    return serialize(ProductTransformer.transform(product))
   }
 
   /**
@@ -172,6 +198,10 @@ export default class ProductsController {
    * `storeDraft` (once images are attached) and to edit an already-active
    * product. Options/variants are wiped and recreated from scratch rather
    * than diffed, since there's no partial-edit UI yet.
+   *
+   * Omitting `status` publishes the product, which is what the create flow
+   * wants when it finalizes its draft. The edit form always sends the
+   * seller's current choice, so an archived product stays archived.
    */
   async update({ request, auth, response, params, serialize }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -194,15 +224,19 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, options, variants } =
+    const { title, description, status, options, variants } =
       await request.validateUsing(createProductValidator)
-    const slug = await Product.generateUniqueSlug(title)
+    // Only re-slug when the title actually moved. Regenerating unconditionally
+    // would bump an unchanged title to `-2` (its own row counts as a clash)
+    // and churn the product's public URL on every save.
+    const slug =
+      product.title === title ? product.slug : await Product.generateUniqueSlug(title, product.id)
 
-    const updatedProduct = await db.transaction(async (trx) => {
+    await db.transaction(async (trx) => {
       product.useTransaction(trx)
       product.title = title
       product.description = description ?? null
-      product.status = 'active'
+      product.status = status ?? 'active'
       product.slug = slug
       await product.save()
 
@@ -211,17 +245,10 @@ export default class ProductsController {
       await ProductVariant.query({ client: trx }).where('productId', product.id).delete()
 
       await this.replaceOptionsAndVariants(trx, product, options, variants)
-
-      return product
     })
 
-    await updatedProduct.load((preloader) =>
-      preloader
-        .load('options', (query) => query.preload('values'))
-        .load('variants', (query) => query.preload('optionValues'))
-        .load('images')
+    return serialize(
+      ProductTransformer.transform(await this.productQuery().where('id', product.id).firstOrFail())
     )
-
-    return serialize(ProductTransformer.transform(updatedProduct))
   }
 }

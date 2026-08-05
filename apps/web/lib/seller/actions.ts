@@ -23,6 +23,8 @@ export async function updateSellerAction(shopName: string, description: string):
 export type CreateProductInput = {
   title: string;
   description: string;
+  // Omitted by the create flow, which lets the API publish the product.
+  status?: "active" | "archived";
   options: { name: string; values: string[] }[];
   variants: { optionValues: string[]; sku: string; price: number; stockQuantity: number }[];
 };
@@ -81,6 +83,20 @@ export async function uploadProductImagesAction(
       body: formData,
     });
     return { images: res.data };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+type DeleteProductImageResult = { errors?: ApiErrorItem[] };
+
+export async function deleteProductImageAction(
+  productId: number,
+  imageId: number
+): Promise<DeleteProductImageResult> {
+  try {
+    await apiFetch<void>(`/api/products/${productId}/images/${imageId}`, { method: "DELETE" });
+    return {};
   } catch (error) {
     return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }

@@ -1,6 +1,6 @@
 import "server-only";
 import { redirect } from "@/i18n/navigation";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, ApiError } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
 import type { Product } from "./types";
@@ -23,4 +23,19 @@ export async function requireSeller(locale: string): Promise<User & { seller: Se
 export async function getSellerProducts(): Promise<Product[]> {
   const res = await apiFetch<{ data: Product[] }>("/api/products");
   return res.data;
+}
+
+/**
+ * Returns null rather than throwing when the id doesn't resolve, so the page
+ * can hand off to `notFound()`. The API scopes the lookup to the calling
+ * seller, so another seller's product is a 404 here too.
+ */
+export async function getSellerProduct(id: string): Promise<Product | null> {
+  try {
+    const res = await apiFetch<{ data: Product }>(`/api/products/${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
 }

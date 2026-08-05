@@ -90,6 +90,12 @@ const routes = {
     tokens: [{"old":"/api/products/draft","type":0,"val":"api","end":""},{"old":"/api/products/draft","type":0,"val":"products","end":""},{"old":"/api/products/draft","type":0,"val":"draft","end":""}],
     types: placeholder as Registry['products.products.store_draft']['types'],
   },
+  'products.products.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/products/:id',
+    tokens: [{"old":"/api/products/:id","type":0,"val":"api","end":""},{"old":"/api/products/:id","type":0,"val":"products","end":""},{"old":"/api/products/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['products.products.show']['types'],
+  },
   'products.products.update': {
     methods: ["PATCH"],
     pattern: '/api/products/:id',
@@ -101,6 +107,12 @@ const routes = {
     pattern: '/api/products/:id/images',
     tokens: [{"old":"/api/products/:id/images","type":0,"val":"api","end":""},{"old":"/api/products/:id/images","type":0,"val":"products","end":""},{"old":"/api/products/:id/images","type":1,"val":"id","end":""},{"old":"/api/products/:id/images","type":0,"val":"images","end":""}],
     types: placeholder as Registry['products.product_images.store']['types'],
+  },
+  'products.product_images.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/products/:id/images/:imageId',
+    tokens: [{"old":"/api/products/:id/images/:imageId","type":0,"val":"api","end":""},{"old":"/api/products/:id/images/:imageId","type":0,"val":"products","end":""},{"old":"/api/products/:id/images/:imageId","type":1,"val":"id","end":""},{"old":"/api/products/:id/images/:imageId","type":0,"val":"images","end":""},{"old":"/api/products/:id/images/:imageId","type":1,"val":"imageId","end":""}],
+    types: placeholder as Registry['products.product_images.destroy']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

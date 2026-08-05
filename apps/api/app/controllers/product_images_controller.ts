@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { unlink } from 'node:fs/promises'
 import type { HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app'
 import sharp from 'sharp'
@@ -74,5 +75,38 @@ export default class ProductImagesController {
     }
 
     return serialize(ProductImageTransformer.transform(images))
+  }
+
+  async destroy({ auth, response, params }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const seller = await Seller.query().where('userId', user.id).first()
+
+    if (!seller) {
+      return response.forbidden({
+        errors: [
+          { code: 'NOT_A_SELLER', message: 'You need a seller account to manage products.' },
+        ],
+      })
+    }
+
+    // Joined through the product so a seller can only ever reach their own
+    // images, whatever product id they pair the image id with.
+    const image = await ProductImage.query()
+      .where('id', params.imageId)
+      .whereHas('product', (query) => query.where('id', params.id).where('sellerId', seller.id))
+      .first()
+
+    if (!image) {
+      return response.notFound({
+        errors: [{ code: 'PRODUCT_IMAGE_NOT_FOUND', message: 'Image not found.' }],
+      })
+    }
+
+    await image.delete()
+    // Best-effort — the row is already gone, and a leftover file is far less
+    // harmful than failing a delete the seller has been told succeeded.
+    await unlink(app.makePath('storage/uploads', image.path)).catch(() => {})
+
+    return response.noContent()
   }
 }

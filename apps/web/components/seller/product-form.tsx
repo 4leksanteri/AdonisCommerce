@@ -5,12 +5,15 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   Button,
+  CloseButton,
+  Description,
   FieldError,
   Form,
   Input,
   Label,
   NumberField,
   Spinner,
+  Switch,
   Table,
   Tag,
   TagGroup,
@@ -22,13 +25,14 @@ import { useRouter } from "@/i18n/navigation";
 import {
   createDraftProductAction,
   createProductAction,
+  deleteProductImageAction,
   updateProductAction,
   uploadProductImagesAction,
   type CreateProductInput,
 } from "@/lib/seller/actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
-import type { ProductImage } from "@/lib/seller/types";
+import type { Product, ProductImage } from "@/lib/seller/types";
 
 type OptionDraft = { name: string; values: string[] };
 type VariantDraft = { price: string; stockQuantity: string; sku: string };
@@ -42,26 +46,71 @@ function cartesianProduct(valuesLists: string[][]): string[][] {
   );
 }
 
-export function ProductForm() {
+function toOptionDrafts(product?: Product): OptionDraft[] {
+  return (product?.options ?? []).map((option) => ({
+    name: option.name,
+    values: option.values.map((value) => value.value),
+  }));
+}
+
+/**
+ * Rebuilds the variant grid's draft map from a saved product, keyed exactly
+ * the way the grid keys it: a JSON array of option values in option order.
+ * A variant's `optionValues` come back without that ordering attached, so
+ * they're sorted by the option each one belongs to before the key is built.
+ */
+function toVariantDrafts(product?: Product): Map<string, VariantDraft> {
+  const drafts = new Map<string, VariantDraft>();
+  if (!product) return drafts;
+
+  const optionIndexByValueId = new Map<number, number>();
+  product.options.forEach((option, index) => {
+    for (const value of option.values) optionIndexByValueId.set(value.id, index);
+  });
+
+  for (const variant of product.variants) {
+    const combo = [...variant.optionValues]
+      .sort((a, b) => (optionIndexByValueId.get(a.id) ?? 0) - (optionIndexByValueId.get(b.id) ?? 0))
+      .map((value) => value.value);
+
+    drafts.set(JSON.stringify(combo), {
+      price: variant.price,
+      stockQuantity: String(variant.stockQuantity),
+      sku: variant.sku ?? "",
+    });
+  }
+
+  return drafts;
+}
+
+export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
   const t = useTranslations("SellerPanel.productForm");
   const tValidation = useTranslations("Validation");
   const tApiMessages = useTranslations("ApiMessages");
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [options, setOptions] = useState<OptionDraft[]>([]);
-  const [valueDrafts, setValueDrafts] = useState<string[]>([]);
-  const [variantValues, setVariantValues] = useState<Map<string, VariantDraft>>(new Map());
+  const isEditing = product !== undefined;
+
+  const [title, setTitle] = useState(product?.title ?? "");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [options, setOptions] = useState<OptionDraft[]>(() => toOptionDrafts(product));
+  const [valueDrafts, setValueDrafts] = useState<string[]>(() =>
+    (product?.options ?? []).map(() => "")
+  );
+  const [variantValues, setVariantValues] = useState<Map<string, VariantDraft>>(() =>
+    toVariantDrafts(product)
+  );
+  const [isListed, setIsListed] = useState(product?.status !== "archived");
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-  // Lazily created the moment the seller picks their first image — gives
-  // us a real id to attach images to before the rest of the form is done.
-  // If never set, final submit does a plain one-shot create instead.
-  const [productId, setProductId] = useState<number | null>(null);
-  const [images, setImages] = useState<ProductImage[]>([]);
+  // When creating, this is lazily filled the moment the seller picks their
+  // first image — it gives us a real id to attach images to before the rest
+  // of the form is done. If still null at submit, we do a one-shot create.
+  const [productId, setProductId] = useState<number | null>(product?.id ?? null);
+  const [images, setImages] = useState<ProductImage[]>(product?.images ?? []);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [removingImageId, setRemovingImageId] = useState<number | null>(null);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.name.trim().length > 0 && option.values.length > 0),
@@ -156,6 +205,24 @@ export function ProductForm() {
     setImages((prev) => [...prev, ...uploadResult.images]);
   }
 
+  async function handleRemoveImage(imageId: number) {
+    // Images only ever exist against a saved product (a draft one while
+    // creating), so there is always an id to delete against here.
+    if (productId === null) return;
+
+    setErrorMessages([]);
+    setRemovingImageId(imageId);
+    const result = await deleteProductImageAction(productId, imageId);
+    setRemovingImageId(null);
+
+    if (result.errors) {
+      showErrors(result.errors);
+      return;
+    }
+
+    setImages((prev) => prev.filter((image) => image.id !== imageId));
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessages([]);
@@ -163,6 +230,9 @@ export function ProductForm() {
     const payload: CreateProductInput = {
       title,
       description,
+      // Left off when creating so the API publishes the product itself —
+      // the listed/unlisted switch only exists once there's a product to hide.
+      ...(isEditing && { status: isListed ? ("active" as const) : ("archived" as const) }),
       options: validOptions,
       variants: combinations.map((combo) => {
         const key = JSON.stringify(combo);
@@ -185,7 +255,7 @@ export function ProductForm() {
       return;
     }
 
-    toast.success(t("createButton"));
+    toast.success(isEditing ? t("saveSuccess") : t("createSuccess"));
     router.push("/seller/products");
   }
 
@@ -220,8 +290,20 @@ export function ProductForm() {
 
         <div className="flex flex-wrap gap-3">
           {images.map((image) => (
-            <div key={image.id} className="h-24 w-24 overflow-hidden rounded-lg border border-border">
+            <div key={image.id} className="relative h-24 w-24 overflow-hidden rounded-lg border border-border">
               <Image src={image.url} alt="" width={96} height={96} unoptimized className="h-full w-full object-cover" />
+              {removingImageId === image.id ? (
+                <div className="absolute inset-0 grid place-items-center bg-background/60">
+                  <Spinner size="sm" />
+                </div>
+              ) : (
+                <CloseButton
+                  aria-label={t("removeImage")}
+                  isDisabled={isPending || removingImageId !== null}
+                  onPress={() => handleRemoveImage(image.id)}
+                  className="absolute top-1 right-1 size-6 bg-background/80"
+                />
+              )}
             </div>
           ))}
 
@@ -386,11 +468,31 @@ export function ProductForm() {
         </Table>
       </div>
 
-      <Button type="submit" isPending={isPending} isDisabled={isUploadingImages} className="self-start">
+      {isEditing && (
+        <div className="flex flex-col gap-3">
+          <h2 className="font-medium text-foreground">{t("statusHeading")}</h2>
+          <Switch isSelected={isListed} isDisabled={isPending} onChange={setIsListed}>
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              <Label>{t("statusLabel")}</Label>
+            </Switch.Content>
+            <Description>{t("statusHint")}</Description>
+          </Switch>
+        </div>
+      )}
+
+      <Button
+        type="submit"
+        isPending={isPending}
+        isDisabled={isUploadingImages || removingImageId !== null}
+        className="self-start"
+      >
         {({ isPending: pending }) => (
           <>
             {pending && <Spinner color="current" size="sm" />}
-            {t("createButton")}
+            {isEditing ? t("saveButton") : t("createButton")}
           </>
         )}
       </Button>

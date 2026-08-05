@@ -36,10 +36,12 @@ export interface ApiDefinition {
       index: typeof routes['products.products.index']
       store: typeof routes['products.products.store']
       storeDraft: typeof routes['products.products.store_draft']
+      show: typeof routes['products.products.show']
       update: typeof routes['products.products.update']
     }
     productImages: {
       store: typeof routes['products.product_images.store']
+      destroy: typeof routes['products.product_images.destroy']
     }
   }
 }

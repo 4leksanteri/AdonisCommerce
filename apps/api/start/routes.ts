@@ -50,9 +50,16 @@ router
     router.get('/', [controllers.Products, 'index'])
     router.post('/', [controllers.Products, 'store'])
     router.post('/draft', [controllers.Products, 'storeDraft'])
+    router.get('/:id', [controllers.Products, 'show'])
     router.patch('/:id', [controllers.Products, 'update'])
     router.post('/:id/images', [controllers.ProductImages, 'store'])
+    router.delete('/:id/images/:imageId', [controllers.ProductImages, 'destroy'])
   })
   .prefix('/api/products')
   .as('products')
+  // Ids reach these routes straight from user-typed URLs on the frontend.
+  // Matching on digits turns a junk id into a 404 at the router, instead of
+  // Postgres blowing up on `where id = 'abc'` further down.
+  .where('id', router.matchers.number())
+  .where('imageId', router.matchers.number())
   .use(middleware.auth())

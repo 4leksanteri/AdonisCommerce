@@ -54,7 +54,12 @@
     "PASSWORD_RESET_SUCCESS": "Salasana palautettu onnistuneesti.",
     "PASSWORD_RESET_TOKEN_INVALID": "Tämä salasanan palautuslinkki on virheellinen tai vanhentunut.",
     "E_INVALID_CREDENTIALS": "Virheellinen sähköposti tai salasana.",
-    "GENERIC_ERROR": "Jotain meni pieleen. Yritä uudelleen."
+    "GENERIC_ERROR": "Jotain meni pieleen. Yritä uudelleen.",
+    "NOT_A_SELLER": "Tarvitset myyjätilin hallitaksesi tuotteita.",
+    "PRODUCT_NOT_FOUND": "Tuotetta ei löytynyt.",
+    "PRODUCT_IMAGE_NOT_FOUND": "Kuvaa ei löytynyt.",
+    "NO_FILES": "Kuvia ei ladattu.",
+    "INVALID_FILE": "Tiedostoa ei voitu ladata. Käytä JPG-, PNG- tai WebP-tiedostoa, jonka koko on alle 5 Mt."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -123,7 +128,16 @@
       "priceLabel": "Hinta",
       "stockLabel": "Varasto",
       "skuLabel": "SKU",
-      "createButton": "Luo tuote"
+      "createButton": "Luo tuote",
+      "editHeading": "Muokkaa tuotetta",
+      "editSubheading": "Päivitä tuote ja sen muunnelmat.",
+      "saveButton": "Tallenna muutokset",
+      "createSuccess": "Tuote luotu.",
+      "saveSuccess": "Muutokset tallennettu.",
+      "removeImage": "Poista kuva",
+      "statusHeading": "Saatavuus",
+      "statusLabel": "Näkyy kaupassasi",
+      "statusHint": "Ota tämä pois käytöstä piilottaaksesi tuotteen kaupastasi poistamatta sitä. Voit julkaista sen uudelleen milloin tahansa."
     }
   },
   "Cart": {

@@ -25,5 +25,11 @@ export const routing = defineRouting({
       en: "/seller/products/new",
       fi: "/myyja/tuotteet/uusi",
     },
+    // Must stay below the static `/new` entry — these are matched in
+    // declaration order, and `[id]` would otherwise swallow `uusi`/`new`.
+    "/seller/products/[id]": {
+      en: "/seller/products/[id]",
+      fi: "/myyja/tuotteet/[id]",
+    },
   },
 });
