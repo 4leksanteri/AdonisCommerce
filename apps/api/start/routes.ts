@@ -43,3 +43,11 @@ router
   .prefix('/api/sellers')
   .as('sellers')
   .use(middleware.auth())
+
+router
+  .group(() => {
+    router.post('/', [controllers.Products, 'store'])
+  })
+  .prefix('/api/products')
+  .as('products')
+  .use(middleware.auth())

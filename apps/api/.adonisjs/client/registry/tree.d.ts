@@ -28,4 +28,9 @@ export interface ApiDefinition {
       update: typeof routes['sellers.sellers.update']
     }
   }
+  products: {
+    products: {
+      store: typeof routes['products.products.store']
+    }
+  }
 }

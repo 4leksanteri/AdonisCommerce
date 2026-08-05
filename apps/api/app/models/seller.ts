@@ -4,7 +4,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type User from '#models/user'
 import Product from '#models/product'
 
-function slugify(value: string) {
+export function slugify(value: string) {
   return value
     .toLowerCase()
     .trim()
