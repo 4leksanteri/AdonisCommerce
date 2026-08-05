@@ -66,6 +66,12 @@ const routes = {
     tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['sellers.sellers.update']['types'],
   },
+  'products.products.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/products',
+    tokens: [{"old":"/api/products","type":0,"val":"api","end":""},{"old":"/api/products","type":0,"val":"products","end":""}],
+    types: placeholder as Registry['products.products.index']['types'],
+  },
   'products.products.store': {
     methods: ["POST"],
     pattern: '/api/products',

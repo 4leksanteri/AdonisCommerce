@@ -17,5 +17,13 @@ export const routing = defineRouting({
       en: "/seller/settings",
       fi: "/myyja/asetukset",
     },
+    "/seller/products": {
+      en: "/seller/products",
+      fi: "/myyja/tuotteet",
+    },
+    "/seller/products/new": {
+      en: "/seller/products/new",
+      fi: "/myyja/tuotteet/uusi",
+    },
   },
 });

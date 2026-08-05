@@ -5,6 +5,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 
 const ITEMS = [
   { href: "/seller", key: "dashboard" },
+  { href: "/seller/products", key: "products" },
   { href: "/seller/settings", key: "settings" },
 ] as const;
 
@@ -15,7 +16,8 @@ export function SellerNav() {
   return (
     <nav className="flex shrink-0 flex-row gap-1 overflow-x-auto md:w-48 md:flex-col md:overflow-visible">
       {ITEMS.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive =
+          item.href === "/seller" ? pathname === item.href : pathname.startsWith(item.href);
         return (
           <Link
             key={item.href}

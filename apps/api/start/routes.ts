@@ -46,6 +46,7 @@ router
 
 router
   .group(() => {
+    router.get('/', [controllers.Products, 'index'])
     router.post('/', [controllers.Products, 'store'])
   })
   .prefix('/api/products')

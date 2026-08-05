@@ -62,12 +62,13 @@
   "SellerPanel": {
     "nav": {
       "dashboard": "Dashboard",
+      "products": "Products",
       "settings": "Shop settings"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",
       "subheading": "Here's the current status of your shop.",
-      "moreComingSoon": "Product and order management are coming soon."
+      "moreComingSoon": "Order management is coming soon."
     },
     "status": {
       "approved": "Approved",
@@ -87,6 +88,39 @@
       "descriptionPlaceholder": "Tell customers about your shop",
       "saveButton": "Save changes",
       "saveSuccess": "Shop settings updated."
+    },
+    "products": {
+      "heading": "Products",
+      "subheading": "Manage your shop's products.",
+      "newProduct": "New product",
+      "empty": "You haven't added any products yet.",
+      "variantCount": "{count, plural, one {# variant} other {# variants}}"
+    },
+    "productStatus": {
+      "draft": "Draft",
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "productForm": {
+      "heading": "New product",
+      "subheading": "Add a product and its variants.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Ceramic Mug",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe your product",
+      "optionsHeading": "Options",
+      "optionsHint": "Add options like Color or Size to create multiple variants. Leave empty for a single-variant product.",
+      "optionNameLabel": "Option name",
+      "optionNamePlaceholder": "e.g. Color",
+      "valuePlaceholder": "Add a value and press Enter",
+      "addValue": "Add",
+      "removeOption": "Remove option",
+      "addOption": "Add option",
+      "variantsHeading": "Variants",
+      "priceLabel": "Price",
+      "stockLabel": "Stock",
+      "skuLabel": "SKU",
+      "createButton": "Create product"
     }
   },
   "Cart": {

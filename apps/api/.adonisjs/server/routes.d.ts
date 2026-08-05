@@ -14,17 +14,20 @@ export type ScannedRoutes = {
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
+    'products.products.index': { paramsTuple?: []; params?: {} }
     'products.products.store': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
+    'products.products.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
+    'products.products.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }

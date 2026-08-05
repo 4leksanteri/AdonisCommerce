@@ -9,6 +9,25 @@ import ProductTransformer from '#transformers/product_transformer'
 import { createProductValidator } from '#validators/product'
 
 export default class ProductsController {
+  async index({ auth, response, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const seller = await Seller.query().where('userId', user.id).first()
+
+    if (!seller) {
+      return response.forbidden({
+        errors: [{ code: 'NOT_A_SELLER', message: 'You need a seller account to view products.' }],
+      })
+    }
+
+    const products = await Product.query()
+      .where('sellerId', seller.id)
+      .orderBy('createdAt', 'desc')
+      .preload('options', (query) => query.preload('values'))
+      .preload('variants', (query) => query.preload('optionValues'))
+
+    return serialize(ProductTransformer.transform(products))
+  }
+
   async store({ request, auth, response, serialize }: HttpContext) {
     const user = auth.getUserOrFail()
     const seller = await Seller.query().where('userId', user.id).first()

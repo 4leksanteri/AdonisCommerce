@@ -62,12 +62,13 @@
   "SellerPanel": {
     "nav": {
       "dashboard": "Yleisnäkymä",
+      "products": "Tuotteet",
       "settings": "Kaupan asetukset"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",
       "subheading": "Tässä kauppasi nykyinen tila.",
-      "moreComingSoon": "Tuotteiden ja tilausten hallinta tulossa pian."
+      "moreComingSoon": "Tilausten hallinta tulossa pian."
     },
     "status": {
       "approved": "Hyväksytty",
@@ -87,6 +88,39 @@
       "descriptionPlaceholder": "Kerro asiakkaille kaupastasi",
       "saveButton": "Tallenna muutokset",
       "saveSuccess": "Kaupan asetukset päivitetty."
+    },
+    "products": {
+      "heading": "Tuotteet",
+      "subheading": "Hallitse kauppasi tuotteita.",
+      "newProduct": "Uusi tuote",
+      "empty": "Et ole vielä lisännyt tuotteita.",
+      "variantCount": "{count, plural, one {# muunnelma} other {# muunnelmaa}}"
+    },
+    "productStatus": {
+      "draft": "Luonnos",
+      "active": "Aktiivinen",
+      "archived": "Arkistoitu"
+    },
+    "productForm": {
+      "heading": "Uusi tuote",
+      "subheading": "Lisää tuote ja sen muunnelmat.",
+      "titleLabel": "Nimi",
+      "titlePlaceholder": "esim. Keraaminen muki",
+      "descriptionLabel": "Kuvaus",
+      "descriptionPlaceholder": "Kuvaile tuotettasi",
+      "optionsHeading": "Valinnat",
+      "optionsHint": "Lisää valintoja, kuten väri tai koko, luodaksesi useita muunnelmia. Jätä tyhjäksi yhden muunnelman tuotteelle.",
+      "optionNameLabel": "Valinnan nimi",
+      "optionNamePlaceholder": "esim. Väri",
+      "valuePlaceholder": "Lisää arvo ja paina Enter",
+      "addValue": "Lisää",
+      "removeOption": "Poista valinta",
+      "addOption": "Lisää valinta",
+      "variantsHeading": "Muunnelmat",
+      "priceLabel": "Hinta",
+      "stockLabel": "Varasto",
+      "skuLabel": "SKU",
+      "createButton": "Luo tuote"
     }
   },
   "Cart": {
