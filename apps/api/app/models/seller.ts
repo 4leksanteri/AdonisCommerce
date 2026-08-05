@@ -1,5 +1,8 @@
 import { SellerSchema } from '#database/schema'
+import { hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type User from '#models/user'
+import Product from '#models/product'
 
 function slugify(value: string) {
   return value
@@ -10,6 +13,9 @@ function slugify(value: string) {
 }
 
 export default class Seller extends SellerSchema {
+  @hasMany(() => Product)
+  declare products: HasMany<typeof Product>
+
   /**
    * Instant-approved for now — `status` stays on the row so this can be
    * switched to a manual admin-gated flow later without a schema change.

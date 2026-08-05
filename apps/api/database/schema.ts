@@ -45,6 +45,91 @@ export class PasswordResetTokenSchema extends BaseModel {
   declare token: string
 }
 
+export class ProductOptionValueSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'position', 'productOptionId', 'updatedAt', 'value'] as const
+  $columns = ProductOptionValueSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare position: number
+  @column()
+  declare productOptionId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare value: string
+}
+
+export class ProductOptionSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'name', 'position', 'productId', 'updatedAt'] as const
+  $columns = ProductOptionSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare position: number
+  @column()
+  declare productId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class ProductVariantOptionValueSchema extends BaseModel {
+  static $columns = ['id', 'productOptionValueId', 'productVariantId'] as const
+  $columns = ProductVariantOptionValueSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare productOptionValueId: number
+  @column()
+  declare productVariantId: number
+}
+
+export class ProductVariantSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'price', 'productId', 'sku', 'stockQuantity', 'updatedAt'] as const
+  $columns = ProductVariantSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare price: string
+  @column()
+  declare productId: number
+  @column()
+  declare sku: string | null
+  @column()
+  declare stockQuantity: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class ProductSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'updatedAt'] as const
+  $columns = ProductSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sellerId: number
+  @column()
+  declare slug: string
+  @column()
+  declare status: string
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class SellerSchema extends BaseModel {
   static $columns = ['createdAt', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
