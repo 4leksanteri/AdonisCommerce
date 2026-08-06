@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { ProductDetail } from "@/components/storefront/product-detail";
 import { toMajorUnits } from "@/lib/format";
 import { getPublicProduct } from "@/lib/storefront/queries";
+import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 import type { PublicProduct } from "@/lib/storefront/types";
 
 type Props = PageProps<"/[locale]/shop/[shopSlug]/[productSlug]">;
@@ -63,7 +64,11 @@ function productJsonLd(product: PublicProduct) {
 
 export default async function ProductPage(props: Props) {
   const { shopSlug, productSlug } = await props.params;
-  const product = await getPublicProduct(shopSlug, productSlug);
+  const [product, displayCurrency, rates] = await Promise.all([
+    getPublicProduct(shopSlug, productSlug),
+    getDisplayCurrency(),
+    getExchangeRates(),
+  ]);
 
   if (!product) notFound();
 
@@ -78,7 +83,7 @@ export default async function ProductPage(props: Props) {
         }}
       />
       <Container>
-        <ProductDetail product={product} />
+        <ProductDetail product={product} displayCurrency={displayCurrency} rates={rates} />
       </Container>
     </main>
   );

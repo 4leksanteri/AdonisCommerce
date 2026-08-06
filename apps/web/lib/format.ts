@@ -35,3 +35,30 @@ export function toMinorUnits(major: number): number {
 export function currencyFormat(currency: string) {
   return { style: "currency", currency } as const;
 }
+
+/** Rates per 1 EUR, as published by the ECB — `{ EUR: 1, USD: 1.1554 }`. */
+export type ExchangeRates = Record<string, number>;
+
+/**
+ * Converts between two currencies via EUR, since that's the base the rates
+ * are quoted against. Returns null when either rate is missing, which the
+ * callers render as "show the original price" — a price in the wrong
+ * currency is far worse than one the shopper has to convert themselves.
+ *
+ * Deliberately does not round to "nice" numbers. €19.99 becoming $23.09 is
+ * honest; nudging it to $22.99 would be inventing a price nobody set.
+ */
+export function convertCents(
+  cents: number,
+  from: string,
+  to: string,
+  rates: ExchangeRates
+): number | null {
+  if (from === to) return cents;
+
+  const fromRate = rates[from];
+  const toRate = rates[to];
+  if (!fromRate || !toRate) return null;
+
+  return Math.round((cents / fromRate) * toRate);
+}

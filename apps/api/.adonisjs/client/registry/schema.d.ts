@@ -31,6 +31,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/uploads_controller').default['show']>>>
     }
   }
+  'storefront.exchange_rates.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/storefront/exchange-rates'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/exchange_rates_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/exchange_rates_controller').default['index']>>>
+    }
+  }
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/products'

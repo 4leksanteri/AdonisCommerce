@@ -4,7 +4,12 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
 import { Button, Chip, ToggleButton, ToggleButtonGroup } from "@heroui/react";
-import { currencyFormat, toMajorUnits } from "@/lib/format";
+import {
+  convertCents,
+  currencyFormat,
+  toMajorUnits,
+  type ExchangeRates,
+} from "@/lib/format";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
 /**
@@ -32,11 +37,30 @@ function isInStock(variant: PublicProductVariant | undefined) {
   return variant !== undefined && variant.stockQuantity > 0;
 }
 
-export function ProductDetail({ product }: { product: PublicProduct }) {
+type Props = {
+  product: PublicProduct;
+  /** Null means the shopper hasn't picked one — show the seller's currency. */
+  displayCurrency: string | null;
+  rates: ExchangeRates;
+};
+
+export function ProductDetail({ product, displayCurrency, rates }: Props) {
   const t = useTranslations("Storefront.product");
   const format = useFormatter();
+
+  const native = product.currency;
+  // Falls back to the seller's currency when conversion isn't possible, so a
+  // missing rate shows a correct price rather than none.
+  const target =
+    displayCurrency && convertCents(100, native, displayCurrency, rates) !== null
+      ? displayCurrency
+      : native;
+  const isConverted = target !== native;
+
+  const formatIn = (cents: number, currency: string) =>
+    format.number(toMajorUnits(cents), currencyFormat(currency));
   const formatPrice = (cents: number) =>
-    format.number(toMajorUnits(cents), currencyFormat(product.currency));
+    formatIn(convertCents(cents, native, target, rates) ?? cents, target);
 
   /** The option-value ids of `variant`, laid out in product option order. */
   const selectionFor = useMemo(
@@ -154,12 +178,25 @@ export function ProductDetail({ product }: { product: PublicProduct }) {
           <p className="text-sm text-muted">{product.shop.name}</p>
           <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
           <p className="text-xl text-foreground">
+            {isConverted && "≈ "}
             {selectedVariant
               ? formatPrice(selectedVariant.priceCents)
               : priceRange.min === priceRange.max
                 ? formatPrice(priceRange.min)
                 : `${formatPrice(priceRange.min)}–${formatPrice(priceRange.max)}`}
           </p>
+          {/* The seller prices and is paid in their own currency, so the
+              converted figure above is only ever an estimate. Say so, and
+              show the real number rather than burying it. */}
+          {isConverted && (
+            <p className="text-sm text-muted">
+              {t("approximateFrom", {
+                price: selectedVariant
+                  ? formatIn(selectedVariant.priceCents, native)
+                  : formatIn(priceRange.min, native),
+              })}
+            </p>
+          )}
         </div>
 
         {product.options.map((option, optionIndex) => (

@@ -22,6 +22,7 @@ router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 // shopper is allowed to see (active products, approved shops).
 router
   .group(() => {
+    router.get('exchange-rates', [controllers.ExchangeRates, 'index'])
     router.get('products', [controllers.StorefrontProducts, 'index'])
     router.get('shops/:shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
   })

@@ -1,14 +1,33 @@
 import Image from "next/image";
 import { getFormatter } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { currencyFormat, toMajorUnits } from "@/lib/format";
+import { convertCents, currencyFormat, toMajorUnits, type ExchangeRates } from "@/lib/format";
 import type { PublicProductCard } from "@/lib/storefront/types";
 
-export async function ProductCard({ product }: { product: PublicProductCard }) {
-  const format = await getFormatter();
+type Props = {
+  product: PublicProductCard;
+  /** Null means the shopper hasn't picked one — show the seller's currency. */
+  displayCurrency: string | null;
+  rates: ExchangeRates;
+};
 
+export async function ProductCard({ product, displayCurrency, rates }: Props) {
+  const format = await getFormatter();
   const { priceMinCents, priceMaxCents, currency } = product;
-  const money = (cents: number) => format.number(toMajorUnits(cents), currencyFormat(currency));
+
+  // Falls back to the seller's own currency whenever conversion isn't
+  // possible, so a missing rate shows a correct price rather than none.
+  const target =
+    displayCurrency && convertCents(100, currency, displayCurrency, rates) !== null
+      ? displayCurrency
+      : currency;
+  const isConverted = target !== currency;
+
+  const money = (cents: number) => {
+    const amount = convertCents(cents, currency, target, rates) ?? cents;
+    return format.number(toMajorUnits(amount), currencyFormat(target));
+  };
+
   const price =
     priceMinCents === null || priceMaxCents === null
       ? null
@@ -40,7 +59,13 @@ export async function ProductCard({ product }: { product: PublicProductCard }) {
       <div className="flex flex-col gap-0.5">
         <p className="truncate font-medium text-foreground">{product.title}</p>
         <p className="truncate text-sm text-muted">{product.shop.name}</p>
-        {price && <p className="text-sm text-foreground">{price}</p>}
+        {price && (
+          <p className="text-sm text-foreground">
+            {/* The "≈" is load-bearing: this is a converted estimate, and the
+                seller still prices and charges in their own currency. */}
+            {isConverted ? `≈ ${price}` : price}
+          </p>
+        )}
       </div>
     </Link>
   );

@@ -18,6 +18,12 @@ const routes = {
     tokens: [{"old":"/uploads/:filename","type":0,"val":"uploads","end":""},{"old":"/uploads/:filename","type":1,"val":"filename","end":""}],
     types: placeholder as Registry['uploads.show']['types'],
   },
+  'storefront.exchange_rates.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/storefront/exchange-rates',
+    tokens: [{"old":"/api/storefront/exchange-rates","type":0,"val":"api","end":""},{"old":"/api/storefront/exchange-rates","type":0,"val":"storefront","end":""},{"old":"/api/storefront/exchange-rates","type":0,"val":"exchange-rates","end":""}],
+    types: placeholder as Registry['storefront.exchange_rates.index']['types'],
+  },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/products',

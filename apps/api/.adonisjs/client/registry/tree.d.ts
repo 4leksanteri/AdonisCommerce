@@ -9,6 +9,9 @@ export interface ApiDefinition {
     show: typeof routes['uploads.show']
   }
   storefront: {
+    exchangeRates: {
+      index: typeof routes['storefront.exchange_rates.index']
+    }
     storefrontProducts: {
       index: typeof routes['storefront.storefront_products.index']
       show: typeof routes['storefront.storefront_products.show']

@@ -6,6 +6,7 @@ export type ScannedRoutes = {
   ALL: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
+    'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
@@ -28,6 +29,7 @@ export type ScannedRoutes = {
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
+    'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
@@ -38,6 +40,7 @@ export type ScannedRoutes = {
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
+    'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }

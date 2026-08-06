@@ -175,12 +175,17 @@
       "combinationUnavailable": "That combination isn't available",
       "lowStock": "{count, plural, one {Only # left} other {Only # left}}",
       "descriptionHeading": "About this item",
-      "viewImage": "View image {number}"
+      "viewImage": "View image {number}",
+      "approximateFrom": "Seller charges {price}"
     },
     "home": {
       "heading": "Fresh from our makers",
       "subheading": "Handmade pieces from independent shops.",
       "empty": "No products listed yet."
+    },
+    "currency": {
+      "change": "Change currency",
+      "auto": "Currency"
     }
   }
 }

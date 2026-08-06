@@ -175,12 +175,17 @@
       "combinationUnavailable": "Tämä yhdistelmä ei ole saatavilla",
       "lowStock": "{count, plural, one {Vain # jäljellä} other {Vain # jäljellä}}",
       "descriptionHeading": "Tietoja tuotteesta",
-      "viewImage": "Näytä kuva {number}"
+      "viewImage": "Näytä kuva {number}",
+      "approximateFrom": "Myyjä veloittaa {price}"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",
       "subheading": "Käsintehtyjä tuotteita itsenäisiltä kaupoilta.",
       "empty": "Tuotteita ei ole vielä listattu."
+    },
+    "currency": {
+      "change": "Vaihda valuutta",
+      "auto": "Valuutta"
     }
   }
 }

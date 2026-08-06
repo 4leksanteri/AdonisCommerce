@@ -2,11 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/components/storefront/product-card";
 import { getStorefrontProducts } from "@/lib/storefront/queries";
+import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 
 export default async function Home() {
-  const [products, t] = await Promise.all([
+  const [products, t, displayCurrency, rates] = await Promise.all([
     getStorefrontProducts(),
     getTranslations("Storefront.home"),
+    getDisplayCurrency(),
+    getExchangeRates(),
   ]);
 
   return (
@@ -24,7 +27,12 @@ export default async function Home() {
         ) : (
           <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                displayCurrency={displayCurrency}
+                rates={rates}
+              />
             ))}
           </div>
         )}
