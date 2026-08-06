@@ -123,6 +123,7 @@ export function ProductForm({ product }: { product?: Product }) {
   const [basePrice, setBasePrice] = useState("");
   const [bulkStock, setBulkStock] = useState("");
   const [isListed, setIsListed] = useState(product?.status !== "archived");
+  const [tracksInventory, setTracksInventory] = useState(product?.tracksInventory ?? true);
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -307,6 +308,7 @@ export function ProductForm({ product }: { product?: Product }) {
       // Left off when creating so the API publishes the product itself —
       // the listed/unlisted switch only exists once there's a product to hide.
       ...(isEditing && { status: isListed ? ("active" as const) : ("archived" as const) }),
+      tracksInventory,
       options: validOptions.map((option) => ({
         name: option.name,
         values: option.values.map((value) => value.value),
@@ -504,6 +506,20 @@ export function ProductForm({ product }: { product?: Product }) {
           </p>
         </div>
 
+        <Switch
+          isSelected={tracksInventory}
+          isDisabled={isPending}
+          onChange={setTracksInventory}
+        >
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>{t("tracksInventoryLabel")}</Label>
+          </Switch.Content>
+          <Description>{t("tracksInventoryHint")}</Description>
+        </Switch>
+
         {includedCount > MAX_VARIANTS && (
           <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
             {t("tooManyVariants", { count: MAX_VARIANTS })}
@@ -527,7 +543,7 @@ export function ProductForm({ product }: { product?: Product }) {
           <NumberField
             minValue={0}
             step={1}
-            isDisabled={isPending}
+            isDisabled={isPending || !tracksInventory}
             value={bulkStock === "" ? undefined : Number(bulkStock)}
             onChange={(value) => setBulkStock(Number.isNaN(value) ? "" : String(value))}
           >
@@ -603,7 +619,7 @@ export function ProductForm({ product }: { product?: Product }) {
                           aria-label={t("stockLabel")}
                           minValue={0}
                           step={1}
-                          isDisabled={isPending || draft.isExcluded}
+                          isDisabled={isPending || draft.isExcluded || !tracksInventory}
                           value={Number(draft.stockQuantity) || 0}
                           onChange={(value) =>
                             updateVariant(key, "stockQuantity", Number.isNaN(value) ? "0" : String(value))

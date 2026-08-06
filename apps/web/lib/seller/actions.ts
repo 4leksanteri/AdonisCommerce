@@ -25,6 +25,7 @@ export type CreateProductInput = {
   description: string;
   // Omitted by the create flow, which lets the API publish the product.
   status?: "active" | "archived";
+  tracksInventory?: boolean;
   options: { name: string; values: string[] }[];
   variants: { optionValues: string[]; sku: string; priceCents: number; stockQuantity: number }[];
 };

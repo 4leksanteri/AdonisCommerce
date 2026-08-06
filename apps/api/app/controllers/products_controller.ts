@@ -138,7 +138,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, currency, options, variants } =
+    const { title, description, currency, tracksInventory, options, variants } =
       await request.validateUsing(createProductValidator)
     const slug = await Product.generateUniqueSlug(seller.id, title)
 
@@ -152,6 +152,7 @@ export default class ProductsController {
       newProduct.slug = slug
       // Inherits the shop's currency unless the seller names one explicitly.
       newProduct.currency = currency ?? seller.currency
+      newProduct.tracksInventory = tracksInventory ?? true
       await newProduct.save()
 
       await this.replaceOptionsAndVariants(trx, newProduct, options, variants)
@@ -227,7 +228,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, status, currency, options, variants } =
+    const { title, description, status, currency, tracksInventory, options, variants } =
       await request.validateUsing(createProductValidator)
     // Only re-slug when the title actually moved. Regenerating unconditionally
     // would bump an unchanged title to `-2` (its own row counts as a clash)
@@ -244,6 +245,7 @@ export default class ProductsController {
       product.status = status ?? 'active'
       product.slug = slug
       product.currency = currency ?? product.currency
+      product.tracksInventory = tracksInventory ?? product.tracksInventory
       await product.save()
 
       // Cascades delete each option's values and each variant's pivot rows.

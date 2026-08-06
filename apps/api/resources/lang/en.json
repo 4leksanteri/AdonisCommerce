@@ -156,7 +156,9 @@
       "includeLabel": "Include",
       "includeCombination": "Include {combination}",
       "variantSummary": "{included} of {total} combinations included",
-      "tooManyVariants": "Too many combinations — a product can have at most {count} variants. Remove some option values or exclude combinations."
+      "tooManyVariants": "Too many combinations — a product can have at most {count} variants. Remove some option values or exclude combinations.",
+      "tracksInventoryLabel": "Track inventory",
+      "tracksInventoryHint": "Turn this off for made-to-order or digital items that never run out. Stock numbers are ignored while it's off."
     }
   },
   "Cart": {

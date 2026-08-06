@@ -127,7 +127,7 @@ export class ProductVariantSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'updatedAt'] as const
+  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -145,6 +145,8 @@ export class ProductSchema extends BaseModel {
   declare status: string
   @column()
   declare title: string
+  @column()
+  declare tracksInventory: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }

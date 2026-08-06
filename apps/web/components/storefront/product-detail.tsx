@@ -33,8 +33,24 @@ function findVariant(
   });
 }
 
-function isInStock(variant: PublicProductVariant | undefined) {
-  return variant !== undefined && variant.stockQuantity > 0;
+/**
+ * A sanity ceiling, not a statement about what the seller can make — if an
+ * order is too large to fulfil, they cancel it, and they're better placed to
+ * judge that than a constant here. This exists only so the quantity field has
+ * some upper bound: without one a stray keystroke turns 5 into 5000, and an
+ * unbounded field is a soft target for card-testing.
+ */
+const UNTRACKED_MAX_PER_ORDER = 999;
+
+/**
+ * The single place stock is interpreted. A product that doesn't track
+ * inventory is always available, so every decision below asks this rather
+ * than comparing `stockQuantity` directly — a bare `> 0` would read an
+ * untracked listing as sold out.
+ */
+function isAvailable(variant: PublicProductVariant | undefined, tracksInventory: boolean) {
+  if (variant === undefined) return false;
+  return !tracksInventory || variant.stockQuantity > 0;
 }
 
 type Props = {
@@ -78,7 +94,10 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   // Open on something buyable rather than an empty state the shopper has
   // to resolve themselves.
   const [selection, setSelection] = useState<Selection>(() =>
-    selectionFor(product.variants.find((variant) => variant.stockQuantity > 0) ?? product.variants[0])
+    selectionFor(
+      product.variants.find((variant) => isAvailable(variant, product.tracksInventory)) ??
+        product.variants[0]
+    )
   );
 
   const [activeImage, setActiveImage] = useState(0);
@@ -103,7 +122,7 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   function isValueOffered(valueId: string) {
     return product.variants.some(
       (variant) =>
-        variant.stockQuantity > 0 &&
+        isAvailable(variant, product.tracksInventory) &&
         variant.optionValues.some((optionValue) => optionValue.id === valueId)
     );
   }
@@ -111,14 +130,14 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   function selectValue(optionIndex: number, valueId: string) {
     setSelection((prev) => {
       const next = prev.map((chosen, i) => (i === optionIndex ? valueId : chosen));
-      if (isInStock(findVariant(product.variants, next))) return next;
+      if (isAvailable(findVariant(product.variants, next), product.tracksInventory)) return next;
 
       // The new combination isn't buyable, so adopt the other options from
       // the first in-stock variant carrying the value just picked — choosing
       // Rose slides Size to Large instead of landing on sold-out Rose/Small.
       const repair = product.variants.find(
         (variant) =>
-          variant.stockQuantity > 0 &&
+          isAvailable(variant, product.tracksInventory) &&
           variant.optionValues.some((optionValue) => optionValue.id === valueId)
       );
 
@@ -127,10 +146,14 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   }
 
   const images = product.images;
+  const tracksInventory = product.tracksInventory;
   const isUnavailable = selectedVariant === undefined;
-  const isSoldOut = selectedVariant !== undefined && selectedVariant.stockQuantity === 0;
+  const isSoldOut =
+    selectedVariant !== undefined && !isAvailable(selectedVariant, tracksInventory);
 
-  const maxQuantity = selectedVariant?.stockQuantity ?? 1;
+  const maxQuantity = !tracksInventory
+    ? UNTRACKED_MAX_PER_ORDER
+    : (selectedVariant?.stockQuantity ?? 1);
   /**
    * Derived rather than synced through an effect. Switching to a variant with
    * less stock must never leave an unbuyable number on screen, not even for a
@@ -265,6 +288,8 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
               <Chip.Label>{t("soldOut")}</Chip.Label>
             </Chip>
           ) : (
+            // Nothing to run low on when inventory isn't tracked.
+            tracksInventory &&
             selectedVariant.stockQuantity <= 5 && (
               <Chip>
                 <Chip.Label>{t("lowStock", { count: selectedVariant.stockQuantity })}</Chip.Label>

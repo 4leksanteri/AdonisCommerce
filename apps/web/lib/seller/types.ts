@@ -34,6 +34,8 @@ export type Product = {
   description: string | null;
   status: string;
   currency: string;
+  /** False for made-to-order and digital listings — stockQuantity is ignored. */
+  tracksInventory: boolean;
   createdAt: string;
   options: ProductOption[];
   variants: ProductVariant[];

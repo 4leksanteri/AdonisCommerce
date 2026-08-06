@@ -17,6 +17,9 @@ export const createProductValidator = vine.create({
   // Set from the seller's shop currency when omitted. Recorded per product so
   // a shop changing its currency can't reinterpret existing prices.
   currency: vine.enum(SUPPORTED_CURRENCIES).optional(),
+  // False for made-to-order and digital listings, where `stockQuantity` is
+  // kept but ignored rather than repurposed as a sentinel.
+  tracksInventory: vine.boolean().optional(),
   // Only the seller-settable states — `draft` is assigned server-side by
   // `storeDraft` and left behind the moment the product is first saved.
   status: vine.enum(['active', 'archived']).optional(),

@@ -54,8 +54,9 @@ function productJsonLd(product: PublicProduct) {
       // schema.org wants a major-unit decimal string, not minor units.
       price: toMajorUnits(variant.priceCents).toFixed(2),
       priceCurrency: product.currency,
+      // An untracked listing is made to order, so it is always purchasable.
       availability:
-        variant.stockQuantity > 0
+        !product.tracksInventory || variant.stockQuantity > 0
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
     })),

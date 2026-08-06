@@ -156,7 +156,9 @@
       "includeLabel": "Mukana",
       "includeCombination": "Ota mukaan {combination}",
       "variantSummary": "{included}/{total} yhdistelmää mukana",
-      "tooManyVariants": "Liian monta yhdistelmää — tuotteella voi olla enintään {count} muunnelmaa. Poista joitakin arvoja tai jätä yhdistelmiä pois."
+      "tooManyVariants": "Liian monta yhdistelmää — tuotteella voi olla enintään {count} muunnelmaa. Poista joitakin arvoja tai jätä yhdistelmiä pois.",
+      "tracksInventoryLabel": "Seuraa varastoa",
+      "tracksInventoryHint": "Ota tämä pois käytöstä tilauksesta valmistettaville tai digitaalisille tuotteille, jotka eivät lopu. Varastomääriä ei huomioida, kun tämä on pois päältä."
     }
   },
   "Cart": {
