@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
-import { CURRENCY_FORMAT } from "@/lib/format";
+import { currencyFormat, toMajorUnits } from "@/lib/format";
 import { requireSeller, getSellerProducts } from "@/lib/seller/queries";
 
 function statusColor(status: string): "success" | "danger" | undefined {
@@ -42,13 +42,12 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
       ) : (
         <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
           {products.map((product) => {
-            const prices = product.variants.map((variant) => Number(variant.price));
+            const prices = product.variants.map((variant) => variant.priceCents);
             const min = Math.min(...prices);
             const max = Math.max(...prices);
-            const priceLabel =
-              min === max
-                ? format.number(min, CURRENCY_FORMAT)
-                : `${format.number(min, CURRENCY_FORMAT)}–${format.number(max, CURRENCY_FORMAT)}`;
+            const money = (cents: number) =>
+              format.number(toMajorUnits(cents), currencyFormat(product.currency));
+            const priceLabel = min === max ? money(min) : `${money(min)}–${money(max)}`;
 
             const thumbnail = product.images[0];
 

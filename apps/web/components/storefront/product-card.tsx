@@ -1,19 +1,20 @@
 import Image from "next/image";
 import { getFormatter } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { CURRENCY_FORMAT } from "@/lib/format";
+import { currencyFormat, toMajorUnits } from "@/lib/format";
 import type { PublicProductCard } from "@/lib/storefront/types";
 
 export async function ProductCard({ product }: { product: PublicProductCard }) {
   const format = await getFormatter();
 
-  const { priceMin, priceMax } = product;
+  const { priceMinCents, priceMaxCents, currency } = product;
+  const money = (cents: number) => format.number(toMajorUnits(cents), currencyFormat(currency));
   const price =
-    priceMin === null || priceMax === null
+    priceMinCents === null || priceMaxCents === null
       ? null
-      : priceMin === priceMax
-        ? format.number(Number(priceMin), CURRENCY_FORMAT)
-        : `${format.number(Number(priceMin), CURRENCY_FORMAT)}–${format.number(Number(priceMax), CURRENCY_FORMAT)}`;
+      : priceMinCents === priceMaxCents
+        ? money(priceMinCents)
+        : `${money(priceMinCents)}–${money(priceMaxCents)}`;
 
   return (
     <Link

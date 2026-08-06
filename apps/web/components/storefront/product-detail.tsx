@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
 import { Button, Chip, ToggleButton, ToggleButtonGroup } from "@heroui/react";
-import { CURRENCY_FORMAT } from "@/lib/format";
+import { currencyFormat, toMajorUnits } from "@/lib/format";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
 /**
@@ -35,8 +35,8 @@ function isInStock(variant: PublicProductVariant | undefined) {
 export function ProductDetail({ product }: { product: PublicProduct }) {
   const t = useTranslations("Storefront.product");
   const format = useFormatter();
-  const formatPrice = (price: number | string) =>
-    format.number(Number(price), CURRENCY_FORMAT);
+  const formatPrice = (cents: number) =>
+    format.number(toMajorUnits(cents), currencyFormat(product.currency));
 
   /** The option-value ids of `variant`, laid out in product option order. */
   const selectionFor = useMemo(
@@ -65,7 +65,7 @@ export function ProductDetail({ product }: { product: PublicProduct }) {
   );
 
   const priceRange = useMemo(() => {
-    const prices = product.variants.map((variant) => Number(variant.price));
+    const prices = product.variants.map((variant) => variant.priceCents);
     return { min: Math.min(...prices), max: Math.max(...prices) };
   }, [product.variants]);
 
@@ -155,7 +155,7 @@ export function ProductDetail({ product }: { product: PublicProduct }) {
           <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
           <p className="text-xl text-foreground">
             {selectedVariant
-              ? formatPrice(selectedVariant.price)
+              ? formatPrice(selectedVariant.priceCents)
               : priceRange.min === priceRange.max
                 ? formatPrice(priceRange.min)
                 : `${formatPrice(priceRange.min)}–${formatPrice(priceRange.max)}`}

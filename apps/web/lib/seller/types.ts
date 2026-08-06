@@ -14,7 +14,8 @@ export type ProductOption = {
 export type ProductVariant = {
   id: string;
   sku: string | null;
-  price: string;
+  /** Minor units — 1250 is €12.50. See lib/format.ts. */
+  priceCents: number;
   stockQuantity: number;
   createdAt: string;
   optionValues: ProductOptionValue[];
@@ -32,6 +33,7 @@ export type Product = {
   slug: string;
   description: string | null;
   status: string;
+  currency: string;
   createdAt: string;
   options: ProductOption[];
   variants: ProductVariant[];

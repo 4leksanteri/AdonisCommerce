@@ -4,21 +4,21 @@ import { useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { ShoppingBag, TrashBin } from "@gravity-ui/icons";
 import { Badge, Button, Popover } from "@heroui/react";
-import { CURRENCY_FORMAT } from "@/lib/format";
+import { currencyFormat, DEFAULT_CURRENCY, toMajorUnits } from "@/lib/format";
 
 type CartItem = {
   id: string;
   name: string;
-  price: number;
+  priceCents: number;
   quantity: number;
   color: string;
 };
 
 // Mock data — no cart/product backend yet, this is purely to shape the UI.
 const MOCK_ITEMS: CartItem[] = [
-  { id: "1", name: "Classic Cotton T-Shirt", price: 24.99, quantity: 2, color: "bg-blue-100" },
-  { id: "2", name: "Leather Wallet", price: 49.99, quantity: 1, color: "bg-amber-100" },
-  { id: "3", name: "Canvas Tote Bag", price: 19.99, quantity: 1, color: "bg-emerald-100" },
+  { id: "1", name: "Classic Cotton T-Shirt", priceCents: 2499, quantity: 2, color: "bg-blue-100" },
+  { id: "2", name: "Leather Wallet", priceCents: 4999, quantity: 1, color: "bg-amber-100" },
+  { id: "3", name: "Canvas Tote Bag", priceCents: 1999, quantity: 1, color: "bg-emerald-100" },
 ];
 
 export function CartPopover() {
@@ -27,7 +27,7 @@ export function CartPopover() {
   const [items] = useState(MOCK_ITEMS);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => sum + item.priceCents * item.quantity, 0);
 
   return (
     <Popover>
@@ -61,7 +61,7 @@ export function CartPopover() {
                       <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
                       <p className="text-xs text-muted">
                         {t("quantity")}: {item.quantity} &middot;{" "}
-                        {format.number(item.price, CURRENCY_FORMAT)}
+                        {format.number(toMajorUnits(item.priceCents), currencyFormat(DEFAULT_CURRENCY))}
                       </p>
                     </div>
                     <button
@@ -78,7 +78,7 @@ export function CartPopover() {
               <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                 <span className="text-sm font-medium text-foreground">{t("subtotal")}</span>
                 <span className="text-sm font-semibold text-foreground">
-                  {format.number(subtotal, CURRENCY_FORMAT)}
+                  {format.number(toMajorUnits(subtotal), currencyFormat(DEFAULT_CURRENCY))}
                 </span>
               </div>
 

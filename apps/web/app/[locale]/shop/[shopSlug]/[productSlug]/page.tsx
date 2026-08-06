@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPathname } from "@/i18n/navigation";
 import { Container } from "@/components/ui/container";
 import { ProductDetail } from "@/components/storefront/product-detail";
+import { toMajorUnits } from "@/lib/format";
 import { getPublicProduct } from "@/lib/storefront/queries";
 import type { PublicProduct } from "@/lib/storefront/types";
 
@@ -49,8 +50,9 @@ function productJsonLd(product: PublicProduct) {
     brand: { "@type": "Brand", name: product.shop.name },
     offers: product.variants.map((variant) => ({
       "@type": "Offer",
-      price: variant.price,
-      priceCurrency: "EUR",
+      // schema.org wants a major-unit decimal string, not minor units.
+      price: toMajorUnits(variant.priceCents).toFixed(2),
+      priceCurrency: product.currency,
       availability:
         variant.stockQuantity > 0
           ? "https://schema.org/InStock"

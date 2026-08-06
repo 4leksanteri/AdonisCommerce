@@ -48,7 +48,9 @@
       "minLength": "This value is too short",
       "databaseUnique": "This email is already registered",
       "arrayMinLength": "Add at least one item",
-      "arrayMaxLength": "Too many items"
+      "arrayMaxLength": "Too many items",
+      "enum": "Choose one of the available options",
+      "withoutDecimals": "This value must be a whole number"
     }
   },
   "ApiMessages": {
@@ -94,7 +96,9 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Tell customers about your shop",
       "saveButton": "Save changes",
-      "saveSuccess": "Shop settings updated."
+      "saveSuccess": "Shop settings updated.",
+      "currencyLabel": "Currency",
+      "currencyHint": "The currency new products are priced in. Products you've already listed keep the currency they were priced in."
     },
     "products": {
       "heading": "Products",

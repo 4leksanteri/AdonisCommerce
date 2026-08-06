@@ -108,14 +108,14 @@ export class ProductVariantOptionValueSchema extends BaseModel {
 }
 
 export class ProductVariantSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'price', 'productId', 'sku', 'stockQuantity', 'updatedAt'] as const
+  static $columns = ['createdAt', 'id', 'priceCents', 'productId', 'sku', 'stockQuantity', 'updatedAt'] as const
   $columns = ProductVariantSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: string
   @column()
-  declare price: string
+  declare priceCents: bigint | number
   @column()
   declare productId: string
   @column()
@@ -127,10 +127,12 @@ export class ProductVariantSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'updatedAt'] as const
+  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare currency: string
   @column()
   declare description: string | null
   @column({ isPrimary: true })
@@ -148,10 +150,12 @@ export class ProductSchema extends BaseModel {
 }
 
 export class SellerSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'currency', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare currency: string
   @column()
   declare description: string | null
   @column({ isPrimary: true })

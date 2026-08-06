@@ -29,6 +29,7 @@ import {
   uploadProductImagesAction,
   type CreateProductInput,
 } from "@/lib/seller/actions";
+import { toMajorUnits, toMinorUnits } from "@/lib/format";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
 import type { Product, ProductImage } from "@/lib/seller/types";
@@ -84,7 +85,7 @@ function toVariantDrafts(product: Product | undefined, options: OptionDraft[]): 
       .map((value) => value.value);
 
     drafts.set(JSON.stringify(combo), {
-      price: variant.price,
+      price: String(toMajorUnits(variant.priceCents)),
       stockQuantity: String(variant.stockQuantity),
       sku: variant.sku ?? "",
       isExcluded: false,
@@ -318,7 +319,8 @@ export function ProductForm({ product }: { product?: Product }) {
         .map(({ combo, draft }) => ({
           optionValues: combo,
           sku: draft.sku,
-          price: Number(draft.price) || 0,
+          // The seller types major units; the API only ever sees minor ones.
+          priceCents: toMinorUnits(Number(draft.price) || 0),
           stockQuantity: Number(draft.stockQuantity) || 0,
         })),
     };

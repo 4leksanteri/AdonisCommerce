@@ -7,7 +7,15 @@ import ProductImageTransformer from '#transformers/product_image_transformer'
 export default class ProductTransformer extends BaseTransformer<Product> {
   toObject() {
     return {
-      ...this.pick(this.resource, ['id', 'title', 'slug', 'description', 'status', 'createdAt']),
+      ...this.pick(this.resource, [
+        'id',
+        'title',
+        'slug',
+        'description',
+        'status',
+        'currency',
+        'createdAt',
+      ]),
       // `options`, `variants` and `images` must be preloaded before
       // transforming — Lucid won't lazy-load them.
       // `.depth(2)` is required on options/variants — `BaseTransformer.transform()`

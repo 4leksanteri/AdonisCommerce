@@ -5,6 +5,7 @@ export type Seller = {
   description: string | null;
   status: string;
   payoutStatus: string;
+  currency: string;
   createdAt: string;
 };
 

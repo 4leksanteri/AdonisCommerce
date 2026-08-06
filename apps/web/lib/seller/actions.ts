@@ -8,11 +8,11 @@ const GENERIC_ERROR: ApiErrorItem = { code: "GENERIC_ERROR", message: "Something
 
 type UpdateSellerResult = { seller: Seller; errors?: undefined } | { seller?: undefined; errors: ApiErrorItem[] };
 
-export async function updateSellerAction(shopName: string, description: string): Promise<UpdateSellerResult> {
+export async function updateSellerAction(shopName: string, description: string, currency?: string): Promise<UpdateSellerResult> {
   try {
     const res = await apiFetch<{ data: Seller }>("/api/sellers/me", {
       method: "PATCH",
-      body: JSON.stringify({ shopName, description }),
+      body: JSON.stringify({ shopName, description, currency }),
     });
     return { seller: res.data };
   } catch (error) {
@@ -26,7 +26,7 @@ export type CreateProductInput = {
   // Omitted by the create flow, which lets the API publish the product.
   status?: "active" | "archived";
   options: { name: string; values: string[] }[];
-  variants: { optionValues: string[]; sku: string; price: number; stockQuantity: number }[];
+  variants: { optionValues: string[]; sku: string; priceCents: number; stockQuantity: number }[];
 };
 
 type CreateProductResult = { product: Product; errors?: undefined } | { product?: undefined; errors: ApiErrorItem[] };

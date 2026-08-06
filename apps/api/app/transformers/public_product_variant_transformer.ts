@@ -10,7 +10,8 @@ import ProductOptionValueTransformer from '#transformers/product_option_value_tr
 export default class PublicProductVariantTransformer extends BaseTransformer<ProductVariant> {
   toObject() {
     return {
-      ...this.pick(this.resource, ['id', 'price', 'stockQuantity']),
+      ...this.pick(this.resource, ['id', 'stockQuantity']),
+      priceCents: Number(this.resource.priceCents),
       // `optionValues` must be preloaded via `.preload('optionValues')` before
       // transforming — Lucid won't lazy-load it.
       optionValues: ProductOptionValueTransformer.transform(this.resource.optionValues),

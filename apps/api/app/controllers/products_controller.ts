@@ -66,7 +66,7 @@ export default class ProductsController {
       productVariant.useTransaction(trx)
       productVariant.productId = product.id
       productVariant.sku = variant.sku ?? null
-      productVariant.price = String(variant.price)
+      productVariant.priceCents = variant.priceCents
       productVariant.stockQuantity = variant.stockQuantity
       await productVariant.save()
 
@@ -138,7 +138,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, options, variants } =
+    const { title, description, currency, options, variants } =
       await request.validateUsing(createProductValidator)
     const slug = await Product.generateUniqueSlug(seller.id, title)
 
@@ -150,6 +150,8 @@ export default class ProductsController {
       newProduct.description = description ?? null
       newProduct.status = 'active'
       newProduct.slug = slug
+      // Inherits the shop's currency unless the seller names one explicitly.
+      newProduct.currency = currency ?? seller.currency
       await newProduct.save()
 
       await this.replaceOptionsAndVariants(trx, newProduct, options, variants)
@@ -186,6 +188,7 @@ export default class ProductsController {
       description: null,
       status: 'draft',
       slug,
+      currency: seller.currency,
     })
 
     return serialize(
@@ -224,7 +227,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, status, options, variants } =
+    const { title, description, status, currency, options, variants } =
       await request.validateUsing(createProductValidator)
     // Only re-slug when the title actually moved. Regenerating unconditionally
     // would bump an unchanged title to `-2` (its own row counts as a clash)
@@ -240,6 +243,7 @@ export default class ProductsController {
       product.description = description ?? null
       product.status = status ?? 'active'
       product.slug = slug
+      product.currency = currency ?? product.currency
       await product.save()
 
       // Cascades delete each option's values and each variant's pivot rows.

@@ -1,4 +1,5 @@
 import vine from '@vinejs/vine'
+import { SUPPORTED_CURRENCIES } from '#services/currencies'
 
 /**
  * Caps on the option/variant tree. Variants are the cartesian product of the
@@ -13,6 +14,9 @@ export const MAX_VARIANTS = 200
 export const createProductValidator = vine.create({
   title: vine.string().trim().minLength(2).maxLength(150),
   description: vine.string().trim().maxLength(5000).optional(),
+  // Set from the seller's shop currency when omitted. Recorded per product so
+  // a shop changing its currency can't reinterpret existing prices.
+  currency: vine.enum(SUPPORTED_CURRENCIES).optional(),
   // Only the seller-settable states — `draft` is assigned server-side by
   // `storeDraft` and left behind the moment the product is first saved.
   status: vine.enum(['active', 'archived']).optional(),
@@ -37,8 +41,11 @@ export const createProductValidator = vine.create({
         // optionValues[0] is the value for options[0].
         optionValues: vine.array(vine.string().trim()).optional(),
         sku: vine.string().trim().maxLength(60).optional(),
-        price: vine.number().min(0),
-        stockQuantity: vine.number().min(0),
+        // Minor units (1250 = €12.50). Integer-only: money must never arrive
+        // as a float, and the number of decimals is a property of the
+        // currency, not of the amount.
+        priceCents: vine.number().min(0).withoutDecimals(),
+        stockQuantity: vine.number().min(0).withoutDecimals(),
       })
     )
     .minLength(1)

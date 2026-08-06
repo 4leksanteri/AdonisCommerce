@@ -48,7 +48,9 @@
       "minLength": "Tämä arvo on liian lyhyt",
       "databaseUnique": "Tämä sähköpostiosoite on jo rekisteröity",
       "arrayMinLength": "Lisää vähintään yksi kohde",
-      "arrayMaxLength": "Liian monta kohdetta"
+      "arrayMaxLength": "Liian monta kohdetta",
+      "enum": "Valitse jokin vaihtoehdoista",
+      "withoutDecimals": "Arvon on oltava kokonaisluku"
     }
   },
   "ApiMessages": {
@@ -94,7 +96,9 @@
       "descriptionLabel": "Kuvaus",
       "descriptionPlaceholder": "Kerro asiakkaille kaupastasi",
       "saveButton": "Tallenna muutokset",
-      "saveSuccess": "Kaupan asetukset päivitetty."
+      "saveSuccess": "Kaupan asetukset päivitetty.",
+      "currencyLabel": "Valuutta",
+      "currencyHint": "Valuutta, jossa uudet tuotteet hinnoitellaan. Jo listaamasi tuotteet säilyttävät sen valuutan, jossa ne hinnoiteltiin."
     },
     "products": {
       "heading": "Tuotteet",

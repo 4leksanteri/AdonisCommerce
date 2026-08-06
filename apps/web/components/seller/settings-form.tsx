@@ -2,8 +2,22 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Card, Form, Input, Label, Spinner, TextArea, TextField, toast } from "@heroui/react";
+import {
+  Button,
+  Card,
+  Description,
+  Form,
+  Input,
+  Label,
+  ListBox,
+  Select,
+  Spinner,
+  TextArea,
+  TextField,
+  toast,
+} from "@heroui/react";
 import { updateSellerAction } from "@/lib/seller/actions";
+import { SUPPORTED_CURRENCIES } from "@/lib/format";
 import { useAuth } from "@/lib/auth/context";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { Seller } from "@/lib/auth/types";
@@ -14,6 +28,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
   const tValidation = useTranslations("Validation");
   const tApiMessages = useTranslations("ApiMessages");
 
+  const [currency, setCurrency] = useState(seller.currency);
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -26,7 +41,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
     const description = String(formData.get("description") ?? "");
 
     setIsPending(true);
-    const result = await updateSellerAction(shopName, description);
+    const result = await updateSellerAction(shopName, description, currency);
     setIsPending(false);
 
     if (result.errors) {
@@ -65,6 +80,29 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               <Label>{t("descriptionLabel")}</Label>
               <TextArea className="h-32 border border-border" placeholder={t("descriptionPlaceholder")} />
             </TextField>
+
+            <Select
+              isDisabled={isPending}
+              selectedKey={currency}
+              onSelectionChange={(key) => setCurrency(String(key))}
+            >
+              <Label>{t("currencyLabel")}</Label>
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  {SUPPORTED_CURRENCIES.map((code) => (
+                    <ListBox.Item key={code} id={code} textValue={code}>
+                      {code}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Select.Popover>
+              <Description>{t("currencyHint")}</Description>
+            </Select>
           </div>
         </Card.Content>
         <Card.Footer>

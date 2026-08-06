@@ -25,8 +25,9 @@ export type PublicProductCard = {
   id: string;
   title: string;
   slug: string;
+  currency: string;
   shop: { name: string; slug: string };
   imageUrl: string | null;
-  priceMin: string | null;
-  priceMax: string | null;
+  priceMinCents: number | null;
+  priceMaxCents: number | null;
 };
