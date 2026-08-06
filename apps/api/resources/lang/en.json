@@ -157,6 +157,11 @@
       "lowStock": "{count, plural, one {Only # left} other {Only # left}}",
       "descriptionHeading": "About this item",
       "viewImage": "View image {number}"
+    },
+    "home": {
+      "heading": "Fresh from our makers",
+      "subheading": "Handmade pieces from independent shops.",
+      "empty": "No products listed yet."
     }
   }
 }

@@ -10,6 +10,7 @@ import type ProductOptionTransformer from '#transformers/product_option_transfor
 import type ProductOptionValueTransformer from '#transformers/product_option_value_transformer'
 import type ProductTransformer from '#transformers/product_transformer'
 import type ProductVariantTransformer from '#transformers/product_variant_transformer'
+import type PublicProductCardTransformer from '#transformers/public_product_card_transformer'
 import type PublicProductTransformer from '#transformers/public_product_transformer'
 import type PublicProductVariantTransformer from '#transformers/public_product_variant_transformer'
 import type SellerTransformer from '#transformers/seller_transformer'
@@ -35,6 +36,10 @@ export namespace Data {
   export type ProductVariant = InferData<ProductVariantTransformer>
   export namespace ProductVariant {
     export type Variants = InferVariants<ProductVariantTransformer>
+  }
+  export type PublicProductCard = InferData<PublicProductCardTransformer>
+  export namespace PublicProductCard {
+    export type Variants = InferVariants<PublicProductCardTransformer>
   }
   export type PublicProduct = InferData<PublicProductTransformer>
   export namespace PublicProduct {

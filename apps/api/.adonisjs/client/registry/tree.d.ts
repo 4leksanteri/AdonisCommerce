@@ -8,9 +8,10 @@ export interface ApiDefinition {
   uploads: {
     show: typeof routes['uploads.show']
   }
-  shops: {
+  storefront: {
     storefrontProducts: {
-      show: typeof routes['shops.storefront_products.show']
+      index: typeof routes['storefront.storefront_products.index']
+      show: typeof routes['storefront.storefront_products.show']
     }
   }
   auth: {

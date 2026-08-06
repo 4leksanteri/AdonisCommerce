@@ -22,10 +22,11 @@ router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 // shopper is allowed to see (active products, approved shops).
 router
   .group(() => {
-    router.get(':shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
+    router.get('products', [controllers.StorefrontProducts, 'index'])
+    router.get('shops/:shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
   })
-  .prefix('/api/shops')
-  .as('shops')
+  .prefix('/api/storefront')
+  .as('storefront')
 
 router
   .group(() => {

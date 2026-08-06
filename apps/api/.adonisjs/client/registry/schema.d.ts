@@ -31,9 +31,21 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/uploads_controller').default['show']>>>
     }
   }
-  'shops.storefront_products.show': {
+  'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
-    pattern: '/api/shops/:shopSlug/products/:productSlug'
+    pattern: '/api/storefront/products'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/storefront_products_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_products_controller').default['index']>>>
+    }
+  }
+  'storefront.storefront_products.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/storefront/shops/:shopSlug/products/:productSlug'
     types: {
       body: {}
       paramsTuple: [ParamValue, ParamValue]

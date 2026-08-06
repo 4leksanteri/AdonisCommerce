@@ -18,11 +18,17 @@ const routes = {
     tokens: [{"old":"/uploads/:filename","type":0,"val":"uploads","end":""},{"old":"/uploads/:filename","type":1,"val":"filename","end":""}],
     types: placeholder as Registry['uploads.show']['types'],
   },
-  'shops.storefront_products.show': {
+  'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
-    pattern: '/api/shops/:shopSlug/products/:productSlug',
-    tokens: [{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"api","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"shops","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":1,"val":"shopSlug","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"products","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":1,"val":"productSlug","end":""}],
-    types: placeholder as Registry['shops.storefront_products.show']['types'],
+    pattern: '/api/storefront/products',
+    tokens: [{"old":"/api/storefront/products","type":0,"val":"api","end":""},{"old":"/api/storefront/products","type":0,"val":"storefront","end":""},{"old":"/api/storefront/products","type":0,"val":"products","end":""}],
+    types: placeholder as Registry['storefront.storefront_products.index']['types'],
+  },
+  'storefront.storefront_products.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/storefront/shops/:shopSlug/products/:productSlug',
+    tokens: [{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":0,"val":"api","end":""},{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":0,"val":"storefront","end":""},{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":0,"val":"shops","end":""},{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":1,"val":"shopSlug","end":""},{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":0,"val":"products","end":""},{"old":"/api/storefront/shops/:shopSlug/products/:productSlug","type":1,"val":"productSlug","end":""}],
+    types: placeholder as Registry['storefront.storefront_products.show']['types'],
   },
   'auth.registered_user.store': {
     methods: ["POST"],

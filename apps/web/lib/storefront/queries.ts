@@ -1,6 +1,20 @@
 import "server-only";
 import { apiFetch, ApiError } from "@/lib/api";
-import type { PublicProduct } from "./types";
+import type { PublicProduct, PublicProductCard } from "./types";
+
+/**
+ * Newest active products across all shops, for the homepage grid.
+ * Anonymous like every storefront call — see `getPublicProduct`.
+ */
+export async function getStorefrontProducts(limit?: number): Promise<PublicProductCard[]> {
+  const query = limit === undefined ? "" : `?limit=${limit}`;
+  const res = await apiFetch<{ data: PublicProductCard[] }>(
+    `/api/storefront/products${query}`,
+    {},
+    null
+  );
+  return res.data;
+}
 
 /**
  * Storefront product lookup. Passes `null` as the token override so the
@@ -17,7 +31,7 @@ export async function getPublicProduct(
 ): Promise<PublicProduct | null> {
   try {
     const res = await apiFetch<{ data: PublicProduct }>(
-      `/api/shops/${encodeURIComponent(shopSlug)}/products/${encodeURIComponent(productSlug)}`,
+      `/api/storefront/shops/${encodeURIComponent(shopSlug)}/products/${encodeURIComponent(productSlug)}`,
       {},
       null
     );

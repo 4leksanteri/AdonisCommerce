@@ -15,3 +15,18 @@ export type PublicProduct = Omit<Product, "status" | "variants"> & {
   shop: { name: string; slug: string };
   variants: PublicProductVariant[];
 };
+
+/**
+ * Grid-card shape. The API collapses variants into a price range server-side
+ * so a listing doesn't ship every product's whole option tree. All three
+ * nullable fields are null only for a product with no images or no variants.
+ */
+export type PublicProductCard = {
+  id: string;
+  title: string;
+  slug: string;
+  shop: { name: string; slug: string };
+  imageUrl: string | null;
+  priceMin: string | null;
+  priceMax: string | null;
+};

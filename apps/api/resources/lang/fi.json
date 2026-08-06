@@ -157,6 +157,11 @@
       "lowStock": "{count, plural, one {Vain # jäljellä} other {Vain # jäljellä}}",
       "descriptionHeading": "Tietoja tuotteesta",
       "viewImage": "Näytä kuva {number}"
+    },
+    "home": {
+      "heading": "Uutta tekijöiltämme",
+      "subheading": "Käsintehtyjä tuotteita itsenäisiltä kaupoilta.",
+      "empty": "Tuotteita ei ole vielä listattu."
     }
   }
 }
