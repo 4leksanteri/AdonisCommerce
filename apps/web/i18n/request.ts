@@ -7,10 +7,16 @@ import { routing } from "./routing";
  * Translations live on the API (single source of truth, admin-editable
  * later) rather than static JSON files here. Cached via Next's data cache
  * so this is an occasional refresh, not a live call on every render.
+ *
+ * Not cached in development: an hour-long cache means a newly added key
+ * renders as its raw path (`SellerPanel.productForm.applyToAll`) until the
+ * cache is manually cleared, which reads as a bug every time.
  */
+const REVALIDATE_SECONDS = process.env.NODE_ENV === "development" ? 0 : 3600;
+
 async function getMessages(locale: string) {
   const res = await fetch(`${process.env.API_INTERNAL_URL}/api/translations/${locale}`, {
-    next: { revalidate: 3600, tags: ["translations", `translations-${locale}`] },
+    next: { revalidate: REVALIDATE_SECONDS, tags: ["translations", `translations-${locale}`] },
   });
 
   if (!res.ok) {

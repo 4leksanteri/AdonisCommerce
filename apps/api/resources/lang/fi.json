@@ -46,7 +46,9 @@
       "required": "Tämä kenttä on pakollinen",
       "email": "Anna kelvollinen sähköpostiosoite",
       "minLength": "Tämä arvo on liian lyhyt",
-      "databaseUnique": "Tämä sähköpostiosoite on jo rekisteröity"
+      "databaseUnique": "Tämä sähköpostiosoite on jo rekisteröity",
+      "arrayMinLength": "Lisää vähintään yksi kohde",
+      "arrayMaxLength": "Liian monta kohdetta"
     }
   },
   "ApiMessages": {
@@ -137,7 +139,20 @@
       "removeImage": "Poista kuva",
       "statusHeading": "Saatavuus",
       "statusLabel": "Näkyy kaupassasi",
-      "statusHint": "Ota tämä pois käytöstä piilottaaksesi tuotteen kaupastasi poistamatta sitä. Voit julkaista sen uudelleen milloin tahansa."
+      "statusHint": "Ota tämä pois käytöstä piilottaaksesi tuotteen kaupastasi poistamatta sitä. Voit julkaista sen uudelleen milloin tahansa.",
+      "valueLabel": "Arvo",
+      "priceAdjustmentLabel": "Hinta +/-",
+      "priceAdjustmentFor": "Hinnan muutos arvolle {value}",
+      "removeValue": "Poista {value}",
+      "maxOptionsReached": "Voit lisätä enintään {count} valintaa.",
+      "basePriceLabel": "Perushinta",
+      "bulkStockLabel": "Varasto",
+      "applyToAll": "Käytä kaikkiin",
+      "applyToAllHint": "Täyttää jokaiseen mukaan otettuun muunnelmaan perushinnan ja sen valintojen hinnanmuutokset. Voit silti muokata rivejä yksitellen jälkeenpäin.",
+      "includeLabel": "Mukana",
+      "includeCombination": "Ota mukaan {combination}",
+      "variantSummary": "{included}/{total} yhdistelmää mukana",
+      "tooManyVariants": "Liian monta yhdistelmää — tuotteella voi olla enintään {count} muunnelmaa. Poista joitakin arvoja tai jätä yhdistelmiä pois."
     }
   },
   "Cart": {

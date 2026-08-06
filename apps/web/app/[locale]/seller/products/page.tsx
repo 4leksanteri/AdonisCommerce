@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
+import { CURRENCY_FORMAT } from "@/lib/format";
 import { requireSeller, getSellerProducts } from "@/lib/seller/queries";
 
 function statusColor(status: string): "success" | "danger" | undefined {
@@ -14,10 +15,11 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
   const { locale } = await props.params;
   await requireSeller(locale);
 
-  const [products, t, tStatus] = await Promise.all([
+  const [products, t, tStatus, format] = await Promise.all([
     getSellerProducts(),
     getTranslations("SellerPanel.products"),
     getTranslations("SellerPanel.productStatus"),
+    getFormatter(),
   ]);
 
   return (
@@ -43,7 +45,10 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
             const prices = product.variants.map((variant) => Number(variant.price));
             const min = Math.min(...prices);
             const max = Math.max(...prices);
-            const priceLabel = min === max ? `€${min.toFixed(2)}` : `€${min.toFixed(2)}–€${max.toFixed(2)}`;
+            const priceLabel =
+              min === max
+                ? format.number(min, CURRENCY_FORMAT)
+                : `${format.number(min, CURRENCY_FORMAT)}–${format.number(max, CURRENCY_FORMAT)}`;
 
             const thumbnail = product.images[0];
 

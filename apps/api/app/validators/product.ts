@@ -1,5 +1,15 @@
 import vine from '@vinejs/vine'
 
+/**
+ * Caps on the option/variant tree. Variants are the cartesian product of the
+ * options, so without a ceiling three options of ten values each is already
+ * a thousand rows in one request — enough to wedge the seller form and bloat
+ * the database by accident. Shopify holds a comparable line at three options.
+ */
+export const MAX_OPTIONS = 3
+export const MAX_VALUES_PER_OPTION = 50
+export const MAX_VARIANTS = 200
+
 export const createProductValidator = vine.create({
   title: vine.string().trim().minLength(2).maxLength(150),
   description: vine.string().trim().maxLength(5000).optional(),
@@ -10,9 +20,13 @@ export const createProductValidator = vine.create({
     .array(
       vine.object({
         name: vine.string().trim().minLength(1).maxLength(60),
-        values: vine.array(vine.string().trim().minLength(1).maxLength(60)).minLength(1),
+        values: vine
+          .array(vine.string().trim().minLength(1).maxLength(60))
+          .minLength(1)
+          .maxLength(MAX_VALUES_PER_OPTION),
       })
     )
+    .maxLength(MAX_OPTIONS)
     .optional(),
   // Every product needs at least one variant — a product with no options
   // still gets a single variant carrying its price/stock.
@@ -27,5 +41,6 @@ export const createProductValidator = vine.create({
         stockQuantity: vine.number().min(0),
       })
     )
-    .minLength(1),
+    .minLength(1)
+    .maxLength(MAX_VARIANTS),
 })

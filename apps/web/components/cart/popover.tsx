@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { ShoppingBag, TrashBin } from "@gravity-ui/icons";
 import { Badge, Button, Popover } from "@heroui/react";
+import { CURRENCY_FORMAT } from "@/lib/format";
 
 type CartItem = {
   id: string;
@@ -22,6 +23,7 @@ const MOCK_ITEMS: CartItem[] = [
 
 export function CartPopover() {
   const t = useTranslations("Cart");
+  const format = useFormatter();
   const [items] = useState(MOCK_ITEMS);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -58,7 +60,8 @@ export function CartPopover() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
                       <p className="text-xs text-muted">
-                        {t("quantity")}: {item.quantity} &middot; ${item.price.toFixed(2)}
+                        {t("quantity")}: {item.quantity} &middot;{" "}
+                        {format.number(item.price, CURRENCY_FORMAT)}
                       </p>
                     </div>
                     <button
@@ -74,7 +77,9 @@ export function CartPopover() {
 
               <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                 <span className="text-sm font-medium text-foreground">{t("subtotal")}</span>
-                <span className="text-sm font-semibold text-foreground">${subtotal.toFixed(2)}</span>
+                <span className="text-sm font-semibold text-foreground">
+                  {format.number(subtotal, CURRENCY_FORMAT)}
+                </span>
               </div>
 
               <Button className="mt-4" fullWidth>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   Button,
+  Checkbox,
   CloseButton,
   Description,
   FieldError,
@@ -15,8 +16,6 @@ import {
   Spinner,
   Switch,
   Table,
-  Tag,
-  TagGroup,
   TextArea,
   TextField,
   toast,
@@ -34,10 +33,17 @@ import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
 import type { Product, ProductImage } from "@/lib/seller/types";
 
-type OptionDraft = { name: string; values: string[] };
-type VariantDraft = { price: string; stockQuantity: string; sku: string };
+/** `delta` is what this value adds to the base price when filling prices. */
+type OptionValueDraft = { value: string; delta: string };
+type OptionDraft = { name: string; values: OptionValueDraft[] };
+type VariantDraft = { price: string; stockQuantity: string; sku: string; isExcluded: boolean };
 
-const EMPTY_VARIANT: VariantDraft = { price: "", stockQuantity: "0", sku: "" };
+const EMPTY_VARIANT: VariantDraft = { price: "", stockQuantity: "0", sku: "", isExcluded: false };
+
+// Mirrors the caps in the API's product validator. The form stops the seller
+// before the request does; the API stays the actual guard.
+const MAX_OPTIONS = 3;
+const MAX_VARIANTS = 200;
 
 function cartesianProduct(valuesLists: string[][]): string[][] {
   return valuesLists.reduce<string[][]>(
@@ -46,10 +52,14 @@ function cartesianProduct(valuesLists: string[][]): string[][] {
   );
 }
 
+function optionValueNames(options: OptionDraft[]): string[][] {
+  return options.map((option) => option.values.map((value) => value.value));
+}
+
 function toOptionDrafts(product?: Product): OptionDraft[] {
   return (product?.options ?? []).map((option) => ({
     name: option.name,
-    values: option.values.map((value) => value.value),
+    values: option.values.map((value) => ({ value: value.value, delta: "" })),
   }));
 }
 
@@ -59,7 +69,7 @@ function toOptionDrafts(product?: Product): OptionDraft[] {
  * A variant's `optionValues` come back without that ordering attached, so
  * they're sorted by the option each one belongs to before the key is built.
  */
-function toVariantDrafts(product?: Product): Map<string, VariantDraft> {
+function toVariantDrafts(product: Product | undefined, options: OptionDraft[]): Map<string, VariantDraft> {
   const drafts = new Map<string, VariantDraft>();
   if (!product) return drafts;
 
@@ -77,7 +87,16 @@ function toVariantDrafts(product?: Product): Map<string, VariantDraft> {
       price: variant.price,
       stockQuantity: String(variant.stockQuantity),
       sku: variant.sku ?? "",
+      isExcluded: false,
     });
+  }
+
+  // A combination the saved product has no variant for is one the seller
+  // excluded last time. Without this it would silently reappear, ticked, on
+  // the next edit — and get recreated on save.
+  for (const combo of cartesianProduct(optionValueNames(options))) {
+    const key = JSON.stringify(combo);
+    if (!drafts.has(key)) drafts.set(key, { ...EMPTY_VARIANT, isExcluded: true });
   }
 
   return drafts;
@@ -98,8 +117,10 @@ export function ProductForm({ product }: { product?: Product }) {
     (product?.options ?? []).map(() => "")
   );
   const [variantValues, setVariantValues] = useState<Map<string, VariantDraft>>(() =>
-    toVariantDrafts(product)
+    toVariantDrafts(product, toOptionDrafts(product))
   );
+  const [basePrice, setBasePrice] = useState("");
+  const [bulkStock, setBulkStock] = useState("");
   const [isListed, setIsListed] = useState(product?.status !== "archived");
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -118,9 +139,13 @@ export function ProductForm({ product }: { product?: Product }) {
   );
 
   const combinations = useMemo(
-    () => cartesianProduct(validOptions.map((option) => option.values)),
+    () => cartesianProduct(optionValueNames(validOptions)),
     [validOptions]
   );
+
+  const includedCount = combinations.filter(
+    (combo) => !variantValues.get(JSON.stringify(combo))?.isExcluded
+  ).length;
 
   function showErrors(errors: ApiErrorItem[]) {
     setErrorMessages(
@@ -151,7 +176,9 @@ export function ProductForm({ product }: { product?: Product }) {
 
     setOptions((prev) =>
       prev.map((option, i) =>
-        i === index && !option.values.includes(value) ? { ...option, values: [...option.values, value] } : option
+        i === index && !option.values.some((existing) => existing.value === value)
+          ? { ...option, values: [...option.values, { value, delta: "" }] }
+          : option
       )
     );
     setValueDrafts((prev) => prev.map((draft, i) => (i === index ? "" : draft)));
@@ -159,14 +186,60 @@ export function ProductForm({ product }: { product?: Product }) {
 
   function removeOptionValue(index: number, value: string) {
     setOptions((prev) =>
-      prev.map((option, i) => (i === index ? { ...option, values: option.values.filter((v) => v !== value) } : option))
+      prev.map((option, i) =>
+        i === index ? { ...option, values: option.values.filter((v) => v.value !== value) } : option
+      )
     );
   }
 
-  function updateVariant(key: string, field: keyof VariantDraft, value: string) {
+  function updateValueDelta(optionIndex: number, value: string, delta: string) {
+    setOptions((prev) =>
+      prev.map((option, i) =>
+        i === optionIndex
+          ? {
+              ...option,
+              values: option.values.map((v) => (v.value === value ? { ...v, delta } : v)),
+            }
+          : option
+      )
+    );
+  }
+
+  function updateVariant<K extends keyof VariantDraft>(key: string, field: K, value: VariantDraft[K]) {
     setVariantValues((prev) => {
       const next = new Map(prev);
       next.set(key, { ...(next.get(key) ?? EMPTY_VARIANT), [field]: value });
+      return next;
+    });
+  }
+
+  /** Base price plus every selected value's adjustment, e.g. 1999 + 200 + 600. */
+  function computedPrice(combo: string[]) {
+    return combo.reduce((total, value, optionIndex) => {
+      const delta = validOptions[optionIndex]?.values.find((v) => v.value === value)?.delta;
+      return total + (Number(delta) || 0);
+    }, Number(basePrice) || 0);
+  }
+
+  /**
+   * Writes the computed price (and optionally one stock figure) across every
+   * included row. Explicit rather than reactive so the seller can still hand-
+   * tune individual rows afterwards without the form overwriting them.
+   */
+  function applyToAllVariants() {
+    setVariantValues((prev) => {
+      const next = new Map(prev);
+      for (const combo of combinations) {
+        const key = JSON.stringify(combo);
+        const draft = next.get(key) ?? EMPTY_VARIANT;
+        if (draft.isExcluded) continue;
+
+        next.set(key, {
+          ...draft,
+          price: String(computedPrice(combo)),
+          stockQuantity: bulkStock === "" ? draft.stockQuantity : bulkStock,
+        });
+      }
       return next;
     });
   }
@@ -233,17 +306,21 @@ export function ProductForm({ product }: { product?: Product }) {
       // Left off when creating so the API publishes the product itself —
       // the listed/unlisted switch only exists once there's a product to hide.
       ...(isEditing && { status: isListed ? ("active" as const) : ("archived" as const) }),
-      options: validOptions,
-      variants: combinations.map((combo) => {
-        const key = JSON.stringify(combo);
-        const draft = variantValues.get(key) ?? EMPTY_VARIANT;
-        return {
+      options: validOptions.map((option) => ({
+        name: option.name,
+        values: option.values.map((value) => value.value),
+      })),
+      // Excluded combinations are simply absent — the storefront already
+      // handles a missing variant as "that combination isn't available".
+      variants: combinations
+        .map((combo) => ({ combo, draft: variantValues.get(JSON.stringify(combo)) ?? EMPTY_VARIANT }))
+        .filter(({ draft }) => !draft.isExcluded)
+        .map(({ combo, draft }) => ({
           optionValues: combo,
           sku: draft.sku,
           price: Number(draft.price) || 0,
           stockQuantity: Number(draft.stockQuantity) || 0,
-        };
-      }),
+        })),
     };
 
     setIsPending(true);
@@ -345,20 +422,38 @@ export function ProductForm({ product }: { product?: Product }) {
             </div>
 
             {option.values.length > 0 && (
-              <TagGroup
-                aria-label={option.name || t("optionNameLabel")}
-                onRemove={(keys) => {
-                  for (const key of keys) removeOptionValue(index, String(key));
-                }}
-              >
-                <TagGroup.List items={option.values.map((value) => ({ id: value }))}>
-                  {(item) => (
-                    <Tag id={item.id} textValue={item.id}>
-                      {item.id}
-                    </Tag>
-                  )}
-                </TagGroup.List>
-              </TagGroup>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-xs text-muted">
+                  <span className="flex-1">{t("valueLabel")}</span>
+                  <span className="w-24">{t("priceAdjustmentLabel")}</span>
+                  <span className="size-7" aria-hidden />
+                </div>
+
+                {option.values.map((value) => (
+                  <div key={value.value} className="flex items-center gap-2">
+                    <span className="flex-1 truncate text-sm text-foreground">{value.value}</span>
+                    <NumberField
+                      aria-label={t("priceAdjustmentFor", { value: value.value })}
+                      step={0.01}
+                      isDisabled={isPending}
+                      value={value.delta === "" ? undefined : Number(value.delta)}
+                      onChange={(delta) =>
+                        updateValueDelta(index, value.value, Number.isNaN(delta) ? "" : String(delta))
+                      }
+                    >
+                      <NumberField.Group>
+                        <NumberField.Input className="w-24" placeholder="0.00" />
+                      </NumberField.Group>
+                    </NumberField>
+                    <CloseButton
+                      aria-label={t("removeValue", { value: value.value })}
+                      isDisabled={isPending}
+                      onPress={() => removeOptionValue(index, value.value)}
+                      className="size-7"
+                    />
+                  </div>
+                ))}
+              </div>
             )}
 
             <div className="flex gap-2">
@@ -386,18 +481,72 @@ export function ProductForm({ product }: { product?: Product }) {
           </div>
         ))}
 
-        <Button variant="outline" isDisabled={isPending} onPress={addOption} className="self-start">
+        <Button
+          variant="outline"
+          isDisabled={isPending || options.length >= MAX_OPTIONS}
+          onPress={addOption}
+          className="self-start"
+        >
           {t("addOption")}
         </Button>
+        {options.length >= MAX_OPTIONS && (
+          <p className="text-xs text-muted">{t("maxOptionsReached", { count: MAX_OPTIONS })}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-3">
-        <h2 className="font-medium text-foreground">{t("variantsHeading")}</h2>
+        <div>
+          <h2 className="font-medium text-foreground">{t("variantsHeading")}</h2>
+          <p className="text-sm text-muted">
+            {t("variantSummary", { included: includedCount, total: combinations.length })}
+          </p>
+        </div>
+
+        {includedCount > MAX_VARIANTS && (
+          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+            {t("tooManyVariants", { count: MAX_VARIANTS })}
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-end gap-2 rounded-lg border border-border p-4">
+          <NumberField
+            minValue={0}
+            step={0.01}
+            isDisabled={isPending}
+            value={basePrice === "" ? undefined : Number(basePrice)}
+            onChange={(value) => setBasePrice(Number.isNaN(value) ? "" : String(value))}
+          >
+            <Label>{t("basePriceLabel")}</Label>
+            <NumberField.Group>
+              <NumberField.Input className="w-28" />
+            </NumberField.Group>
+          </NumberField>
+
+          <NumberField
+            minValue={0}
+            step={1}
+            isDisabled={isPending}
+            value={bulkStock === "" ? undefined : Number(bulkStock)}
+            onChange={(value) => setBulkStock(Number.isNaN(value) ? "" : String(value))}
+          >
+            <Label>{t("bulkStockLabel")}</Label>
+            <NumberField.Group>
+              <NumberField.Input className="w-24" />
+            </NumberField.Group>
+          </NumberField>
+
+          <Button variant="outline" isDisabled={isPending} onPress={applyToAllVariants}>
+            {t("applyToAll")}
+          </Button>
+
+          <p className="w-full text-xs text-muted">{t("applyToAllHint")}</p>
+        </div>
 
         <Table>
           <Table.ScrollContainer>
             <Table.Content aria-label={t("variantsHeading")}>
               <Table.Header>
+                <Table.Column>{t("includeLabel")}</Table.Column>
                 {validOptions.map((option, index) => (
                   <Table.Column key={`option-${index}`} isRowHeader={index === 0}>
                     {option.name}
@@ -413,7 +562,21 @@ export function ProductForm({ product }: { product?: Product }) {
                   const draft = variantValues.get(key) ?? EMPTY_VARIANT;
 
                   return (
-                    <Table.Row key={key}>
+                    <Table.Row key={key} className={draft.isExcluded ? "opacity-50" : undefined}>
+                      <Table.Cell>
+                        <Checkbox
+                          aria-label={t("includeCombination", { combination: combo.join(" / ") })}
+                          isSelected={!draft.isExcluded}
+                          isDisabled={isPending}
+                          onChange={(isSelected) => updateVariant(key, "isExcluded", !isSelected)}
+                        >
+                          <Checkbox.Content>
+                            <Checkbox.Control>
+                              <Checkbox.Indicator />
+                            </Checkbox.Control>
+                          </Checkbox.Content>
+                        </Checkbox>
+                      </Table.Cell>
                       {combo.map((value, i) => (
                         <Table.Cell key={i}>{value}</Table.Cell>
                       ))}
@@ -422,7 +585,7 @@ export function ProductForm({ product }: { product?: Product }) {
                           aria-label={t("priceLabel")}
                           minValue={0}
                           step={0.01}
-                          isDisabled={isPending}
+                          isDisabled={isPending || draft.isExcluded}
                           value={draft.price === "" ? undefined : Number(draft.price)}
                           onChange={(value) =>
                             updateVariant(key, "price", Number.isNaN(value) ? "" : String(value))
@@ -438,7 +601,7 @@ export function ProductForm({ product }: { product?: Product }) {
                           aria-label={t("stockLabel")}
                           minValue={0}
                           step={1}
-                          isDisabled={isPending}
+                          isDisabled={isPending || draft.isExcluded}
                           value={Number(draft.stockQuantity) || 0}
                           onChange={(value) =>
                             updateVariant(key, "stockQuantity", Number.isNaN(value) ? "0" : String(value))
@@ -452,7 +615,7 @@ export function ProductForm({ product }: { product?: Product }) {
                       <Table.Cell>
                         <TextField
                           aria-label={t("skuLabel")}
-                          isDisabled={isPending}
+                          isDisabled={isPending || draft.isExcluded}
                           value={draft.sku}
                           onChange={(value) => updateVariant(key, "sku", value)}
                         >
@@ -486,7 +649,12 @@ export function ProductForm({ product }: { product?: Product }) {
       <Button
         type="submit"
         isPending={isPending}
-        isDisabled={isUploadingImages || removingImageId !== null}
+        isDisabled={
+          isUploadingImages ||
+          removingImageId !== null ||
+          includedCount === 0 ||
+          includedCount > MAX_VARIANTS
+        }
         className="self-start"
       >
         {({ isPending: pending }) => (

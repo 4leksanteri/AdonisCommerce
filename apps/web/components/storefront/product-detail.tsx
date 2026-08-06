@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Button, Chip, ToggleButton, ToggleButtonGroup } from "@heroui/react";
+import { CURRENCY_FORMAT } from "@/lib/format";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
 /**
@@ -31,12 +32,11 @@ function isInStock(variant: PublicProductVariant | undefined) {
   return variant !== undefined && variant.stockQuantity > 0;
 }
 
-function formatPrice(price: number | string) {
-  return `€${Number(price).toFixed(2)}`;
-}
-
 export function ProductDetail({ product }: { product: PublicProduct }) {
   const t = useTranslations("Storefront.product");
+  const format = useFormatter();
+  const formatPrice = (price: number | string) =>
+    format.number(Number(price), CURRENCY_FORMAT);
 
   /** The option-value ids of `variant`, laid out in product option order. */
   const selectionFor = useMemo(

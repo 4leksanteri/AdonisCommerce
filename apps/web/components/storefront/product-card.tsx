@@ -1,14 +1,19 @@
 import Image from "next/image";
+import { getFormatter } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { CURRENCY_FORMAT } from "@/lib/format";
 import type { PublicProductCard } from "@/lib/storefront/types";
 
-function formatPriceRange(min: string | null, max: string | null) {
-  if (min === null || max === null) return null;
-  return min === max ? `€${min}` : `€${min}–€${max}`;
-}
+export async function ProductCard({ product }: { product: PublicProductCard }) {
+  const format = await getFormatter();
 
-export function ProductCard({ product }: { product: PublicProductCard }) {
-  const price = formatPriceRange(product.priceMin, product.priceMax);
+  const { priceMin, priceMax } = product;
+  const price =
+    priceMin === null || priceMax === null
+      ? null
+      : priceMin === priceMax
+        ? format.number(Number(priceMin), CURRENCY_FORMAT)
+        : `${format.number(Number(priceMin), CURRENCY_FORMAT)}–${format.number(Number(priceMax), CURRENCY_FORMAT)}`;
 
   return (
     <Link

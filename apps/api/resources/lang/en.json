@@ -46,7 +46,9 @@
       "required": "This field is required",
       "email": "Enter a valid email address",
       "minLength": "This value is too short",
-      "databaseUnique": "This email is already registered"
+      "databaseUnique": "This email is already registered",
+      "arrayMinLength": "Add at least one item",
+      "arrayMaxLength": "Too many items"
     }
   },
   "ApiMessages": {
@@ -137,7 +139,20 @@
       "removeImage": "Remove image",
       "statusHeading": "Availability",
       "statusLabel": "Listed in your shop",
-      "statusHint": "Turn this off to hide the product from your shop without deleting it. You can list it again at any time."
+      "statusHint": "Turn this off to hide the product from your shop without deleting it. You can list it again at any time.",
+      "valueLabel": "Value",
+      "priceAdjustmentLabel": "Price +/-",
+      "priceAdjustmentFor": "Price adjustment for {value}",
+      "removeValue": "Remove {value}",
+      "maxOptionsReached": "You can add up to {count} options.",
+      "basePriceLabel": "Base price",
+      "bulkStockLabel": "Stock",
+      "applyToAll": "Apply to all",
+      "applyToAllHint": "Fills every included variant with the base price plus its option adjustments. You can still edit rows individually afterwards.",
+      "includeLabel": "Include",
+      "includeCombination": "Include {combination}",
+      "variantSummary": "{included} of {total} combinations included",
+      "tooManyVariants": "Too many combinations — a product can have at most {count} variants. Remove some option values or exclude combinations."
     }
   },
   "Cart": {
