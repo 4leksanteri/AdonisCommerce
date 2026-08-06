@@ -8,6 +8,11 @@ export interface ApiDefinition {
   uploads: {
     show: typeof routes['uploads.show']
   }
+  shops: {
+    storefrontProducts: {
+      show: typeof routes['shops.storefront_products.show']
+    }
+  }
   auth: {
     registeredUser: {
       store: typeof routes['auth.registered_user.store']

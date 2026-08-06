@@ -9,6 +9,10 @@ export const routing = defineRouting({
       en: "/reset-password",
       fi: "/salasanan-nollaus",
     },
+    "/shop/[shopSlug]/[productSlug]": {
+      en: "/shop/[shopSlug]/[productSlug]",
+      fi: "/kauppa/[shopSlug]/[productSlug]",
+    },
     "/seller": {
       en: "/seller",
       fi: "/myyja",

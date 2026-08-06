@@ -148,5 +148,15 @@
     "remove": "Remove",
     "subtotal": "Subtotal",
     "checkout": "Checkout"
+  },
+  "Storefront": {
+    "product": {
+      "addToCart": "Add to cart",
+      "soldOut": "Sold out",
+      "combinationUnavailable": "That combination isn't available",
+      "lowStock": "{count, plural, one {Only # left} other {Only # left}}",
+      "descriptionHeading": "About this item",
+      "viewImage": "View image {number}"
+    }
   }
 }

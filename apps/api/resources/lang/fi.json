@@ -148,5 +148,15 @@
     "remove": "Poista",
     "subtotal": "Välisumma",
     "checkout": "Kassalle"
+  },
+  "Storefront": {
+    "product": {
+      "addToCart": "Lisää ostoskoriin",
+      "soldOut": "Loppuunmyyty",
+      "combinationUnavailable": "Tämä yhdistelmä ei ole saatavilla",
+      "lowStock": "{count, plural, one {Vain # jäljellä} other {Vain # jäljellä}}",
+      "descriptionHeading": "Tietoja tuotteesta",
+      "viewImage": "Näytä kuva {number}"
+    }
   }
 }

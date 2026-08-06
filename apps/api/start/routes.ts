@@ -18,6 +18,15 @@ router.get('/', () => {
 router.get('/api/translations/:locale', [controllers.Translations, 'show'])
 router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 
+// Storefront — unauthenticated, so every handler filters down to what a
+// shopper is allowed to see (active products, approved shops).
+router
+  .group(() => {
+    router.get(':shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
+  })
+  .prefix('/api/shops')
+  .as('shops')
+
 router
   .group(() => {
     router.post('register', [controllers.RegisteredUser, 'store'])

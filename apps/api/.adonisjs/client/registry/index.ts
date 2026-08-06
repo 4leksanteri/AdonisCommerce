@@ -18,6 +18,12 @@ const routes = {
     tokens: [{"old":"/uploads/:filename","type":0,"val":"uploads","end":""},{"old":"/uploads/:filename","type":1,"val":"filename","end":""}],
     types: placeholder as Registry['uploads.show']['types'],
   },
+  'shops.storefront_products.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/shops/:shopSlug/products/:productSlug',
+    tokens: [{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"api","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"shops","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":1,"val":"shopSlug","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":0,"val":"products","end":""},{"old":"/api/shops/:shopSlug/products/:productSlug","type":1,"val":"productSlug","end":""}],
+    types: placeholder as Registry['shops.storefront_products.show']['types'],
+  },
   'auth.registered_user.store': {
     methods: ["POST"],
     pattern: '/api/auth/register',
