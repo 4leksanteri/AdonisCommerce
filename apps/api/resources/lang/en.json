@@ -176,7 +176,8 @@
       "lowStock": "{count, plural, one {Only # left} other {Only # left}}",
       "descriptionHeading": "About this item",
       "viewImage": "View image {number}",
-      "approximateFrom": "Seller charges {price}"
+      "approximateFrom": "Seller charges {price}",
+      "quantityLabel": "Quantity"
     },
     "home": {
       "heading": "Fresh from our makers",

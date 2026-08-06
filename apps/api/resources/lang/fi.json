@@ -176,7 +176,8 @@
       "lowStock": "{count, plural, one {Vain # jäljellä} other {Vain # jäljellä}}",
       "descriptionHeading": "Tietoja tuotteesta",
       "viewImage": "Näytä kuva {number}",
-      "approximateFrom": "Myyjä veloittaa {price}"
+      "approximateFrom": "Myyjä veloittaa {price}",
+      "quantityLabel": "Määrä"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",

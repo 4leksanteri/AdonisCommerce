@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
-import { Button, Chip, ToggleButton, ToggleButtonGroup } from "@heroui/react";
+import { Button, Chip, Label, NumberField, ToggleButton, ToggleButtonGroup } from "@heroui/react";
 import {
   convertCents,
   currencyFormat,
@@ -82,6 +82,7 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   );
 
   const [activeImage, setActiveImage] = useState(0);
+  const [desiredQuantity, setDesiredQuantity] = useState(1);
 
   const selectedVariant = useMemo(
     () => findVariant(product.variants, selection),
@@ -128,6 +129,19 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   const images = product.images;
   const isUnavailable = selectedVariant === undefined;
   const isSoldOut = selectedVariant !== undefined && selectedVariant.stockQuantity === 0;
+
+  const maxQuantity = selectedVariant?.stockQuantity ?? 1;
+  /**
+   * Derived rather than synced through an effect. Switching to a variant with
+   * less stock must never leave an unbuyable number on screen, not even for a
+   * frame — and keeping the *desired* figure separately means switching back
+   * to a well-stocked variant restores what the shopper actually asked for.
+   */
+  const quantity = Math.min(desiredQuantity, Math.max(maxQuantity, 1));
+
+  // A one-of-a-kind listing — most of them, on a handmade marketplace — has
+  // nothing to choose, and a control locked at 1 reads as broken.
+  const showQuantity = !isUnavailable && !isSoldOut && maxQuantity > 1;
 
   return (
     <div className="grid gap-8 md:grid-cols-2 md:gap-12">
@@ -221,6 +235,26 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
           </div>
         ))}
 
+        {showQuantity && (
+          <NumberField
+            minValue={1}
+            // React Aria clamps typing and stepping against this; the derived
+            // `quantity` above covers the case it can't see — the shopper
+            // switching variant without touching the field.
+            maxValue={maxQuantity}
+            step={1}
+            value={quantity}
+            onChange={(value) => setDesiredQuantity(Number.isNaN(value) ? 1 : value)}
+          >
+            <Label>{t("quantityLabel")}</Label>
+            <NumberField.Group className="w-32">
+              <NumberField.DecrementButton />
+              <NumberField.Input className="text-center" />
+              <NumberField.IncrementButton />
+            </NumberField.Group>
+          </NumberField>
+        )}
+
         <div className="flex flex-col gap-3">
           {isUnavailable ? (
             <Chip color="danger">
@@ -242,8 +276,11 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
             className="self-start"
             isDisabled={isUnavailable || isSoldOut}
             onPress={() => {
-              // TODO: wire to the cart once it has a real backend — the
-              // header popover is still running on mock data.
+              // TODO: add `quantity` of `selectedVariant` to the cart. Inert
+              // until the cart has real state — the header popover is still
+              // running on mock data. Stock is re-checked server-side then;
+              // the clamp here is convenience, not a guarantee.
+              void quantity;
             }}
           >
             {t("addToCart")}
