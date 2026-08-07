@@ -12,6 +12,9 @@ export interface ApiDefinition {
     exchangeRates: {
       index: typeof routes['storefront.exchange_rates.index']
     }
+    cart: {
+      hydrate: typeof routes['storefront.cart.hydrate']
+    }
     storefrontProducts: {
       index: typeof routes['storefront.storefront_products.index']
       show: typeof routes['storefront.storefront_products.show']

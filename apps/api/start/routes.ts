@@ -23,6 +23,7 @@ router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 router
   .group(() => {
     router.get('exchange-rates', [controllers.ExchangeRates, 'index'])
+    router.post('cart', [controllers.Cart, 'hydrate'])
     router.get('products', [controllers.StorefrontProducts, 'index'])
     router.get('shops/:shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
   })

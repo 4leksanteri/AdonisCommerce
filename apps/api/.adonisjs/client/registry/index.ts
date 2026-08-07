@@ -24,6 +24,12 @@ const routes = {
     tokens: [{"old":"/api/storefront/exchange-rates","type":0,"val":"api","end":""},{"old":"/api/storefront/exchange-rates","type":0,"val":"storefront","end":""},{"old":"/api/storefront/exchange-rates","type":0,"val":"exchange-rates","end":""}],
     types: placeholder as Registry['storefront.exchange_rates.index']['types'],
   },
+  'storefront.cart.hydrate': {
+    methods: ["POST"],
+    pattern: '/api/storefront/cart',
+    tokens: [{"old":"/api/storefront/cart","type":0,"val":"api","end":""},{"old":"/api/storefront/cart","type":0,"val":"storefront","end":""},{"old":"/api/storefront/cart","type":0,"val":"cart","end":""}],
+    types: placeholder as Registry['storefront.cart.hydrate']['types'],
+  },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/products',

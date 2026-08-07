@@ -7,6 +7,7 @@ export type ScannedRoutes = {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
+    'storefront.cart.hydrate': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
@@ -49,6 +50,7 @@ export type ScannedRoutes = {
     'products.products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
+    'storefront.cart.hydrate': { paramsTuple?: []; params?: {} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }

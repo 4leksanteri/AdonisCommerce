@@ -43,6 +43,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/exchange_rates_controller').default['index']>>>
     }
   }
+  'storefront.cart.hydrate': {
+    methods: ["POST"]
+    pattern: '/api/storefront/cart'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/cart').hydrateCartValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/cart').hydrateCartValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/cart_controller').default['hydrate']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/cart_controller').default['hydrate']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/products'
