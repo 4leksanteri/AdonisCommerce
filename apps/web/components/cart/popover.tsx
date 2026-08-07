@@ -7,7 +7,9 @@ import { Badge, Button, NumberField, Popover, Spinner } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
 import { convertCents, currencyFormat, toMajorUnits } from "@/lib/format";
 import { useCart } from "@/lib/cart/context";
-import { useDisplayCurrency } from "@/lib/storefront/currency-context";
+import { useStorefrontPreferences } from "@/lib/storefront/preferences-context";
+import { shippingCentsFor } from "@/lib/storefront/shipping";
+import { ShipToSelect } from "@/components/storefront/ship-to-select";
 import type { CartLine } from "@/lib/cart/types";
 
 /** Mirrors UNTRACKED_MAX_PER_ORDER on the product page. */
@@ -42,7 +44,7 @@ export function CartPopover() {
   const t = useTranslations("Cart");
   const format = useFormatter();
   const { lines, unavailable, isLoading, lineCount, items, setQuantity, remove } = useCart();
-  const { displayCurrency, rates } = useDisplayCurrency();
+  const { displayCurrency, rates, shipToCountry } = useStorefrontPreferences();
 
   const quantityOf = (variantId: string) =>
     items.find((item) => item.variantId === variantId)?.quantity ?? 0;
@@ -68,21 +70,57 @@ export function CartPopover() {
   const shops = groupByShop(lines);
 
   /**
-   * Grouped by the currency each line is *displayed* in, so choosing a display
-   * currency collapses a mixed-currency cart into one approximate total. With
-   * no choice made, it falls back to one row per seller currency — adding EUR
-   * to SEK would be nonsense.
+   * Shipping is billed per seller and, within a seller, per profile — items
+   * sharing a parcel are charged once. So it's computed over the shop groups
+   * rather than line by line, matching what the order endpoint will charge.
    */
-  const totals = [
-    ...lines
-      .reduce((byCurrency, line) => {
-        const target = targetFor(line.currency);
-        const cents = line.priceCents * quantityOf(line.variantId);
-        const amount = convertCents(cents, line.currency, target, rates) ?? cents;
-        return byCurrency.set(target, (byCurrency.get(target) ?? 0) + amount);
-      }, new Map<string, number>())
-      .entries(),
-  ];
+  const shippingByShop = new Map<string, { cents: number; currency: string; deliverable: boolean }>();
+  for (const shop of shops) {
+    const byProfile = new Map<string, { rates: typeof shop.lines[number]["shippingRates"]; quantity: number }>();
+
+    for (const line of shop.lines) {
+      if (!line.shippingProfileId) continue;
+      const entry = byProfile.get(line.shippingProfileId);
+      byProfile.set(line.shippingProfileId, {
+        rates: line.shippingRates,
+        quantity: (entry?.quantity ?? 0) + quantityOf(line.variantId),
+      });
+    }
+
+    let cents = 0;
+    let deliverable = true;
+    for (const { rates: profileRates, quantity } of byProfile.values()) {
+      const quote = shippingCentsFor(profileRates, shipToCountry, quantity);
+      if (!quote.deliverable) deliverable = false;
+      cents += quote.cents;
+    }
+
+    shippingByShop.set(shop.slug, { cents, currency: shop.lines[0].currency, deliverable });
+  }
+
+  /**
+   * Grouped by the currency each amount is *displayed* in, so choosing a
+   * display currency collapses a mixed-currency cart into one set of figures.
+   * With no choice made, it falls back to one block per seller currency —
+   * adding EUR to SEK would be nonsense.
+   */
+  const totals = new Map<string, { subtotal: number; shipping: number }>();
+  const addTo = (currency: string, key: "subtotal" | "shipping", cents: number) => {
+    const target = targetFor(currency);
+    const amount = convertCents(cents, currency, target, rates) ?? cents;
+    const entry = totals.get(target) ?? { subtotal: 0, shipping: 0 };
+    entry[key] += amount;
+    totals.set(target, entry);
+  };
+
+  for (const line of lines) {
+    addTo(line.currency, "subtotal", line.priceCents * quantityOf(line.variantId));
+  }
+  for (const shipping of shippingByShop.values()) {
+    addTo(shipping.currency, "shipping", shipping.cents);
+  }
+
+  const hasUndeliverable = [...shippingByShop.values()].some((s) => !s.deliverable);
 
   return (
     <Popover>
@@ -218,21 +256,48 @@ export function CartPopover() {
                 </div>
               )}
 
-              <div className="mt-4 flex flex-col gap-1 border-t border-border pt-3">
-                {totals.map(([currency, amount]) => (
-                  <div key={currency} className="flex items-center justify-between">
-                    <span className="text-sm text-muted">{t("subtotal")}</span>
-                    <span className="text-sm font-semibold text-foreground">
-                      {displayCurrency && currency === displayCurrency && lines.some((l) => l.currency !== currency)
-                        ? "≈ "
-                        : ""}
-                      {format.number(toMajorUnits(amount), currencyFormat(currency))}
-                    </span>
-                  </div>
-                ))}
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-border pt-3">
+                <span className="text-sm text-muted">{t("shipTo")}</span>
+                <ShipToSelect />
               </div>
 
-              <Button className="mt-4" fullWidth isDisabled>
+              <div className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
+                {[...totals.entries()].map(([currency, amount]) => {
+                  const approx =
+                    displayCurrency &&
+                    currency === displayCurrency &&
+                    lines.some((line) => line.currency !== currency)
+                      ? "≈ "
+                      : "";
+                  const money = (cents: number) =>
+                    `${approx}${format.number(toMajorUnits(cents), currencyFormat(currency))}`;
+
+                  return (
+                    <div key={currency} className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between text-sm text-muted">
+                        <span>{t("subtotal")}</span>
+                        <span>{money(amount.subtotal)}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-muted">
+                        <span>{t("shipping")}</span>
+                        <span>{amount.shipping === 0 ? t("shippingFree") : money(amount.shipping)}</span>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-border pt-1">
+                        <span className="text-sm font-medium text-foreground">{t("total")}</span>
+                        <span className="text-sm font-semibold text-foreground">
+                          {money(amount.subtotal + amount.shipping)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {hasUndeliverable && (
+                  <p className="text-xs text-danger">{t("someUndeliverable")}</p>
+                )}
+              </div>
+
+              <Button className="mt-4" fullWidth isDisabled={hasUndeliverable || true}>
                 {t("checkout")}
               </Button>
             </>

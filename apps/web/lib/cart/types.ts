@@ -1,3 +1,5 @@
+import type { PublicShippingRate } from "@/lib/storefront/shipping";
+
 /**
  * What the browser persists. Deliberately just an id and a count — caching
  * prices locally means eventually showing one price and charging another.
@@ -20,6 +22,9 @@ export type CartLine = {
   priceCents: number;
   stockQuantity: number;
   optionValues: string[];
+  /** Null ships free; grouped on so items sharing a profile share a parcel. */
+  shippingProfileId: string | null;
+  shippingRates: PublicShippingRate[];
 };
 
 /** A stored item the API didn't return — delisted, archived or sold out. */

@@ -5,11 +5,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { AuthProvider } from "@/lib/auth/context";
 import { CartProvider } from "@/lib/cart/context";
-import { DisplayCurrencyProvider } from "@/lib/storefront/currency-context";
+import { StorefrontPreferencesProvider } from "@/lib/storefront/preferences-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getCurrentUser } from "@/lib/auth/queries";
-import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
+import { getDisplayCurrency, getExchangeRates, getShipToCountry } from "@/lib/storefront/currency";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -45,10 +45,11 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const [user, displayCurrency, rates] = await Promise.all([
+  const [user, displayCurrency, rates, shipToCountry] = await Promise.all([
     getCurrentUser(),
     getDisplayCurrency(),
     getExchangeRates(),
+    getShipToCountry(),
   ]);
 
   return (
@@ -56,13 +57,17 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AuthProvider initialUser={user}>
-            <DisplayCurrencyProvider displayCurrency={displayCurrency} rates={rates}>
+            <StorefrontPreferencesProvider
+              displayCurrency={displayCurrency}
+              rates={rates}
+              shipToCountry={shipToCountry}
+            >
               <CartProvider>
               <Header platformName={APP_NAME} />
               {children}
               <Footer platformName={APP_NAME} />
               </CartProvider>
-            </DisplayCurrencyProvider>
+            </StorefrontPreferencesProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

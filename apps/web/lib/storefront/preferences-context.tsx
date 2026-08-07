@@ -2,16 +2,20 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { ExchangeRates } from "@/lib/format";
+import { DEFAULT_SHIP_TO } from "./shipping";
 
-type DisplayCurrencyValue = {
+type StorefrontPreferences = {
   /** Null until the shopper picks one — show each price in its own currency. */
   displayCurrency: string | null;
   rates: ExchangeRates;
+  /** Destination used to quote shipping before checkout. */
+  shipToCountry: string;
 };
 
-const DisplayCurrencyContext = createContext<DisplayCurrencyValue>({
+const StorefrontPreferencesContext = createContext<StorefrontPreferences>({
   displayCurrency: null,
   rates: {},
+  shipToCountry: DEFAULT_SHIP_TO,
 });
 
 /**
@@ -20,18 +24,19 @@ const DisplayCurrencyContext = createContext<DisplayCurrencyValue>({
  * `getExchangeRates` directly instead — they can't consume a context, and
  * both routes end up at the same cookie and the same cached rates.
  */
-export function DisplayCurrencyProvider({
+export function StorefrontPreferencesProvider({
   displayCurrency,
   rates,
+  shipToCountry,
   children,
-}: DisplayCurrencyValue & { children: ReactNode }) {
+}: StorefrontPreferences & { children: ReactNode }) {
   return (
-    <DisplayCurrencyContext.Provider value={{ displayCurrency, rates }}>
+    <StorefrontPreferencesContext.Provider value={{ displayCurrency, rates, shipToCountry }}>
       {children}
-    </DisplayCurrencyContext.Provider>
+    </StorefrontPreferencesContext.Provider>
   );
 }
 
-export function useDisplayCurrency() {
-  return useContext(DisplayCurrencyContext);
+export function useStorefrontPreferences() {
+  return useContext(StorefrontPreferencesContext);
 }

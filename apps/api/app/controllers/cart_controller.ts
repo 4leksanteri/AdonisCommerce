@@ -36,6 +36,7 @@ export default class CartController {
       .preload('product', (product) => {
         product.preload('seller')
         product.preload('images', (images) => images.orderBy('position').limit(1))
+        product.preload('shippingProfile', (profile) => profile.preload('rates'))
       })
 
     const lines = variants.map((variant) => {
@@ -53,6 +54,14 @@ export default class CartController {
         imageUrl: image ? `/uploads/${image.path}` : null,
         priceCents: Number(variant.priceCents),
         stockQuantity: variant.stockQuantity,
+        // Grouped on by the cart: items sharing a profile ship as one parcel,
+        // so the client needs the identity as well as the rates.
+        shippingProfileId: product.shippingProfileId,
+        shippingRates: (product.shippingProfile?.rates ?? []).map((rate) => ({
+          destination: rate.destination,
+          firstItemCents: Number(rate.firstItemCents),
+          additionalItemCents: Number(rate.additionalItemCents),
+        })),
         // Ordered by the option each value belongs to, so a line always reads
         // "Lavender / Small" rather than flipping between renders.
         optionValues: [...variant.optionValues]

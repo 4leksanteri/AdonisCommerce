@@ -199,7 +199,12 @@
     "subtotal": "Välisumma",
     "checkout": "Kassalle",
     "onlyLeft": "Vain {count} jäljellä — vähennä määrää",
-    "unavailable": "Ei enää saatavilla"
+    "unavailable": "Ei enää saatavilla",
+    "total": "Yhteensä",
+    "shippingFree": "Ilmainen",
+    "someUndeliverable": "Joitakin tuotteita ei voi toimittaa valitsemaasi maahan.",
+    "shipping": "Toimitus",
+    "shipTo": "Toimitusmaa"
   },
   "Storefront": {
     "product": {
@@ -212,10 +217,10 @@
       "approximateFrom": "Myyjä veloittaa {price}",
       "quantityLabel": "Määrä",
       "addedToCart": "Lisätty ostoskoriin",
-      "shipTo": "Toimitus maahan",
+      "shipTo": "Toimitusmaa",
       "shippingCost": "Toimitus {cost}",
       "shippingFree": "Ilmainen toimitus",
-      "shippingUnavailable": "Tämä myyjä ei toimita maahan {country}"
+      "shippingUnavailable": "Myyjä ei toimita tähän maahan"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",

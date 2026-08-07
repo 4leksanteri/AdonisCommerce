@@ -199,7 +199,12 @@
     "subtotal": "Subtotal",
     "checkout": "Checkout",
     "onlyLeft": "Only {count} left — reduce the quantity",
-    "unavailable": "No longer available"
+    "unavailable": "No longer available",
+    "total": "Total",
+    "shippingFree": "Free",
+    "someUndeliverable": "Some items can't be shipped to your selected country.",
+    "shipping": "Shipping",
+    "shipTo": "Ship to"
   },
   "Storefront": {
     "product": {
@@ -215,7 +220,7 @@
       "shipTo": "Ship to",
       "shippingCost": "Shipping {cost}",
       "shippingFree": "Free shipping",
-      "shippingUnavailable": "This seller doesn't ship to {country}"
+      "shippingUnavailable": "Seller doesn't ship here"
     },
     "home": {
       "heading": "Fresh from our makers",
