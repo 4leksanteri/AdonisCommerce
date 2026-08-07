@@ -3,16 +3,22 @@
 import { apiFetch, ApiError, type ApiErrorItem } from "@/lib/api";
 import type { Seller } from "@/lib/auth/types";
 import type { Product, ProductImage } from "./types";
+import type { ShippingProfile, ShippingRateInput } from "./shipping-types";
 
 const GENERIC_ERROR: ApiErrorItem = { code: "GENERIC_ERROR", message: "Something went wrong." };
 
 type UpdateSellerResult = { seller: Seller; errors?: undefined } | { seller?: undefined; errors: ApiErrorItem[] };
 
-export async function updateSellerAction(shopName: string, description: string, currency?: string): Promise<UpdateSellerResult> {
+export async function updateSellerAction(
+  shopName: string,
+  description: string,
+  currency?: string,
+  country?: string
+): Promise<UpdateSellerResult> {
   try {
     const res = await apiFetch<{ data: Seller }>("/api/sellers/me", {
       method: "PATCH",
-      body: JSON.stringify({ shopName, description, currency }),
+      body: JSON.stringify({ shopName, description, currency, country }),
     });
     return { seller: res.data };
   } catch (error) {
@@ -26,6 +32,8 @@ export type CreateProductInput = {
   // Omitted by the create flow, which lets the API publish the product.
   status?: "active" | "archived";
   tracksInventory?: boolean;
+  /** Null ships the product free. */
+  shippingProfileId?: string | null;
   options: { name: string; values: string[] }[];
   variants: { optionValues: string[]; sku: string; priceCents: number; stockQuantity: number }[];
 };
@@ -97,6 +105,35 @@ export async function deleteProductImageAction(
 ): Promise<DeleteProductImageResult> {
   try {
     await apiFetch<void>(`/api/products/${productId}/images/${imageId}`, { method: "DELETE" });
+    return {};
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+type ShippingProfileResult =
+  | { profile: ShippingProfile; errors?: undefined }
+  | { profile?: undefined; errors: ApiErrorItem[] };
+
+export async function saveShippingProfileAction(
+  id: string | null,
+  name: string,
+  rates: ShippingRateInput[]
+): Promise<ShippingProfileResult> {
+  try {
+    const res = await apiFetch<{ data: ShippingProfile }>(
+      id === null ? "/api/shipping-profiles" : `/api/shipping-profiles/${id}`,
+      { method: id === null ? "POST" : "PATCH", body: JSON.stringify({ name, rates }) }
+    );
+    return { profile: res.data };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+export async function deleteShippingProfileAction(id: string): Promise<{ errors?: ApiErrorItem[] }> {
+  try {
+    await apiFetch<void>(`/api/shipping-profiles/${id}`, { method: "DELETE" });
     return {};
   } catch (error) {
     return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };

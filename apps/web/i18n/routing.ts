@@ -17,6 +17,10 @@ export const routing = defineRouting({
       en: "/seller",
       fi: "/myyja",
     },
+    "/seller/shipping": {
+      en: "/seller/shipping",
+      fi: "/myyja/toimitus",
+    },
     "/seller/settings": {
       en: "/seller/settings",
       fi: "/myyja/asetukset",

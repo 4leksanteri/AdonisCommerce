@@ -6,6 +6,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 const ITEMS = [
   { href: "/seller", key: "dashboard" },
   { href: "/seller/products", key: "products" },
+  { href: "/seller/shipping", key: "shipping" },
   { href: "/seller/settings", key: "settings" },
 ] as const;
 

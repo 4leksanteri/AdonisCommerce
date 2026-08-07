@@ -1,4 +1,5 @@
 import type { Product, ProductVariant } from "@/lib/seller/types";
+import type { PublicShippingRate } from "./shipping";
 
 /**
  * The storefront's narrower view of a product — no `status` (public products
@@ -11,9 +12,11 @@ import type { Product, ProductVariant } from "@/lib/seller/types";
  */
 export type PublicProductVariant = Omit<ProductVariant, "sku" | "createdAt">;
 
-export type PublicProduct = Omit<Product, "status" | "variants"> & {
+export type PublicProduct = Omit<Product, "status" | "variants" | "shippingProfileId"> & {
   shop: { name: string; slug: string };
   variants: PublicProductVariant[];
+  /** Empty means the seller ships this product free. */
+  shippingRates: PublicShippingRate[];
 };
 
 /**

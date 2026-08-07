@@ -211,6 +211,54 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'shippingProfiles.shipping_profiles.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/shipping-profiles'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['index']>>>
+    }
+  }
+  'shippingProfiles.shipping_profiles.store': {
+    methods: ["POST"]
+    pattern: '/api/shipping-profiles'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/shipping_profile').shippingProfileValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/shipping_profile').shippingProfileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'shippingProfiles.shipping_profiles.update': {
+    methods: ["PATCH"]
+    pattern: '/api/shipping-profiles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/shipping_profile').shippingProfileValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/shipping_profile').shippingProfileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'shippingProfiles.shipping_profiles.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/shipping-profiles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/shipping_profiles_controller').default['destroy']>>>
+    }
+  }
   'products.products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/products'

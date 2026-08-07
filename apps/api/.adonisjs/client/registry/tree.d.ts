@@ -47,6 +47,14 @@ export interface ApiDefinition {
       update: typeof routes['sellers.sellers.update']
     }
   }
+  shippingProfiles: {
+    shippingProfiles: {
+      index: typeof routes['shippingProfiles.shipping_profiles.index']
+      store: typeof routes['shippingProfiles.shipping_profiles.store']
+      update: typeof routes['shippingProfiles.shipping_profiles.update']
+      destroy: typeof routes['shippingProfiles.shipping_profiles.destroy']
+    }
+  }
   products: {
     products: {
       index: typeof routes['products.products.index']

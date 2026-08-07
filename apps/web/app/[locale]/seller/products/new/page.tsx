@@ -1,11 +1,15 @@
 import { getTranslations } from "next-intl/server";
-import { requireSeller } from "@/lib/seller/queries";
+import { getShippingProfiles, requireSeller } from "@/lib/seller/queries";
 import { ProductForm } from "@/components/seller/product-form";
 
 export default async function NewSellerProductPage(props: PageProps<"/[locale]/seller/products/new">) {
   const { locale } = await props.params;
   await requireSeller(locale);
-  const t = await getTranslations("SellerPanel.productForm");
+
+  const [shippingProfiles, t] = await Promise.all([
+    getShippingProfiles(),
+    getTranslations("SellerPanel.productForm"),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -14,7 +18,7 @@ export default async function NewSellerProductPage(props: PageProps<"/[locale]/s
         <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
       </div>
 
-      <ProductForm />
+      <ProductForm shippingProfiles={shippingProfiles} />
     </div>
   );
 }

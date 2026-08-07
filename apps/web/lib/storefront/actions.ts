@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers";
 import { SUPPORTED_CURRENCIES, type SupportedCurrency } from "@/lib/format";
-import { CURRENCY_COOKIE } from "./currency";
+import { CURRENCY_COOKIE, SHIP_TO_COOKIE } from "./currency";
+import { SHIP_TO_COUNTRIES } from "./shipping";
 
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
@@ -21,4 +22,12 @@ export async function setDisplayCurrencyAction(currency: string): Promise<void> 
     path: "/",
     maxAge: ONE_YEAR_SECONDS,
   });
+}
+
+export async function setShipToCountryAction(country: string): Promise<void> {
+  const value = country.toUpperCase();
+  if (!(SHIP_TO_COUNTRIES as readonly string[]).includes(value)) return;
+
+  const store = await cookies();
+  store.set(SHIP_TO_COOKIE, value, { sameSite: "lax", path: "/", maxAge: ONE_YEAR_SECONDS });
 }

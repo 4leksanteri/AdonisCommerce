@@ -36,6 +36,8 @@ export type Product = {
   currency: string;
   /** False for made-to-order and digital listings — stockQuantity is ignored. */
   tracksInventory: boolean;
+  /** Null means the seller ships this product free. */
+  shippingProfileId: string | null;
   createdAt: string;
   options: ProductOption[];
   variants: ProductVariant[];

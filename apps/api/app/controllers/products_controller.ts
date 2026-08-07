@@ -207,7 +207,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, currency, tracksInventory, options, variants } =
+    const { title, description, currency, tracksInventory, shippingProfileId, options, variants } =
       await request.validateUsing(createProductValidator)
     const slug = await Product.generateUniqueSlug(seller.id, title)
 
@@ -222,6 +222,7 @@ export default class ProductsController {
       // Inherits the shop's currency unless the seller names one explicitly.
       newProduct.currency = currency ?? seller.currency
       newProduct.tracksInventory = tracksInventory ?? true
+      newProduct.shippingProfileId = shippingProfileId ?? null
       await newProduct.save()
 
       await this.syncOptionsAndVariants(trx, newProduct, options, variants)
@@ -297,7 +298,7 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, status, currency, tracksInventory, options, variants } =
+    const { title, description, status, currency, tracksInventory, shippingProfileId, options, variants } =
       await request.validateUsing(createProductValidator)
     // Only re-slug when the title actually moved. Regenerating unconditionally
     // would bump an unchanged title to `-2` (its own row counts as a clash)
@@ -315,6 +316,8 @@ export default class ProductsController {
       product.slug = slug
       product.currency = currency ?? product.currency
       product.tracksInventory = tracksInventory ?? product.tracksInventory
+      product.shippingProfileId =
+        shippingProfileId === undefined ? product.shippingProfileId : shippingProfileId
       await product.save()
 
       await this.syncOptionsAndVariants(trx, product, options, variants)

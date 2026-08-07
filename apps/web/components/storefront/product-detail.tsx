@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Image from "next/image";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Button,
   Chip,
   Label,
+  ListBox,
   NumberField,
+  Select,
   ToggleButton,
   ToggleButtonGroup,
   toast,
@@ -18,7 +20,10 @@ import {
   toMajorUnits,
   type ExchangeRates,
 } from "@/lib/format";
+import { useRouter } from "@/i18n/navigation";
 import { useCart } from "@/lib/cart/context";
+import { setShipToCountryAction } from "@/lib/storefront/actions";
+import { SHIP_TO_COUNTRIES, shippingCentsFor } from "@/lib/storefront/shipping";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
 /**
@@ -67,12 +72,21 @@ type Props = {
   /** Null means the shopper hasn't picked one — show the seller's currency. */
   displayCurrency: string | null;
   rates: ExchangeRates;
+  shipToCountry: string;
 };
 
-export function ProductDetail({ product, displayCurrency, rates }: Props) {
+export function ProductDetail({ product, displayCurrency, rates, shipToCountry }: Props) {
   const t = useTranslations("Storefront.product");
+  const locale = useLocale();
   const format = useFormatter();
+  const router = useRouter();
   const { add } = useCart();
+  const [isChangingCountry, startCountryChange] = useTransition();
+
+  const countryName = useMemo(() => {
+    const names = new Intl.DisplayNames([locale], { type: "region" });
+    return (code: string) => names.of(code) ?? code;
+  }, [locale]);
 
   const native = product.currency;
   // Falls back to the seller's currency when conversion isn't possible, so a
@@ -175,6 +189,14 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
   // A one-of-a-kind listing — most of them, on a handmade marketplace — has
   // nothing to choose, and a control locked at 1 reads as broken.
   const showQuantity = !isUnavailable && !isSoldOut && maxQuantity > 1;
+
+  /**
+   * Quoted for the chosen destination *and* the chosen quantity, because both
+   * move the number — a second item adds only the additional-item rate. Uses
+   * the same formula as the API so checkout can't disagree with this page.
+   */
+  const shipping = shippingCentsFor(product.shippingRates, shipToCountry, quantity);
+  const isFreeShipping = product.shippingRates.length === 0;
 
   return (
     <div className="grid gap-8 md:grid-cols-2 md:gap-12">
@@ -288,6 +310,48 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
           </NumberField>
         )}
 
+        <div className="flex flex-col gap-2 border-t border-border pt-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted">{t("shipTo")}</span>
+            <Select
+              aria-label={t("shipTo")}
+              isDisabled={isChangingCountry}
+              selectedKey={shipToCountry}
+              onSelectionChange={(key) =>
+                startCountryChange(async () => {
+                  await setShipToCountryAction(String(key));
+                  // The quote is rendered from a server-read cookie, so the
+                  // route has to re-render for the new destination to apply.
+                  router.refresh();
+                })
+              }
+            >
+              <Select.Trigger className="min-w-40">
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  {SHIP_TO_COUNTRIES.map((code) => (
+                    <ListBox.Item key={code} id={code} textValue={countryName(code)}>
+                      {countryName(code)}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Select.Popover>
+            </Select>
+          </div>
+
+          <p className="text-sm text-foreground">
+            {isFreeShipping
+              ? t("shippingFree")
+              : !shipping.deliverable
+                ? t("shippingUnavailable", { country: countryName(shipToCountry) })
+                : t("shippingCost", { cost: formatPrice(shipping.cents) })}
+          </p>
+        </div>
+
         <div className="flex flex-col gap-3">
           {isUnavailable ? (
             <Chip color="danger">
@@ -309,7 +373,7 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
 
           <Button
             className="self-start"
-            isDisabled={isUnavailable || isSoldOut}
+            isDisabled={isUnavailable || isSoldOut || !shipping.deliverable}
             onPress={() => {
               if (!selectedVariant) return;
               // The cart stores the id and count only; price and stock are

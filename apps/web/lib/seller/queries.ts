@@ -4,6 +4,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
 import type { Product } from "./types";
+import type { ShippingProfile } from "./shipping-types";
 
 /**
  * Redirects non-sellers home. Called from seller pages (not the shared
@@ -38,4 +39,9 @@ export async function getSellerProduct(id: string): Promise<Product | null> {
     if (error instanceof ApiError && error.status === 404) return null;
     throw error;
   }
+}
+
+export async function getShippingProfiles(): Promise<ShippingProfile[]> {
+  const res = await apiFetch<{ data: ShippingProfile[] }>("/api/shipping-profiles");
+  return res.data;
 }

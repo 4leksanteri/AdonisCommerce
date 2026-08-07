@@ -62,7 +62,7 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
+  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
   @column()
   declare contactEmail: string
@@ -76,6 +76,8 @@ export class OrderSchema extends BaseModel {
   declare reference: string
   @column()
   declare sellerId: string
+  @column()
+  declare shippingCents: bigint | number
   @column()
   declare shippingCity: string
   @column()
@@ -193,7 +195,7 @@ export class ProductVariantSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
+  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'shippingProfileId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -205,6 +207,8 @@ export class ProductSchema extends BaseModel {
   declare id: string
   @column()
   declare sellerId: string
+  @column()
+  declare shippingProfileId: string | null
   @column()
   declare slug: string
   @column()
@@ -218,8 +222,10 @@ export class ProductSchema extends BaseModel {
 }
 
 export class SellerSchema extends BaseModel {
-  static $columns = ['createdAt', 'currency', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
+  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
+  @column()
+  declare country: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
@@ -240,6 +246,40 @@ export class SellerSchema extends BaseModel {
   declare updatedAt: DateTime
   @column()
   declare userId: string
+}
+
+export class ShippingProfileSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'name', 'sellerId', 'updatedAt'] as const
+  $columns = ShippingProfileSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare name: string
+  @column()
+  declare sellerId: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class ShippingRateSchema extends BaseModel {
+  static $columns = ['additionalItemCents', 'createdAt', 'destination', 'firstItemCents', 'id', 'shippingProfileId', 'updatedAt'] as const
+  $columns = ShippingRateSchema.$columns
+  @column()
+  declare additionalItemCents: bigint | number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare destination: string
+  @column()
+  declare firstItemCents: bigint | number
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare shippingProfileId: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class UserSchema extends BaseModel {

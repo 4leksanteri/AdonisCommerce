@@ -11,6 +11,7 @@ export default class SellerTransformer extends BaseTransformer<Seller> {
       'status',
       'payoutStatus',
       'currency',
+      'country',
       'createdAt',
     ])
   }

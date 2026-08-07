@@ -15,6 +15,8 @@ import {
   NumberField,
   Spinner,
   Switch,
+  ListBox,
+  Select,
   Table,
   TextArea,
   TextField,
@@ -33,6 +35,7 @@ import { toMajorUnits, toMinorUnits } from "@/lib/format";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
 import type { Product, ProductImage } from "@/lib/seller/types";
+import type { ShippingProfile } from "@/lib/seller/shipping-types";
 
 /** `delta` is what this value adds to the base price when filling prices. */
 type OptionValueDraft = { value: string; delta: string };
@@ -103,7 +106,15 @@ function toVariantDrafts(product: Product | undefined, options: OptionDraft[]): 
   return drafts;
 }
 
-export function ProductForm({ product }: { product?: Product }) {
+const FREE_SHIPPING = "free";
+
+export function ProductForm({
+  product,
+  shippingProfiles,
+}: {
+  product?: Product;
+  shippingProfiles: ShippingProfile[];
+}) {
   const router = useRouter();
   const t = useTranslations("SellerPanel.productForm");
   const tValidation = useTranslations("Validation");
@@ -124,6 +135,11 @@ export function ProductForm({ product }: { product?: Product }) {
   const [bulkStock, setBulkStock] = useState("");
   const [isListed, setIsListed] = useState(product?.status !== "archived");
   const [tracksInventory, setTracksInventory] = useState(product?.tracksInventory ?? true);
+  // Preselect a profile for new products so free shipping is a choice rather
+  // than an oversight; an existing product keeps whatever it was saved with.
+  const [shippingProfileId, setShippingProfileId] = useState<string>(
+    product ? (product.shippingProfileId ?? FREE_SHIPPING) : (shippingProfiles[0]?.id ?? FREE_SHIPPING)
+  );
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -309,6 +325,7 @@ export function ProductForm({ product }: { product?: Product }) {
       // the listed/unlisted switch only exists once there's a product to hide.
       ...(isEditing && { status: isListed ? ("active" as const) : ("archived" as const) }),
       tracksInventory,
+      shippingProfileId: shippingProfileId === FREE_SHIPPING ? null : shippingProfileId,
       options: validOptions.map((option) => ({
         name: option.name,
         values: option.values.map((value) => value.value),
@@ -648,6 +665,36 @@ export function ProductForm({ product }: { product?: Product }) {
           </Table.ScrollContainer>
         </Table>
       </div>
+
+      <Select
+        isDisabled={isPending}
+        selectedKey={shippingProfileId}
+        onSelectionChange={(key) => setShippingProfileId(String(key))}
+        className="max-w-sm"
+      >
+        <Label>{t("shippingProfileLabel")}</Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {[
+              <ListBox.Item key={FREE_SHIPPING} id={FREE_SHIPPING} textValue={t("shippingFree")}>
+                {t("shippingFree")}
+                <ListBox.ItemIndicator />
+              </ListBox.Item>,
+              ...shippingProfiles.map((profile) => (
+                <ListBox.Item key={profile.id} id={profile.id} textValue={profile.name}>
+                  {profile.name}
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              )),
+            ]}
+          </ListBox>
+        </Select.Popover>
+        <Description>{t("shippingHint")}</Description>
+      </Select>
 
       {isEditing && (
         <div className="flex flex-col gap-3">

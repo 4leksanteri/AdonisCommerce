@@ -72,7 +72,8 @@
     "nav": {
       "dashboard": "Dashboard",
       "products": "Products",
-      "settings": "Shop settings"
+      "settings": "Shop settings",
+      "shipping": "Shipping"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",
@@ -98,7 +99,9 @@
       "saveButton": "Save changes",
       "saveSuccess": "Shop settings updated.",
       "currencyLabel": "Currency",
-      "currencyHint": "The currency new products are priced in. Products you've already listed keep the currency they were priced in."
+      "currencyHint": "The currency new products are priced in. Products you've already listed keep the currency they were priced in.",
+      "countryLabel": "Ships from",
+      "countryHint": "Decides which of your shipping rates counts as domestic."
     },
     "products": {
       "heading": "Products",
@@ -158,7 +161,33 @@
       "variantSummary": "{included} of {total} combinations included",
       "tooManyVariants": "Too many combinations — a product can have at most {count} variants. Remove some option values or exclude combinations.",
       "tracksInventoryLabel": "Track inventory",
-      "tracksInventoryHint": "Turn this off for made-to-order or digital items that never run out. Stock numbers are ignored while it's off."
+      "tracksInventoryHint": "Turn this off for made-to-order or digital items that never run out. Stock numbers are ignored while it's off.",
+      "shippingProfileLabel": "Shipping",
+      "shippingFree": "Free shipping",
+      "shippingHint": "Pick a profile, or leave as free shipping to cover postage yourself."
+    },
+    "shipping": {
+      "heading": "Shipping profiles",
+      "subheading": "Reusable postage rates you can assign to products — a small parcel costs less to send than a large one.",
+      "empty": "No shipping profiles yet. Products without one ship free.",
+      "newProfile": "New profile",
+      "nameLabel": "Profile name",
+      "namePlaceholder": "e.g. Small parcel",
+      "destinationLabel": "Destination",
+      "firstItemLabel": "First item",
+      "additionalItemLabel": "Each additional",
+      "destinationHint": "Use a two-letter country code, or * for everywhere else. A destination with no matching rate can't be ordered.",
+      "addRate": "Add destination",
+      "removeRate": "Remove destination",
+      "save": "Save profile",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "saved": "Shipping profile saved.",
+      "deleted": "Shipping profile deleted.",
+      "everywhereElse": "Everywhere else",
+      "domestic": "{country} (domestic)",
+      "rateSummary": "{first} first, {additional} each extra"
     }
   },
   "Cart": {
@@ -182,7 +211,11 @@
       "viewImage": "View image {number}",
       "approximateFrom": "Seller charges {price}",
       "quantityLabel": "Quantity",
-      "addedToCart": "Added to cart"
+      "addedToCart": "Added to cart",
+      "shipTo": "Ship to",
+      "shippingCost": "Shipping {cost}",
+      "shippingFree": "Free shipping",
+      "shippingUnavailable": "This seller doesn't ship to {country}"
     },
     "home": {
       "heading": "Fresh from our makers",

@@ -7,6 +7,8 @@ export default class OrderTransformer extends BaseTransformer<Order> {
     return {
       ...this.pick(this.resource, ['id', 'reference', 'status', 'currency', 'createdAt']),
       subtotalCents: Number(this.resource.subtotalCents),
+      shippingCents: Number(this.resource.shippingCents),
+      totalCents: Number(this.resource.subtotalCents) + Number(this.resource.shippingCents),
       // `seller` and `items` must be preloaded before transforming.
       shop: {
         name: this.resource.seller.shopName,

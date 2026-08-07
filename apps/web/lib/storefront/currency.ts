@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { SUPPORTED_CURRENCIES, type ExchangeRates, type SupportedCurrency } from "@/lib/format";
+import { DEFAULT_SHIP_TO, SHIP_TO_COUNTRIES } from "./shipping";
 
 export const CURRENCY_COOKIE = "display_currency";
 
@@ -42,4 +43,20 @@ export async function getExchangeRates(): Promise<ExchangeRates> {
   } catch {
     return {};
   }
+}
+
+export const SHIP_TO_COOKIE = "ship_to";
+
+/**
+ * Where the shopper wants things delivered, for quoting shipping before
+ * checkout. Falls back to the marketplace's home market — the picker shows
+ * the assumption rather than hiding it.
+ */
+export async function getShipToCountry(): Promise<string> {
+  const store = await cookies();
+  const value = store.get(SHIP_TO_COOKIE)?.value?.toUpperCase();
+
+  return value && (SHIP_TO_COUNTRIES as readonly string[]).includes(value)
+    ? value
+    : DEFAULT_SHIP_TO;
 }

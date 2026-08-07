@@ -5,6 +5,7 @@ import OrderItem from '#models/order_item'
 import ProductVariant from '#models/product_variant'
 import OrderTransformer from '#transformers/order_transformer'
 import { createOrderValidator } from '#validators/order'
+import { shippingCentsFor } from '#services/shipping'
 
 export default class OrdersController {
   /**
@@ -45,6 +46,7 @@ export default class OrdersController {
           .preload('product', (product) => {
             product.preload('seller')
             product.preload('images', (images) => images.orderBy('position').limit(1))
+            product.preload('shippingProfile', (profile) => profile.preload('rates'))
           })
           .forUpdate()
 
@@ -79,6 +81,27 @@ export default class OrdersController {
             0
           )
 
+          /**
+           * Priced here rather than trusted from the client, same as the
+           * items. Grouping by profile means three soaps travel as one
+           * parcel; a separate "large parcel" profile is a second box and
+           * costs again.
+           */
+          const { cents: shippingCents, undeliverable } = shippingCentsFor(
+            sellerVariants.map((variant) => ({
+              profile: variant.product.shippingProfile ?? null,
+              quantity: quantities.get(variant.id)!,
+            })),
+            shipping.country
+          )
+
+          if (undeliverable.length > 0) {
+            throw new OrderError(
+              'ORDER_UNDELIVERABLE',
+              `${sellerVariants[0].product.seller.shopName} does not ship to ${shipping.country.toUpperCase()}.`
+            )
+          }
+
           const order = new Order()
           order.useTransaction(trx)
           order.reference = await Order.generateReference()
@@ -87,6 +110,7 @@ export default class OrdersController {
           order.status = 'pending'
           order.currency = currency
           order.subtotalCents = subtotal
+          order.shippingCents = shippingCents
           order.contactEmail = user.email
           order.shippingName = shipping.name
           order.shippingLine1 = shipping.line1

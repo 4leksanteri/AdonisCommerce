@@ -5,6 +5,7 @@ import Seller, { slugify } from '#models/seller'
 import ProductOption from '#models/product_option'
 import ProductVariant from '#models/product_variant'
 import ProductImage from '#models/product_image'
+import ShippingProfile from '#models/shipping_profile'
 
 export default class Product extends ProductSchema {
   @belongsTo(() => Seller)
@@ -18,6 +19,9 @@ export default class Product extends ProductSchema {
 
   @hasMany(() => ProductImage)
   declare images: HasMany<typeof ProductImage>
+
+  @belongsTo(() => ShippingProfile)
+  declare shippingProfile: BelongsTo<typeof ShippingProfile>
 
   /**
    * Slugs only have to be unique within a shop, so collisions are resolved

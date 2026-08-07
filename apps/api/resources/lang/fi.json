@@ -72,7 +72,8 @@
     "nav": {
       "dashboard": "Yleisnäkymä",
       "products": "Tuotteet",
-      "settings": "Kaupan asetukset"
+      "settings": "Kaupan asetukset",
+      "shipping": "Toimitus"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",
@@ -98,7 +99,9 @@
       "saveButton": "Tallenna muutokset",
       "saveSuccess": "Kaupan asetukset päivitetty.",
       "currencyLabel": "Valuutta",
-      "currencyHint": "Valuutta, jossa uudet tuotteet hinnoitellaan. Jo listaamasi tuotteet säilyttävät sen valuutan, jossa ne hinnoiteltiin."
+      "currencyHint": "Valuutta, jossa uudet tuotteet hinnoitellaan. Jo listaamasi tuotteet säilyttävät sen valuutan, jossa ne hinnoiteltiin.",
+      "countryLabel": "Lähetyspaikka",
+      "countryHint": "Määrittää, mikä toimitushinnoistasi lasketaan kotimaaksi."
     },
     "products": {
       "heading": "Tuotteet",
@@ -158,7 +161,33 @@
       "variantSummary": "{included}/{total} yhdistelmää mukana",
       "tooManyVariants": "Liian monta yhdistelmää — tuotteella voi olla enintään {count} muunnelmaa. Poista joitakin arvoja tai jätä yhdistelmiä pois.",
       "tracksInventoryLabel": "Seuraa varastoa",
-      "tracksInventoryHint": "Ota tämä pois käytöstä tilauksesta valmistettaville tai digitaalisille tuotteille, jotka eivät lopu. Varastomääriä ei huomioida, kun tämä on pois päältä."
+      "tracksInventoryHint": "Ota tämä pois käytöstä tilauksesta valmistettaville tai digitaalisille tuotteille, jotka eivät lopu. Varastomääriä ei huomioida, kun tämä on pois päältä.",
+      "shippingProfileLabel": "Toimitus",
+      "shippingFree": "Ilmainen toimitus",
+      "shippingHint": "Valitse profiili tai jätä ilmaiseksi toimitukseksi maksaaksesi postikulut itse."
+    },
+    "shipping": {
+      "heading": "Toimitusprofiilit",
+      "subheading": "Uudelleenkäytettävät postimaksut, jotka voit liittää tuotteisiin — pieni paketti maksaa vähemmän kuin suuri.",
+      "empty": "Ei vielä toimitusprofiileja. Tuotteet ilman profiilia toimitetaan ilmaiseksi.",
+      "newProfile": "Uusi profiili",
+      "nameLabel": "Profiilin nimi",
+      "namePlaceholder": "esim. Pieni paketti",
+      "destinationLabel": "Kohde",
+      "firstItemLabel": "Ensimmäinen",
+      "additionalItemLabel": "Jokainen lisä",
+      "destinationHint": "Käytä kaksikirjaimista maakoodia tai * kaikille muille. Kohdetta ilman hintaa ei voi tilata.",
+      "addRate": "Lisää kohde",
+      "removeRate": "Poista kohde",
+      "save": "Tallenna profiili",
+      "cancel": "Peruuta",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "saved": "Toimitusprofiili tallennettu.",
+      "deleted": "Toimitusprofiili poistettu.",
+      "everywhereElse": "Kaikkialle muualle",
+      "domestic": "{country} (kotimaa)",
+      "rateSummary": "{first} ensimmäinen, {additional} kukin lisä"
     }
   },
   "Cart": {
@@ -182,7 +211,11 @@
       "viewImage": "Näytä kuva {number}",
       "approximateFrom": "Myyjä veloittaa {price}",
       "quantityLabel": "Määrä",
-      "addedToCart": "Lisätty ostoskoriin"
+      "addedToCart": "Lisätty ostoskoriin",
+      "shipTo": "Toimitus maahan",
+      "shippingCost": "Toimitus {cost}",
+      "shippingFree": "Ilmainen toimitus",
+      "shippingUnavailable": "Tämä myyjä ei toimita maahan {country}"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",

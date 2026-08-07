@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { requireSeller, getSellerProduct } from "@/lib/seller/queries";
+import { getShippingProfiles, requireSeller, getSellerProduct } from "@/lib/seller/queries";
 import { ProductForm } from "@/components/seller/product-form";
 
 export default async function EditSellerProductPage(
@@ -9,8 +9,9 @@ export default async function EditSellerProductPage(
   const { locale, id } = await props.params;
   await requireSeller(locale);
 
-  const [product, t] = await Promise.all([
+  const [product, shippingProfiles, t] = await Promise.all([
     getSellerProduct(id),
+    getShippingProfiles(),
     getTranslations("SellerPanel.productForm"),
   ]);
 
@@ -23,7 +24,7 @@ export default async function EditSellerProductPage(
         <p className="mt-1 text-sm text-muted">{t("editSubheading")}</p>
       </div>
 
-      <ProductForm product={product} />
+      <ProductForm product={product} shippingProfiles={shippingProfiles} />
     </div>
   );
 }

@@ -108,6 +108,30 @@ const routes = {
     tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['sellers.sellers.update']['types'],
   },
+  'shippingProfiles.shipping_profiles.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/shipping-profiles',
+    tokens: [{"old":"/api/shipping-profiles","type":0,"val":"api","end":""},{"old":"/api/shipping-profiles","type":0,"val":"shipping-profiles","end":""}],
+    types: placeholder as Registry['shippingProfiles.shipping_profiles.index']['types'],
+  },
+  'shippingProfiles.shipping_profiles.store': {
+    methods: ["POST"],
+    pattern: '/api/shipping-profiles',
+    tokens: [{"old":"/api/shipping-profiles","type":0,"val":"api","end":""},{"old":"/api/shipping-profiles","type":0,"val":"shipping-profiles","end":""}],
+    types: placeholder as Registry['shippingProfiles.shipping_profiles.store']['types'],
+  },
+  'shippingProfiles.shipping_profiles.update': {
+    methods: ["PATCH"],
+    pattern: '/api/shipping-profiles/:id',
+    tokens: [{"old":"/api/shipping-profiles/:id","type":0,"val":"api","end":""},{"old":"/api/shipping-profiles/:id","type":0,"val":"shipping-profiles","end":""},{"old":"/api/shipping-profiles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['shippingProfiles.shipping_profiles.update']['types'],
+  },
+  'shippingProfiles.shipping_profiles.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/shipping-profiles/:id',
+    tokens: [{"old":"/api/shipping-profiles/:id","type":0,"val":"api","end":""},{"old":"/api/shipping-profiles/:id","type":0,"val":"shipping-profiles","end":""},{"old":"/api/shipping-profiles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['shippingProfiles.shipping_profiles.destroy']['types'],
+  },
   'products.products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/products',

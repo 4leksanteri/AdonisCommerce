@@ -6,6 +6,7 @@ export type Seller = {
   status: string;
   payoutStatus: string;
   currency: string;
+  country: string;
   createdAt: string;
 };
 

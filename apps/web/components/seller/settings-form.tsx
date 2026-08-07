@@ -29,6 +29,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
   const tApiMessages = useTranslations("ApiMessages");
 
   const [currency, setCurrency] = useState(seller.currency);
+  const [country, setCountry] = useState(seller.country);
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -41,7 +42,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
     const description = String(formData.get("description") ?? "");
 
     setIsPending(true);
-    const result = await updateSellerAction(shopName, description, currency);
+    const result = await updateSellerAction(shopName, description, currency, country);
     setIsPending(false);
 
     if (result.errors) {
@@ -103,6 +104,16 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               </Select.Popover>
               <Description>{t("currencyHint")}</Description>
             </Select>
+
+            <TextField
+              isDisabled={isPending}
+              value={country}
+              onChange={(value) => setCountry(value.toUpperCase().slice(0, 2))}
+            >
+              <Label>{t("countryLabel")}</Label>
+              <Input className="border border-border" placeholder="FI" />
+              <Description>{t("countryHint")}</Description>
+            </TextField>
           </div>
         </Card.Content>
         <Card.Footer>

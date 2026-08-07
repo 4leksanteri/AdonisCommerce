@@ -20,6 +20,8 @@ export const createProductValidator = vine.create({
   // False for made-to-order and digital listings, where `stockQuantity` is
   // kept but ignored rather than repurposed as a sentinel.
   tracksInventory: vine.boolean().optional(),
+  // Null ships this product free; the form preselects one when the shop has any.
+  shippingProfileId: vine.string().uuid().nullable().optional(),
   // Only the seller-settable states — `draft` is assigned server-side by
   // `storeDraft` and left behind the moment the product is first saved.
   status: vine.enum(['active', 'archived']).optional(),

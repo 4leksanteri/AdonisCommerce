@@ -50,6 +50,7 @@ export default class StorefrontProductsController {
       )
       .preload('variants', (query) => query.orderBy('createdAt').preload('optionValues'))
       .preload('images', (query) => query.orderBy('position'))
+      .preload('shippingProfile', (profile) => profile.preload('rates'))
       .first()
 
     if (!product) {

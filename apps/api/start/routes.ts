@@ -68,6 +68,18 @@ router
 
 router
   .group(() => {
+    router.get('/', [controllers.ShippingProfiles, 'index'])
+    router.post('/', [controllers.ShippingProfiles, 'store'])
+    router.patch('/:id', [controllers.ShippingProfiles, 'update'])
+    router.delete('/:id', [controllers.ShippingProfiles, 'destroy'])
+  })
+  .prefix('/api/shipping-profiles')
+  .as('shippingProfiles')
+  .where('id', router.matchers.uuid())
+  .use(middleware.auth())
+
+router
+  .group(() => {
     router.get('/', [controllers.Products, 'index'])
     router.post('/', [controllers.Products, 'store'])
     router.post('/draft', [controllers.Products, 'storeDraft'])

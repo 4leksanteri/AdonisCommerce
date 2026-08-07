@@ -3,6 +3,7 @@ import { BaseTransformer } from '@adonisjs/core/transformers'
 import ProductOptionTransformer from '#transformers/product_option_transformer'
 import PublicProductVariantTransformer from '#transformers/public_product_variant_transformer'
 import ProductImageTransformer from '#transformers/product_image_transformer'
+import ShippingRateTransformer from '#transformers/shipping_rate_transformer'
 
 /**
  * Storefront-facing product. Drops `status` (public products are always
@@ -33,6 +34,15 @@ export default class PublicProductTransformer extends BaseTransformer<Product> {
       options: ProductOptionTransformer.transform(this.resource.options).depth(2),
       variants: PublicProductVariantTransformer.transform(this.resource.variants).depth(2),
       images: ProductImageTransformer.transform(this.resource.images),
+      /**
+       * The whole rate table, not a single computed cost. What a shopper pays
+       * depends on where they are and how many they buy, and shipping the
+       * rates lets the page answer both without a round-trip per change.
+       * They're public information anyway — Etsy prints them on the listing.
+       */
+      shippingRates: this.resource.shippingProfile
+        ? ShippingRateTransformer.transform(this.resource.shippingProfile.rates)
+        : [],
     }
   }
 }

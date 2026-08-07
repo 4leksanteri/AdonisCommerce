@@ -7,4 +7,6 @@ export const becomeSellerValidator = vine.create({
   // The currency new products inherit. Changing it never touches products
   // already priced — those carry their own currency.
   currency: vine.enum(SUPPORTED_CURRENCIES).optional(),
+  // Where the shop ships from — decides which shipping rate counts as domestic
+  country: vine.string().trim().fixedLength(2).optional(),
 })
