@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 import { OrderSchema } from '#database/schema'
 import { belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
@@ -21,7 +22,14 @@ export default class Order extends OrderSchema {
   @hasMany(() => OrderItem)
   declare items: HasMany<typeof OrderItem>
 
-  static async generateReference() {
+  /**
+   * Takes the caller's transaction client on purpose. Querying on the default
+   * connection instead would make one order hold *two* pool connections at
+   * once — its transaction plus this check — and a pool where every slot is
+   * an order transaction waiting for a second connection deadlocks until the
+   * acquire timeout fires.
+   */
+  static async generateReference(client?: TransactionClientContract) {
     // ~29^10 combinations — 420 trillion. The loop exists because "unlikely"
     // isn't "impossible" and the column is unique; a clash costs one extra
     // query rather than failing. References already issued at 8 characters
@@ -33,7 +41,7 @@ export default class Order extends OrderSchema {
         (byte) => REFERENCE_ALPHABET[byte % REFERENCE_ALPHABET.length]
       ).join('')
 
-      if (!(await this.query().where('reference', reference).first())) {
+      if (!(await this.query({ client }).where('reference', reference).first())) {
         return reference
       }
     }

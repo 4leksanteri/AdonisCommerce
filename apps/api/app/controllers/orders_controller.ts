@@ -114,7 +114,7 @@ export default class OrdersController {
 
           const order = new Order()
           order.useTransaction(trx)
-          order.reference = await Order.generateReference()
+          order.reference = await Order.generateReference(trx)
           order.sellerOrderNumber = Number(allocated.rows[0].assigned)
           order.userId = user.id
           order.sellerId = sellerId
@@ -158,12 +158,17 @@ export default class OrdersController {
             }
           }
 
-          await order.load((preloader) => preloader.load('items').load('seller'))
           created.push(order)
         }
 
         return created
       })
+
+      // Loaded after commit: this is presentation, and holding the row locks
+      // open for it would lengthen every checkout for no benefit.
+      for (const order of orders) {
+        await order.load((preloader) => preloader.load('items').load('seller'))
+      }
 
       response.status(201)
       return serialize(OrderTransformer.transform(orders))
