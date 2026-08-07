@@ -3,13 +3,22 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
-import { Button, Chip, Label, NumberField, ToggleButton, ToggleButtonGroup } from "@heroui/react";
+import {
+  Button,
+  Chip,
+  Label,
+  NumberField,
+  ToggleButton,
+  ToggleButtonGroup,
+  toast,
+} from "@heroui/react";
 import {
   convertCents,
   currencyFormat,
   toMajorUnits,
   type ExchangeRates,
 } from "@/lib/format";
+import { useCart } from "@/lib/cart/context";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
 /**
@@ -63,6 +72,7 @@ type Props = {
 export function ProductDetail({ product, displayCurrency, rates }: Props) {
   const t = useTranslations("Storefront.product");
   const format = useFormatter();
+  const { add } = useCart();
 
   const native = product.currency;
   // Falls back to the seller's currency when conversion isn't possible, so a
@@ -301,11 +311,11 @@ export function ProductDetail({ product, displayCurrency, rates }: Props) {
             className="self-start"
             isDisabled={isUnavailable || isSoldOut}
             onPress={() => {
-              // TODO: add `quantity` of `selectedVariant` to the cart. Inert
-              // until the cart has real state — the header popover is still
-              // running on mock data. Stock is re-checked server-side then;
-              // the clamp here is convenience, not a guarantee.
-              void quantity;
+              if (!selectedVariant) return;
+              // The cart stores the id and count only; price and stock are
+              // re-read from the API, so this can't pin a stale price.
+              add(selectedVariant.id, quantity);
+              toast.success(t("addedToCart"));
             }}
           >
             {t("addToCart")}

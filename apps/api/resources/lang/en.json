@@ -168,7 +168,9 @@
     "quantity": "Qty",
     "remove": "Remove",
     "subtotal": "Subtotal",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "onlyLeft": "Only {count} left — reduce the quantity",
+    "unavailable": "No longer available"
   },
   "Storefront": {
     "product": {
@@ -179,7 +181,8 @@
       "descriptionHeading": "About this item",
       "viewImage": "View image {number}",
       "approximateFrom": "Seller charges {price}",
-      "quantityLabel": "Quantity"
+      "quantityLabel": "Quantity",
+      "addedToCart": "Added to cart"
     },
     "home": {
       "heading": "Fresh from our makers",

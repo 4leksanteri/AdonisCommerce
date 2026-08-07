@@ -168,7 +168,9 @@
     "quantity": "Määrä",
     "remove": "Poista",
     "subtotal": "Välisumma",
-    "checkout": "Kassalle"
+    "checkout": "Kassalle",
+    "onlyLeft": "Vain {count} jäljellä — vähennä määrää",
+    "unavailable": "Ei enää saatavilla"
   },
   "Storefront": {
     "product": {
@@ -179,7 +181,8 @@
       "descriptionHeading": "Tietoja tuotteesta",
       "viewImage": "Näytä kuva {number}",
       "approximateFrom": "Myyjä veloittaa {price}",
-      "quantityLabel": "Määrä"
+      "quantityLabel": "Määrä",
+      "addedToCart": "Lisätty ostoskoriin"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",

@@ -28,48 +28,99 @@ export default class ProductsController {
   }
 
   /**
-   * Recreates a product's options/variants from scratch inside `trx`. Used
-   * by both `store` (fresh product) and `update` (finalizing a draft) —
-   * `update` deletes the existing rows first, so this always starts clean.
+   * Brings a product's options and variants in line with the submitted shape,
+   * matching existing rows instead of recreating them.
+   *
+   * Ids have to survive an edit. Carts store variant ids, and orders will too
+   * — wiping and recreating meant a seller correcting a typo silently emptied
+   * every cart holding that product. Options match on name, values on their
+   * string within an option, and variants on the *set* of option values they
+   * carry, so editing a price or restocking leaves every id untouched. Only a
+   * genuine rename or a new combination mints a new row.
    */
-  private async replaceOptionsAndVariants(
+  private async syncOptionsAndVariants(
     trx: TransactionClientContract,
     product: Product,
     options: ProductInput['options'],
     variants: ProductInput['variants']
   ) {
+    const existingOptions = await ProductOption.query({ client: trx })
+      .where('productId', product.id)
+      .preload('values')
+
     // Keyed by "optionName:value" so variants below can resolve the row id
     // they need to attach, without a second round-trip per lookup.
     const valuesByKey = new Map<string, ProductOptionValue>()
+    const keptOptionIds: string[] = []
 
     for (const [index, option] of (options ?? []).entries()) {
-      const productOption = new ProductOption()
-      productOption.useTransaction(trx)
-      productOption.productId = product.id
-      productOption.name = option.name
-      productOption.position = index
-      await productOption.save()
+      let productOption = existingOptions.find((candidate) => candidate.name === option.name)
 
+      if (productOption) {
+        productOption.useTransaction(trx)
+        productOption.position = index
+        await productOption.save()
+      } else {
+        productOption = new ProductOption()
+        productOption.useTransaction(trx)
+        productOption.productId = product.id
+        productOption.name = option.name
+        productOption.position = index
+        await productOption.save()
+      }
+      keptOptionIds.push(productOption.id)
+
+      const keptValueIds: string[] = []
       for (const [valueIndex, value] of option.values.entries()) {
-        const optionValue = new ProductOptionValue()
-        optionValue.useTransaction(trx)
-        optionValue.productOptionId = productOption.id
-        optionValue.value = value
-        optionValue.position = valueIndex
-        await optionValue.save()
+        let optionValue = productOption.values?.find((candidate) => candidate.value === value)
+
+        if (optionValue) {
+          optionValue.useTransaction(trx)
+          optionValue.position = valueIndex
+          await optionValue.save()
+        } else {
+          optionValue = new ProductOptionValue()
+          optionValue.useTransaction(trx)
+          optionValue.productOptionId = productOption.id
+          optionValue.value = value
+          optionValue.position = valueIndex
+          await optionValue.save()
+        }
+
+        keptValueIds.push(optionValue.id)
         valuesByKey.set(`${option.name}:${value}`, optionValue)
       }
+
+      // Values the seller removed. Cascades their pivot rows, which in turn
+      // orphans any variant built on them — cleaned up below.
+      await ProductOptionValue.query({ client: trx })
+        .where('productOptionId', productOption.id)
+        .whereNotIn('id', keptValueIds.length > 0 ? keptValueIds : [''])
+        .delete()
     }
 
-    for (const variant of variants) {
-      const productVariant = new ProductVariant()
-      productVariant.useTransaction(trx)
-      productVariant.productId = product.id
-      productVariant.sku = variant.sku ?? null
-      productVariant.priceCents = variant.priceCents
-      productVariant.stockQuantity = variant.stockQuantity
-      await productVariant.save()
+    await ProductOption.query({ client: trx })
+      .where('productId', product.id)
+      .whereNotIn('id', keptOptionIds.length > 0 ? keptOptionIds : [''])
+      .delete()
 
+    const existingVariants = await ProductVariant.query({ client: trx })
+      .where('productId', product.id)
+      .preload('optionValues')
+
+    /** A variant is identified by the set of option-value ids it carries. */
+    const signature = (valueIds: string[]) => [...valueIds].sort().join('|')
+
+    const existingBySignature = new Map(
+      existingVariants.map((variant) => [
+        signature(variant.optionValues.map((optionValue) => optionValue.id)),
+        variant,
+      ])
+    )
+
+    const keptVariantIds: string[] = []
+
+    for (const variant of variants) {
       const valueIds = (variant.optionValues ?? []).map((value, index) => {
         const optionName = options?.[index]?.name
         const found = optionName && valuesByKey.get(`${optionName}:${value}`)
@@ -79,10 +130,27 @@ export default class ProductsController {
         return found.id
       })
 
-      if (valueIds.length > 0) {
+      const existing = existingBySignature.get(signature(valueIds))
+      const productVariant = existing ?? new ProductVariant()
+      productVariant.useTransaction(trx)
+      productVariant.productId = product.id
+      productVariant.sku = variant.sku ?? null
+      productVariant.priceCents = variant.priceCents
+      productVariant.stockQuantity = variant.stockQuantity
+      await productVariant.save()
+
+      if (!existing && valueIds.length > 0) {
         await productVariant.related('optionValues').attach(valueIds, trx)
       }
+
+      keptVariantIds.push(productVariant.id)
     }
+
+    // Combinations the seller excluded, or that lost an option value above.
+    await ProductVariant.query({ client: trx })
+      .where('productId', product.id)
+      .whereNotIn('id', keptVariantIds.length > 0 ? keptVariantIds : [''])
+      .delete()
   }
 
   async index({ auth, response, serialize }: HttpContext) {
@@ -155,7 +223,7 @@ export default class ProductsController {
       newProduct.tracksInventory = tracksInventory ?? true
       await newProduct.save()
 
-      await this.replaceOptionsAndVariants(trx, newProduct, options, variants)
+      await this.syncOptionsAndVariants(trx, newProduct, options, variants)
 
       return newProduct
     })
@@ -200,8 +268,8 @@ export default class ProductsController {
   /**
    * Finalizes a product — used both to flesh out a draft created via
    * `storeDraft` (once images are attached) and to edit an already-active
-   * product. Options/variants are wiped and recreated from scratch rather
-   * than diffed, since there's no partial-edit UI yet.
+   * product. Options and variants are matched and updated in place rather
+   * than recreated, so their ids survive an edit — carts reference them.
    *
    * Omitting `status` publishes the product, which is what the create flow
    * wants when it finalizes its draft. The edit form always sends the
@@ -248,11 +316,7 @@ export default class ProductsController {
       product.tracksInventory = tracksInventory ?? product.tracksInventory
       await product.save()
 
-      // Cascades delete each option's values and each variant's pivot rows.
-      await ProductOption.query({ client: trx }).where('productId', product.id).delete()
-      await ProductVariant.query({ client: trx }).where('productId', product.id).delete()
-
-      await this.replaceOptionsAndVariants(trx, product, options, variants)
+      await this.syncOptionsAndVariants(trx, product, options, variants)
     })
 
     return serialize(
