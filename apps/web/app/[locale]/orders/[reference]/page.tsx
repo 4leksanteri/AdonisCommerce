@@ -37,7 +37,15 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
             <p className="text-xs font-medium tracking-wide text-muted uppercase">
               {order.shop.name}
             </p>
-            <span className="text-xs text-muted">{t(`status.${order.status}` as "status.pending")}</span>
+            <div className="flex items-center gap-3">
+              {/* The seller's own numbering — what they'll quote back to you. */}
+              <span className="text-xs text-muted">
+                {t("sellerOrderNumber", { number: order.sellerOrderNumber })}
+              </span>
+              <span className="text-xs text-muted">
+                {t(`status.${order.status}` as "status.pending")}
+              </span>
+            </div>
           </div>
 
           {order.items.map((item) => (

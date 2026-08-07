@@ -5,7 +5,14 @@ import OrderItemTransformer from '#transformers/order_item_transformer'
 export default class OrderTransformer extends BaseTransformer<Order> {
   toObject() {
     return {
-      ...this.pick(this.resource, ['id', 'reference', 'status', 'currency', 'createdAt']),
+      ...this.pick(this.resource, [
+        'id',
+        'reference',
+        'sellerOrderNumber',
+        'status',
+        'currency',
+        'createdAt',
+      ]),
       subtotalCents: Number(this.resource.subtotalCents),
       shippingCents: Number(this.resource.shippingCents),
       totalCents: Number(this.resource.subtotalCents) + Number(this.resource.shippingCents),

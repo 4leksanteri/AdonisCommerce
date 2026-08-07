@@ -274,6 +274,7 @@
       "paid": "Paid",
       "shipped": "Shipped",
       "cancelled": "Cancelled"
-    }
+    },
+    "sellerOrderNumber": "Shop order #{number}"
   }
 }

@@ -26,6 +26,8 @@ export type ShippingAddress = {
 export type Order = {
   id: string;
   reference: string;
+  /** Per-shop running number for humans; `reference` stays canonical. */
+  sellerOrderNumber: number;
   status: string;
   currency: string;
   subtotalCents: number;

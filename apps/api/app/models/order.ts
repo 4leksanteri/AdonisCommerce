@@ -9,7 +9,7 @@ import OrderItem from '#models/order_item'
 // No vowels, no 0/O or 1/I — a reference gets read down a phone line and
 // typed back in, so ambiguous glyphs cost more than the extra entropy.
 const REFERENCE_ALPHABET = '23456789BCDFGHJKLMNPQRSTVWXYZ'
-const REFERENCE_LENGTH = 8
+const REFERENCE_LENGTH = 10
 
 export default class Order extends OrderSchema {
   @belongsTo(() => User)
@@ -22,8 +22,10 @@ export default class Order extends OrderSchema {
   declare items: HasMany<typeof OrderItem>
 
   static async generateReference() {
-    // ~29^8 combinations, so a collision is vanishingly unlikely; the loop is
-    // there because "unlikely" isn't "impossible" and the column is unique.
+    // ~29^10 combinations — 420 trillion. The loop exists because "unlikely"
+    // isn't "impossible" and the column is unique; a clash costs one extra
+    // query rather than failing. References already issued at 8 characters
+    // stay valid: lookup is an exact match and the column allows 12.
     for (let attempt = 0; attempt < 5; attempt++) {
       const bytes = randomBytes(REFERENCE_LENGTH)
       const reference = Array.from(

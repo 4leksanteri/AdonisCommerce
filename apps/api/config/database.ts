@@ -21,6 +21,13 @@ const dbConfig = defineConfig({
         password: env.get('DB_PASSWORD'),
         database: env.get('DB_DATABASE'),
       },
+      /**
+       * Knex defaults to 10, which caps concurrent checkouts at 10 — an order
+       * holds a connection for the whole transaction while it locks stock and
+       * writes its lines. Postgres allows 100 by default, so this leaves room
+       * for several app instances alongside migrations and psql sessions.
+       */
+      pool: { min: 2, max: 20 },
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],

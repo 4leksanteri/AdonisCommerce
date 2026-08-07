@@ -62,7 +62,7 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
+  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'sellerOrderNumber', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
   @column()
   declare contactEmail: string
@@ -76,6 +76,8 @@ export class OrderSchema extends BaseModel {
   declare reference: string
   @column()
   declare sellerId: string
+  @column()
+  declare sellerOrderNumber: number
   @column()
   declare shippingCents: bigint | number
   @column()
@@ -222,7 +224,7 @@ export class ProductSchema extends BaseModel {
 }
 
 export class SellerSchema extends BaseModel {
-  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
+  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'nextOrderNumber', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
   @column()
   declare country: string
@@ -234,6 +236,8 @@ export class SellerSchema extends BaseModel {
   declare description: string | null
   @column({ isPrimary: true })
   declare id: string
+  @column()
+  declare nextOrderNumber: number
   @column()
   declare payoutStatus: string
   @column()

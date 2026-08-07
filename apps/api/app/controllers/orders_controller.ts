@@ -102,9 +102,20 @@ export default class OrdersController {
             )
           }
 
+          /**
+           * Bumped in a single statement so two concurrent orders for the same
+           * shop can't both read the same value. `RETURNING` sees the updated
+           * row, so subtracting one gives the number this order just claimed.
+           */
+          const allocated = await trx.rawQuery(
+            'UPDATE sellers SET next_order_number = next_order_number + 1 WHERE id = ? RETURNING next_order_number - 1 AS assigned',
+            [sellerId]
+          )
+
           const order = new Order()
           order.useTransaction(trx)
           order.reference = await Order.generateReference()
+          order.sellerOrderNumber = Number(allocated.rows[0].assigned)
           order.userId = user.id
           order.sellerId = sellerId
           order.status = 'pending'
