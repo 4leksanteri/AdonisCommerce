@@ -62,7 +62,7 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'sellerOrderNumber', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
+  static $columns = ['contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'platformFeeCents', 'reference', 'sellerId', 'sellerOrderNumber', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeTransferId', 'subtotalCents', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
   @column()
   declare contactEmail: string
@@ -70,8 +70,14 @@ export class OrderSchema extends BaseModel {
   declare createdAt: DateTime
   @column()
   declare currency: string
+  @column.dateTime()
+  declare expiresAt: DateTime | null
   @column({ isPrimary: true })
   declare id: string
+  @column()
+  declare paymentId: string | null
+  @column()
+  declare platformFeeCents: bigint | number
   @column()
   declare reference: string
   @column()
@@ -95,6 +101,8 @@ export class OrderSchema extends BaseModel {
   @column()
   declare status: string
   @column()
+  declare stripeTransferId: string | null
+  @column()
   declare subtotalCents: bigint | number
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
@@ -113,6 +121,29 @@ export class PasswordResetTokenSchema extends BaseModel {
   declare id: string
   @column()
   declare token: string
+}
+
+export class PaymentSchema extends BaseModel {
+  static $columns = ['amountCents', 'createdAt', 'currency', 'id', 'lastError', 'status', 'stripePaymentIntentId', 'updatedAt', 'userId'] as const
+  $columns = PaymentSchema.$columns
+  @column()
+  declare amountCents: bigint | number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare lastError: string | null
+  @column()
+  declare status: string
+  @column()
+  declare stripePaymentIntentId: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: string
 }
 
 export class ProductImageSchema extends BaseModel {
@@ -224,7 +255,7 @@ export class ProductSchema extends BaseModel {
 }
 
 export class SellerSchema extends BaseModel {
-  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'nextOrderNumber', 'payoutStatus', 'shopName', 'slug', 'status', 'updatedAt', 'userId'] as const
+  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'nextOrderNumber', 'payoutStatus', 'shopName', 'slug', 'status', 'stripeAccountId', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
   @column()
   declare country: string
@@ -246,6 +277,8 @@ export class SellerSchema extends BaseModel {
   declare slug: string
   @column()
   declare status: string
+  @column()
+  declare stripeAccountId: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
   @column()
@@ -282,6 +315,19 @@ export class ShippingRateSchema extends BaseModel {
   declare id: string
   @column()
   declare shippingProfileId: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class StripeEventSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'type', 'updatedAt'] as const
+  $columns = StripeEventSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }

@@ -3,6 +3,7 @@ import { redirect } from "@/i18n/navigation";
 import { apiFetch, ApiError } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
+import type { PayoutDetails } from "@/lib/payments/types";
 import type { Product } from "./types";
 import type { ShippingProfile } from "./shipping-types";
 
@@ -43,5 +44,16 @@ export async function getSellerProduct(id: string): Promise<Product | null> {
 
 export async function getShippingProfiles(): Promise<ShippingProfile[]> {
   const res = await apiFetch<{ data: ShippingProfile[] }>("/api/shipping-profiles");
+  return res.data;
+}
+
+/**
+ * Read live from Stripe on every request rather than from our own
+ * `payout_status` column. Stripe can restrict an account at any moment, and a
+ * page telling a seller they're getting paid when they aren't is worse than
+ * one that's a beat slow to load.
+ */
+export async function getPayoutDetails(): Promise<PayoutDetails> {
+  const res = await apiFetch<{ data: PayoutDetails }>("/api/sellers/me/payouts");
   return res.data;
 }

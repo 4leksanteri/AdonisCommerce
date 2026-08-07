@@ -7,6 +7,7 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type OrderItemTransformer from '#transformers/order_item_transformer'
 import type OrderTransformer from '#transformers/order_transformer'
+import type PaymentTransformer from '#transformers/payment_transformer'
 import type ProductImageTransformer from '#transformers/product_image_transformer'
 import type ProductOptionTransformer from '#transformers/product_option_transformer'
 import type ProductOptionValueTransformer from '#transformers/product_option_value_transformer'
@@ -28,6 +29,10 @@ export namespace Data {
   export type Order = InferData<OrderTransformer>
   export namespace Order {
     export type Variants = InferVariants<OrderTransformer>
+  }
+  export type Payment = InferData<PaymentTransformer>
+  export namespace Payment {
+    export type Variants = InferVariants<PaymentTransformer>
   }
   export type ProductImage = InferData<ProductImageTransformer>
   export namespace ProductImage {

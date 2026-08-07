@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { Spinner } from "@heroui/react";
 import { Container } from "@/components/ui/container";
+import { OrderStatusPoller } from "@/components/storefront/order-status-poller";
 import { Link } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
 import { getOrder } from "@/lib/orders/queries";
@@ -22,15 +24,29 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
   const money = (cents: number) =>
     format.number(toMajorUnits(cents), currencyFormat(order.currency));
 
+  // Stripe's webhook, not the browser, is what marks an order paid — so for a
+  // second or two after checkout this page is genuinely still waiting.
+  const awaitingPayment = order.status === "pending_payment";
+
   return (
     <main className="flex-1 py-10">
       <Container className="flex max-w-2xl flex-col gap-6">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
+          <h1 className="text-xl font-semibold text-foreground">
+            {awaitingPayment ? t("confirmingHeading") : t("heading")}
+          </h1>
           <p className="mt-1 text-sm text-muted">
             {t("subheading", { reference: order.reference, email: order.contactEmail })}
           </p>
         </div>
+
+        {awaitingPayment && (
+          <div className="flex items-center gap-3 rounded-lg border border-border p-4 text-sm text-muted">
+            <Spinner size="sm" />
+            <span>{t("confirmingHint")}</span>
+            <OrderStatusPoller />
+          </div>
+        )}
 
         <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
           <div className="flex items-center justify-between">

@@ -18,6 +18,10 @@ router.get('/', () => {
 router.get('/api/translations/:locale', [controllers.Translations, 'show'])
 router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 
+// Unauthenticated by design — the caller is Stripe, not a signed-in user, and
+// the request's own signature is what proves it.
+router.post('/api/stripe/webhook', [controllers.StripeWebhook, 'handle'])
+
 // Storefront — unauthenticated, so every handler filters down to what a
 // shopper is allowed to see (active products, approved shops).
 router
@@ -61,6 +65,12 @@ router
     router.post('/', [controllers.Sellers, 'store'])
     router.get('me', [controllers.Sellers, 'show'])
     router.patch('me', [controllers.Sellers, 'update'])
+
+    // Payouts live on Stripe; these only mint links into it and report back
+    // whatever Stripe currently says about the account.
+    router.get('me/payouts', [controllers.StripeConnect, 'show'])
+    router.post('me/payouts/onboarding', [controllers.StripeConnect, 'onboarding'])
+    router.post('me/payouts/dashboard', [controllers.StripeConnect, 'dashboard'])
   })
   .prefix('/api/sellers')
   .as('sellers')

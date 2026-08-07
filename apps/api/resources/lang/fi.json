@@ -63,7 +63,13 @@
     "PRODUCT_NOT_FOUND": "Tuotetta ei löytynyt.",
     "PRODUCT_IMAGE_NOT_FOUND": "Kuvaa ei löytynyt.",
     "NO_FILES": "Kuvia ei ladattu.",
-    "INVALID_FILE": "Tiedostoa ei voitu ladata. Käytä JPG-, PNG- tai WebP-tiedostoa, jonka koko on alle 5 Mt."
+    "INVALID_FILE": "Tiedostoa ei voitu ladata. Käytä JPG-, PNG- tai WebP-tiedostoa, jonka koko on alle 5 Mt.",
+    "ORDER_ITEM_UNAVAILABLE": "Yksi ostoskorisi tuotteista ei ole enää saatavilla.",
+    "ORDER_INSUFFICIENT_STOCK": "Yksi tuotteistasi ehti loppua. Muuta määrää ja yritä uudelleen.",
+    "ORDER_UNDELIVERABLE": "Yksi näistä kaupoista ei toimita valitsemaasi maahan.",
+    "ORDER_SELLER_NOT_PAYABLE": "Yksi näistä kaupoista ei vielä vastaanota maksuja. Poista sen tuotteet jatkaaksesi.",
+    "ORDER_NOT_FOUND": "Tilausta ei löytynyt.",
+    "PAYOUTS_NOT_CONNECTED": "Yhdistä ensin tilitystili."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -73,7 +79,8 @@
       "dashboard": "Yleisnäkymä",
       "products": "Tuotteet",
       "settings": "Kaupan asetukset",
-      "shipping": "Toimitus"
+      "shipping": "Toimitus",
+      "payouts": "Tilitykset"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",
@@ -190,6 +197,21 @@
       "rateSummary": "{first} ensimmäinen, {additional} kukin lisä",
       "flatRateHint": "Aseta ”jokainen lisä” nollaksi veloittaaksesi kiinteän hinnan tilaukselta riippumatta määrästä.",
       "rateSummaryFlat": "{first} tilaukselta"
+    },
+    "payouts": {
+      "heading": "Tilitykset",
+      "subheading": "Näin saat rahat myymistäsi tuotteista.",
+      "commission": "Palvelumaksu {rate}",
+      "connect": "Ota tilitykset käyttöön",
+      "continue": "Viimeistele tilitysten käyttöönotto",
+      "manage": "Hallitse tilityksiä",
+      "updateDetails": "Päivitä tiedot",
+      "explainNotStarted": "Ota tilitykset käyttöön aloittaaksesi myynnin. Stripe hoitaa tiedot ja maksaa rahat pankkitilillesi.",
+      "explainIncomplete": "Stripe tarvitsee vielä muutaman tiedon ennen kuin se voi maksaa sinulle.",
+      "explainReviewing": "Stripe tarkistaa antamiasi tietoja. Tämä kestää yleensä päivän tai kaksi.",
+      "explainActionNeeded": "Stripe on keskeyttänyt tilitykset ja tarvitsee sinulta lisätietoja.",
+      "explainConnected": "Tilitykset ovat käytössä. Stripe maksaa oman aikataulunsa mukaan, ja hallintapaneelista näet mitä on tulossa.",
+      "stripeHint": "Maksut ja tilitykset hoitaa Stripe. Korttitiedot ja henkilöllisyystodistukset menevät Stripelle, eivät koskaan meille."
     }
   },
   "Cart": {
@@ -256,8 +278,15 @@
     "undeliverable": "Ei saatavilla",
     "undeliverableHint": "Joitakin tuotteita ei voi toimittaa tähän maahan. Poista ne tai valitse toinen maa.",
     "splitHint": "Tästä korista syntyy {count} tilausta, yksi per kauppa — jokainen myyjä toimittaa ja laskuttaa erikseen.",
-    "placeOrder": "Tee tilaus",
-    "placed": "Tilaus tehty."
+    "placed": "Tilaus tehty.",
+    "continueToPayment": "Siirry maksamaan",
+    "paymentHeading": "Maksu",
+    "paymentAmount": "Maksettava {amount}.",
+    "paymentStepOf": "Maksu {step}/{total} — {amount}.",
+    "payNow": "Maksa nyt",
+    "paymentFailed": "Maksu ei onnistunut. Yritä uudelleen tai käytä toista korttia.",
+    "paymentUnavailable": "Maksaminen ei ole juuri nyt käytettävissä. Yritä myöhemmin uudelleen.",
+    "reservationHint": "Tuotteet on varattu sinulle 30 minuutiksi maksun ajaksi."
   },
   "Order": {
     "heading": "Kiitos tilauksestasi",
@@ -273,8 +302,12 @@
       "pending": "Odottaa",
       "paid": "Maksettu",
       "shipped": "Lähetetty",
-      "cancelled": "Peruutettu"
+      "cancelled": "Peruutettu",
+      "pending_payment": "Odottaa maksua",
+      "expired": "Vanhentunut"
     },
-    "sellerOrderNumber": "Kaupan tilaus #{number}"
+    "sellerOrderNumber": "Kaupan tilaus #{number}",
+    "confirmingHeading": "Vahvistetaan maksuasi",
+    "confirmingHint": "Tämä kestää muutaman sekunnin. Voit poistua sivulta — lähetämme sähköpostin joka tapauksessa."
   }
 }

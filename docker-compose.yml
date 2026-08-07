@@ -51,6 +51,10 @@ services:
       REDIS_HOST: redis
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
+      # Secret key and webhook secret stay server-side — never passed to web.
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      STRIPE_PLATFORM_FEE_BPS: ${STRIPE_PLATFORM_FEE_BPS:-650}
       CHOKIDAR_USEPOLLING: "true"
     ports:
       - "3333:3333"
@@ -74,6 +78,9 @@ services:
       API_INTERNAL_URL: http://api:3333
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      # Publishable key only. NEXT_PUBLIC_* is inlined into the browser
+      # bundle, so the secret key must never appear here.
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY}
     ports:
       - "${WEB_PORT:-3000}:3000"
     volumes:

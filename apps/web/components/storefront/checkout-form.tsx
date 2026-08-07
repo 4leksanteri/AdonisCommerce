@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Button,
   Form,
@@ -12,8 +12,9 @@ import {
   TextField,
   toast,
 } from "@heroui/react";
-import { useRouter } from "@/i18n/navigation";
+import { getPathname, useRouter } from "@/i18n/navigation";
 import { AuthModal } from "@/components/auth/modal";
+import { PaymentStep } from "@/components/storefront/payment-step";
 import { ShipToSelect } from "@/components/storefront/ship-to-select";
 import { useAuth } from "@/lib/auth/context";
 import { useCart } from "@/lib/cart/context";
@@ -23,6 +24,8 @@ import { useStorefrontPreferences } from "@/lib/storefront/preferences-context";
 import { shippingCentsFor } from "@/lib/storefront/shipping";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { CartLine } from "@/lib/cart/types";
+import type { Order } from "@/lib/orders/types";
+import type { Payment } from "@/lib/payments/types";
 
 function groupByShop(lines: CartLine[]) {
   const shops = new Map<string, { name: string; slug: string; lines: CartLine[] }>();
@@ -36,11 +39,15 @@ function groupByShop(lines: CartLine[]) {
   return [...shops.values()];
 }
 
+/** The orders exist and are holding stock; all that's left is paying. */
+type PlacedCheckout = { orders: Order[]; payments: Payment[] };
+
 export function CheckoutForm() {
   const t = useTranslations("Checkout");
   const tValidation = useTranslations("Validation");
   const tApiMessages = useTranslations("ApiMessages");
   const format = useFormatter();
+  const locale = useLocale();
   const router = useRouter();
 
   const { user } = useAuth();
@@ -54,6 +61,9 @@ export function CheckoutForm() {
   const [postalCode, setPostalCode] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+  const [checkout, setCheckout] = useState<PlacedCheckout | null>(null);
+  const [paymentIndex, setPaymentIndex] = useState(0);
 
   const quantityOf = (variantId: string) =>
     items.find((item) => item.variantId === variantId)?.quantity ?? 0;
@@ -98,6 +108,17 @@ export function CheckoutForm() {
 
   const hasUndeliverable = shops.some((shop) => !shippingForShop(shop.lines).deliverable);
 
+  function finish(orders: Order[]) {
+    // The cart has become paid-for orders; keeping it would show items the
+    // buyer already owns and let a second submit reserve the stock again.
+    clear();
+    toast.success(t("placed"));
+    router.push({
+      pathname: "/orders/[reference]",
+      params: { reference: orders[0].reference },
+    });
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessages([]);
@@ -123,14 +144,21 @@ export function CheckoutForm() {
       return;
     }
 
-    // The cart has become the order; keeping it would re-decrement stock on a
-    // second submit and show items the buyer has already paid for.
-    clear();
-    toast.success(t("placed"));
-    router.push({
-      pathname: "/orders/[reference]",
-      params: { reference: result.orders[0].reference },
-    });
+    setPaymentIndex(0);
+    setCheckout({ orders: result.orders, payments: result.payments });
+  }
+
+  function handlePaid() {
+    if (!checkout) return;
+
+    // A basket priced in two currencies is two charges — carry on to the next
+    // one rather than declaring the order done.
+    if (paymentIndex + 1 < checkout.payments.length) {
+      setPaymentIndex(paymentIndex + 1);
+      return;
+    }
+
+    finish(checkout.orders);
   }
 
   if (!user) {
@@ -150,7 +178,7 @@ export function CheckoutForm() {
     );
   }
 
-  if (lines.length === 0) {
+  if (lines.length === 0 && !checkout) {
     return (
       <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
         {t("empty")}
@@ -158,58 +186,13 @@ export function CheckoutForm() {
     );
   }
 
-  return (
-    <Form className="grid gap-8 md:grid-cols-2 md:items-start" onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-4">
-        <h2 className="font-medium text-foreground">{t("addressHeading")}</h2>
-
-        {errorMessages.length > 0 && (
-          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
-            {errorMessages.map((message) => (
-              <p key={message}>{message}</p>
-            ))}
-          </div>
-        )}
-
-        <TextField isRequired isDisabled={isPending} value={name} onChange={setName}>
-          <Label>{t("nameLabel")}</Label>
-          <Input className="border border-border" />
-        </TextField>
-
-        <TextField isRequired isDisabled={isPending} value={line1} onChange={setLine1}>
-          <Label>{t("line1Label")}</Label>
-          <Input className="border border-border" />
-        </TextField>
-
-        <TextField isDisabled={isPending} value={line2} onChange={setLine2}>
-          <Label>{t("line2Label")}</Label>
-          <Input className="border border-border" />
-        </TextField>
-
-        <div className="flex gap-3">
-          <TextField
-            className="flex-1"
-            isRequired
-            isDisabled={isPending}
-            value={postalCode}
-            onChange={setPostalCode}
-          >
-            <Label>{t("postalCodeLabel")}</Label>
-            <Input className="border border-border" />
-          </TextField>
-          <TextField className="flex-[2]" isRequired isDisabled={isPending} value={city} onChange={setCity}>
-            <Label>{t("cityLabel")}</Label>
-            <Input className="border border-border" />
-          </TextField>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-muted">{t("countryLabel")}</span>
-          <ShipToSelect />
-          <p className="text-xs text-muted">{t("countryHint")}</p>
-        </div>
-      </div>
-
+  /**
+   * The same figures serve both steps — the buyer should still be able to see
+   * what they're paying for while they're paying for it — so the panel is
+   * built once and takes whatever action belongs beneath it.
+   */
+  function summaryPanel(action: ReactNode) {
+    return (
       <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
         <h2 className="font-medium text-foreground">{t("summaryHeading")}</h2>
 
@@ -281,25 +264,125 @@ export function CheckoutForm() {
           );
         })}
 
-        {hasUndeliverable && (
-          <p className="text-sm text-danger">{t("undeliverableHint")}</p>
-        )}
+        {hasUndeliverable && <p className="text-sm text-danger">{t("undeliverableHint")}</p>}
 
         {/* Each seller is paid separately, so a multi-shop basket becomes
             several orders — worth saying before the button, not after. */}
-        {shops.length > 1 && (
-          <p className="text-xs text-muted">{t("splitHint", { count: shops.length })}</p>
+        {shops.length > 1 && <p className="text-xs text-muted">{t("splitHint", { count: shops.length })}</p>}
+
+        {action}
+      </div>
+    );
+  }
+
+  if (checkout) {
+    const payment = checkout.payments[paymentIndex];
+
+    /**
+     * Absolute, because Stripe hands it to the bank — a relative path would
+     * be resolved against the bank's own domain. Built through the localized
+     * router so a Finnish buyer comes back to `/fi/tilaukset/...`.
+     */
+    const returnUrl =
+      typeof window === "undefined"
+        ? ""
+        : window.location.origin +
+          getPathname({
+            href: {
+              pathname: "/orders/[reference]",
+              params: { reference: checkout.orders[0].reference },
+            },
+            locale,
+          });
+
+    return (
+      <div className="grid gap-8 md:grid-cols-2 md:items-start">
+        <div className="flex flex-col gap-4">
+          <div>
+            <h2 className="font-medium text-foreground">{t("paymentHeading")}</h2>
+            <p className="mt-1 text-sm text-muted">
+              {checkout.payments.length > 1
+                ? t("paymentStepOf", {
+                    step: paymentIndex + 1,
+                    total: checkout.payments.length,
+                    amount: money(payment.amountCents, payment.currency),
+                  })
+                : t("paymentAmount", { amount: money(payment.amountCents, payment.currency) })}
+            </p>
+          </div>
+
+          <PaymentStep payment={payment} returnUrl={returnUrl} onPaid={handlePaid} />
+
+          <p className="text-xs text-muted">{t("reservationHint")}</p>
+        </div>
+
+        {summaryPanel(null)}
+      </div>
+    );
+  }
+
+  return (
+    <Form className="grid gap-8 md:grid-cols-2 md:items-start" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-4">
+        <h2 className="font-medium text-foreground">{t("addressHeading")}</h2>
+
+        {errorMessages.length > 0 && (
+          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+            {errorMessages.map((message) => (
+              <p key={message}>{message}</p>
+            ))}
+          </div>
         )}
 
+        <TextField isRequired isDisabled={isPending} value={name} onChange={setName}>
+          <Label>{t("nameLabel")}</Label>
+          <Input className="border border-border" />
+        </TextField>
+
+        <TextField isRequired isDisabled={isPending} value={line1} onChange={setLine1}>
+          <Label>{t("line1Label")}</Label>
+          <Input className="border border-border" />
+        </TextField>
+
+        <TextField isDisabled={isPending} value={line2} onChange={setLine2}>
+          <Label>{t("line2Label")}</Label>
+          <Input className="border border-border" />
+        </TextField>
+
+        <div className="flex gap-3">
+          <TextField
+            className="flex-1"
+            isRequired
+            isDisabled={isPending}
+            value={postalCode}
+            onChange={setPostalCode}
+          >
+            <Label>{t("postalCodeLabel")}</Label>
+            <Input className="border border-border" />
+          </TextField>
+          <TextField className="flex-[2]" isRequired isDisabled={isPending} value={city} onChange={setCity}>
+            <Label>{t("cityLabel")}</Label>
+            <Input className="border border-border" />
+          </TextField>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <span className="text-sm text-muted">{t("countryLabel")}</span>
+          <ShipToSelect />
+          <p className="text-xs text-muted">{t("countryHint")}</p>
+        </div>
+      </div>
+
+      {summaryPanel(
         <Button type="submit" isPending={isPending} isDisabled={hasUndeliverable} fullWidth>
           {({ isPending: pending }) => (
             <>
               {pending && <Spinner color="current" size="sm" />}
-              {t("placeOrder")}
+              {t("continueToPayment")}
             </>
           )}
         </Button>
-      </div>
+      )}
     </Form>
   );
 }

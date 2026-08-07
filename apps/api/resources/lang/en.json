@@ -63,7 +63,13 @@
     "PRODUCT_NOT_FOUND": "Product not found.",
     "PRODUCT_IMAGE_NOT_FOUND": "Image not found.",
     "NO_FILES": "No images were uploaded.",
-    "INVALID_FILE": "That file couldn't be uploaded. Use a JPG, PNG or WebP under 5 MB."
+    "INVALID_FILE": "That file couldn't be uploaded. Use a JPG, PNG or WebP under 5 MB.",
+    "ORDER_ITEM_UNAVAILABLE": "One of the items in your basket is no longer available.",
+    "ORDER_INSUFFICIENT_STOCK": "One of your items just sold out. Adjust the quantity and try again.",
+    "ORDER_UNDELIVERABLE": "One of these shops doesn't deliver to the country you chose.",
+    "ORDER_SELLER_NOT_PAYABLE": "One of these shops isn't accepting payments yet. Remove their items to continue.",
+    "ORDER_NOT_FOUND": "Order not found.",
+    "PAYOUTS_NOT_CONNECTED": "Connect a payout account first."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -73,7 +79,8 @@
       "dashboard": "Dashboard",
       "products": "Products",
       "settings": "Shop settings",
-      "shipping": "Shipping"
+      "shipping": "Shipping",
+      "payouts": "Payouts"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",
@@ -190,6 +197,21 @@
       "rateSummary": "{first} first, {additional} each extra",
       "flatRateHint": "Set “each additional” to 0 to charge one flat rate per order, however many the buyer adds.",
       "rateSummaryFlat": "{first} per order"
+    },
+    "payouts": {
+      "heading": "Payouts",
+      "subheading": "How you get paid for what you sell.",
+      "commission": "Commission {rate}",
+      "connect": "Set up payouts",
+      "continue": "Finish setting up payouts",
+      "manage": "Manage payouts",
+      "updateDetails": "Update details",
+      "explainNotStarted": "Set up payouts to start selling. Stripe handles the details and pays the money into your bank account.",
+      "explainIncomplete": "Stripe still needs a few details before it can pay you.",
+      "explainReviewing": "Stripe is checking the details you provided. This usually takes a day or two.",
+      "explainActionNeeded": "Stripe has paused payouts and needs more information from you.",
+      "explainConnected": "Payouts are active. Stripe pays out on its own schedule; the dashboard shows what's on its way.",
+      "stripeHint": "Payments and payouts are handled by Stripe. Card details and identity documents go to Stripe, never to us."
     }
   },
   "Cart": {
@@ -256,8 +278,15 @@
     "undeliverable": "Not available",
     "undeliverableHint": "Some items can't be shipped to this country. Remove them or choose another destination.",
     "splitHint": "This basket will become {count} orders, one per shop — each seller ships and is paid separately.",
-    "placeOrder": "Place order",
-    "placed": "Order placed."
+    "placed": "Order placed.",
+    "continueToPayment": "Continue to payment",
+    "paymentHeading": "Payment",
+    "paymentAmount": "Paying {amount}.",
+    "paymentStepOf": "Payment {step} of {total} — {amount}.",
+    "payNow": "Pay now",
+    "paymentFailed": "The payment didn't go through. Try again or use another card.",
+    "paymentUnavailable": "Payments are unavailable right now. Please try again later.",
+    "reservationHint": "Your items are held for 30 minutes while you pay."
   },
   "Order": {
     "heading": "Thanks for your order",
@@ -273,8 +302,12 @@
       "pending": "Pending",
       "paid": "Paid",
       "shipped": "Shipped",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "pending_payment": "Awaiting payment",
+      "expired": "Expired"
     },
-    "sellerOrderNumber": "Shop order #{number}"
+    "sellerOrderNumber": "Shop order #{number}",
+    "confirmingHeading": "Confirming your payment",
+    "confirmingHint": "This takes a few seconds. You can leave this page — we'll email you either way."
   }
 }

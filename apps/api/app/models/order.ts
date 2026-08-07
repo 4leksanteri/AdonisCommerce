@@ -6,11 +6,19 @@ import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
 import Seller from '#models/seller'
 import OrderItem from '#models/order_item'
+import Payment from '#models/payment'
 
 // No vowels, no 0/O or 1/I — a reference gets read down a phone line and
 // typed back in, so ambiguous glyphs cost more than the extra entropy.
 const REFERENCE_ALPHABET = '23456789BCDFGHJKLMNPQRSTVWXYZ'
 const REFERENCE_LENGTH = 10
+
+/**
+ * How long an unpaid order keeps its stock reserved. Long enough to fetch a
+ * different card or clear a 3-D Secure challenge; short enough that a
+ * one-of-a-kind item isn't unbuyable for the rest of the day.
+ */
+export const PAYMENT_WINDOW_MINUTES = 30
 
 export default class Order extends OrderSchema {
   @belongsTo(() => User)
@@ -18,6 +26,9 @@ export default class Order extends OrderSchema {
 
   @belongsTo(() => Seller)
   declare seller: BelongsTo<typeof Seller>
+
+  @belongsTo(() => Payment)
+  declare payment: BelongsTo<typeof Payment>
 
   @hasMany(() => OrderItem)
   declare items: HasMany<typeof OrderItem>

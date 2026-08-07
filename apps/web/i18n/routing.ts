@@ -33,6 +33,12 @@ export const routing = defineRouting({
       en: "/seller/settings",
       fi: "/myyja/asetukset",
     },
+    // Stripe sends the seller back here after hosted onboarding, so this must
+    // stay in step with SELLER_PAYOUTS_PATH in the API's frontend_routes.ts.
+    "/seller/payouts": {
+      en: "/seller/payouts",
+      fi: "/myyja/tilitykset",
+    },
     "/seller/products": {
       en: "/seller/products",
       fi: "/myyja/tuotteet",

@@ -10,7 +10,17 @@ const RESET_PASSWORD_PATH = {
   fi: '/fi/salasanan-nollaus',
 } as const
 
+const SELLER_PAYOUTS_PATH = {
+  en: '/en/seller/payouts',
+  fi: '/fi/myyja/tilitykset',
+} as const
+
 export function resetPasswordUrl(locale: 'en' | 'fi', token: string, email: string) {
   const path = RESET_PASSWORD_PATH[locale]
   return `${env.get('FRONTEND_URL')}${path}?token=${token}&email=${encodeURIComponent(email)}`
+}
+
+/** Where Stripe returns the seller to after hosted onboarding. */
+export function sellerPayoutsUrl(locale: 'en' | 'fi') {
+  return `${env.get('FRONTEND_URL')}${SELLER_PAYOUTS_PATH[locale]}`
 }

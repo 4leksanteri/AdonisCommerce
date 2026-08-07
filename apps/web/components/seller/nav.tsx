@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/seller", key: "dashboard" },
   { href: "/seller/products", key: "products" },
   { href: "/seller/shipping", key: "shipping" },
+  { href: "/seller/payouts", key: "payouts" },
   { href: "/seller/settings", key: "settings" },
 ] as const;
 

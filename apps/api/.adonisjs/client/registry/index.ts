@@ -18,6 +18,12 @@ const routes = {
     tokens: [{"old":"/uploads/:filename","type":0,"val":"uploads","end":""},{"old":"/uploads/:filename","type":1,"val":"filename","end":""}],
     types: placeholder as Registry['uploads.show']['types'],
   },
+  'stripe_webhook': {
+    methods: ["POST"],
+    pattern: '/api/stripe/webhook',
+    tokens: [{"old":"/api/stripe/webhook","type":0,"val":"api","end":""},{"old":"/api/stripe/webhook","type":0,"val":"stripe","end":""},{"old":"/api/stripe/webhook","type":0,"val":"webhook","end":""}],
+    types: placeholder as Registry['stripe_webhook']['types'],
+  },
   'storefront.exchange_rates.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/exchange-rates',
@@ -107,6 +113,24 @@ const routes = {
     pattern: '/api/sellers/me',
     tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['sellers.sellers.update']['types'],
+  },
+  'sellers.stripe_connect.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/sellers/me/payouts',
+    tokens: [{"old":"/api/sellers/me/payouts","type":0,"val":"api","end":""},{"old":"/api/sellers/me/payouts","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/payouts","type":0,"val":"me","end":""},{"old":"/api/sellers/me/payouts","type":0,"val":"payouts","end":""}],
+    types: placeholder as Registry['sellers.stripe_connect.show']['types'],
+  },
+  'sellers.stripe_connect.onboarding': {
+    methods: ["POST"],
+    pattern: '/api/sellers/me/payouts/onboarding',
+    tokens: [{"old":"/api/sellers/me/payouts/onboarding","type":0,"val":"api","end":""},{"old":"/api/sellers/me/payouts/onboarding","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/payouts/onboarding","type":0,"val":"me","end":""},{"old":"/api/sellers/me/payouts/onboarding","type":0,"val":"payouts","end":""},{"old":"/api/sellers/me/payouts/onboarding","type":0,"val":"onboarding","end":""}],
+    types: placeholder as Registry['sellers.stripe_connect.onboarding']['types'],
+  },
+  'sellers.stripe_connect.dashboard': {
+    methods: ["POST"],
+    pattern: '/api/sellers/me/payouts/dashboard',
+    tokens: [{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"api","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"me","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"payouts","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"dashboard","end":""}],
+    types: placeholder as Registry['sellers.stripe_connect.dashboard']['types'],
   },
   'shippingProfiles.shipping_profiles.index': {
     methods: ["GET","HEAD"],

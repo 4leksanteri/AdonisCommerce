@@ -139,3 +139,34 @@ export async function deleteShippingProfileAction(id: string): Promise<{ errors?
     return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }
 }
+
+type PayoutLinkResult = { url: string; errors?: undefined } | { url?: undefined; errors: ApiErrorItem[] };
+
+/**
+ * Mints a one-time link into Stripe's hosted onboarding. Account Links expire
+ * within minutes and can only be opened once, so this runs on the button
+ * press rather than when the page loads.
+ */
+export async function startPayoutOnboardingAction(locale: string): Promise<PayoutLinkResult> {
+  try {
+    const res = await apiFetch<{ data: { url: string } }>("/api/sellers/me/payouts/onboarding", {
+      method: "POST",
+      body: JSON.stringify({ locale }),
+    });
+    return { url: res.data.url };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+/** One-time sign-in to the Express dashboard, where Stripe shows payouts. */
+export async function openPayoutDashboardAction(): Promise<PayoutLinkResult> {
+  try {
+    const res = await apiFetch<{ data: { url: string } }>("/api/sellers/me/payouts/dashboard", {
+      method: "POST",
+    });
+    return { url: res.data.url };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}

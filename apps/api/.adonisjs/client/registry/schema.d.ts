@@ -31,6 +31,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/uploads_controller').default['show']>>>
     }
   }
+  'stripe_webhook': {
+    methods: ["POST"]
+    pattern: '/api/stripe/webhook'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stripe_webhook_controller').default['handle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stripe_webhook_controller').default['handle']>>>
+    }
+  }
   'storefront.exchange_rates.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/exchange-rates'
@@ -209,6 +221,42 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/seller').becomeSellerValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'sellers.stripe_connect.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/sellers/me/payouts'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['show']>>>
+    }
+  }
+  'sellers.stripe_connect.onboarding': {
+    methods: ["POST"]
+    pattern: '/api/sellers/me/payouts/onboarding'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['onboarding']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['onboarding']>>>
+    }
+  }
+  'sellers.stripe_connect.dashboard': {
+    methods: ["POST"]
+    pattern: '/api/sellers/me/payouts/dashboard'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['dashboard']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/stripe_connect_controller').default['dashboard']>>>
     }
   }
   'shippingProfiles.shipping_profiles.index': {

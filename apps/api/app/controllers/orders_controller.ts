@@ -1,16 +1,26 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 import db from '@adonisjs/lucid/services/db'
-import Order from '#models/order'
+import Order, { PAYMENT_WINDOW_MINUTES } from '#models/order'
 import OrderItem from '#models/order_item'
+import Payment from '#models/payment'
 import ProductVariant from '#models/product_variant'
 import OrderTransformer from '#transformers/order_transformer'
+import PaymentTransformer from '#transformers/payment_transformer'
 import { createOrderValidator } from '#validators/order'
 import { shippingCentsFor } from '#services/shipping'
+import { platformFeeCents } from '#config/stripe'
+import {
+  cancelUnpaidOrdersForUser,
+  createPaymentIntent,
+  orderTotalCents,
+  releaseExpiredReservations,
+} from '#services/payments'
 
 export default class OrdersController {
   /**
    * Turns a cart into orders — one per seller, since each is fulfilled and
-   * paid separately.
+   * paid separately — plus the payment(s) that will settle them.
    *
    * Everything the buyer agreed to is re-derived server-side. The client
    * sends only variant ids and quantities; prices, titles and availability
@@ -21,6 +31,14 @@ export default class OrdersController {
     const user = auth.getUserOrFail()
     const { items, shipping } = await request.validateUsing(createOrderValidator)
 
+    // Before taking any locks: hand back stock held by checkouts that were
+    // started and never paid for — everyone's expired ones, and this buyer's
+    // own unfinished attempt, which would otherwise be holding the very items
+    // they are trying to buy again. Done outside the transaction below so the
+    // two can never wait on each other.
+    await releaseExpiredReservations()
+    await cancelUnpaidOrdersForUser(user.id)
+
     // Collapse duplicate lines up front: the same variant twice would
     // otherwise pass the stock check separately and oversell.
     const quantities = new Map<string, number>()
@@ -29,7 +47,7 @@ export default class OrdersController {
     }
 
     try {
-      const orders = await db.transaction(async (trx) => {
+      const { orders, payments } = await db.transaction(async (trx) => {
         /**
          * `forUpdate` locks the variant rows for the life of the transaction.
          * Without it two shoppers can both read "1 left" and both succeed —
@@ -62,6 +80,18 @@ export default class OrdersController {
               `Only ${variant.stockQuantity} left of ${variant.product.title}.`
             )
           }
+
+          /**
+           * Checked before taking any money. Without a connected payout
+           * account there is nowhere to send the seller's share, so the
+           * platform would be holding funds it has no way to pass on.
+           */
+          if (variant.product.seller.payoutStatus !== 'connected') {
+            throw new OrderError(
+              'ORDER_SELLER_NOT_PAYABLE',
+              `${variant.product.seller.shopName} is not accepting payments yet.`
+            )
+          }
         }
 
         // Group by seller — one order each.
@@ -76,8 +106,7 @@ export default class OrdersController {
         for (const [sellerId, sellerVariants] of bySeller) {
           const currency = sellerVariants[0].product.currency
           const subtotal = sellerVariants.reduce(
-            (sum, variant) =>
-              sum + Number(variant.priceCents) * quantities.get(variant.id)!,
+            (sum, variant) => sum + Number(variant.priceCents) * quantities.get(variant.id)!,
             0
           )
 
@@ -118,10 +147,14 @@ export default class OrdersController {
           order.sellerOrderNumber = Number(allocated.rows[0].assigned)
           order.userId = user.id
           order.sellerId = sellerId
-          order.status = 'pending'
+          order.status = 'pending_payment'
           order.currency = currency
           order.subtotalCents = subtotal
           order.shippingCents = shippingCents
+          // Frozen at purchase time so a later change to the commission rate
+          // can't rewrite what a seller was owed for a past order.
+          order.platformFeeCents = platformFeeCents(subtotal + shippingCents)
+          order.expiresAt = DateTime.now().plus({ minutes: PAYMENT_WINDOW_MINUTES })
           order.contactEmail = user.email
           order.shippingName = shipping.name
           order.shippingLine1 = shipping.line1
@@ -161,8 +194,56 @@ export default class OrdersController {
           created.push(order)
         }
 
-        return created
+        /**
+         * One payment per currency. A PaymentIntent carries a single
+         * currency, so a basket holding a Finnish shop's euros and a Swedish
+         * shop's kronor is honestly two charges rather than an exchange rate
+         * neither seller agreed to.
+         */
+        const byCurrency = new Map<string, Order[]>()
+        for (const order of created) {
+          byCurrency.set(order.currency, [...(byCurrency.get(order.currency) ?? []), order])
+        }
+
+        const paymentRows: Payment[] = []
+
+        for (const [currency, currencyOrders] of byCurrency) {
+          const payment = new Payment()
+          payment.useTransaction(trx)
+          payment.userId = user.id
+          payment.currency = currency
+          payment.amountCents = currencyOrders.reduce(
+            (sum, order) => sum + orderTotalCents(order),
+            0
+          )
+          payment.status = 'requires_payment_method'
+          await payment.save()
+
+          for (const order of currencyOrders) {
+            order.useTransaction(trx)
+            order.paymentId = payment.id
+            await order.save()
+          }
+
+          paymentRows.push(payment)
+        }
+
+        return { orders: created, payments: paymentRows }
       })
+
+      /**
+       * Stripe is called only once the orders are safely committed. If this
+       * throws, the buyer sees an error and the reservation lapses on its own
+       * within the payment window — the alternative, holding row locks across
+       * a network call, would stall every other shopper wanting these items.
+       */
+      for (const payment of payments) {
+        await createPaymentIntent(
+          payment,
+          user,
+          orders.filter((order) => order.paymentId === payment.id)
+        )
+      }
 
       // Loaded after commit: this is presentation, and holding the row locks
       // open for it would lengthen every checkout for no benefit.
@@ -171,7 +252,10 @@ export default class OrdersController {
       }
 
       response.status(201)
-      return serialize(OrderTransformer.transform(orders))
+      return serialize({
+        orders: OrderTransformer.transform(orders),
+        payments: PaymentTransformer.transform(payments),
+      })
     } catch (error) {
       if (error instanceof OrderError) {
         return response.conflict({ errors: [{ code: error.code, message: error.message }] })

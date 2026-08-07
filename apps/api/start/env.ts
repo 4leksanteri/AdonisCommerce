@@ -47,5 +47,18 @@ export default await Env.create(new URL('../', import.meta.url), {
   MAIL_FROM_NAME: Env.schema.string(),
   MAIL_FROM_ADDRESS: Env.schema.string(),
   SMTP_HOST: Env.schema.string(),
-  SMTP_PORT: Env.schema.number()
+  SMTP_PORT: Env.schema.number(),
+
+  /*
+  |----------------------------------------------------------
+  | Stripe
+  |----------------------------------------------------------
+  | The secret key and webhook secret are credentials — `secret()` keeps them
+  | out of logs and error reports. The publishable key lives in the web app,
+  | not here; it is meant to reach the browser.
+  */
+  STRIPE_SECRET_KEY: Env.schema.secret(),
+  STRIPE_WEBHOOK_SECRET: Env.schema.secret(),
+  // Basis points, so 650 = 6.5%. An integer avoids float rounding on money.
+  STRIPE_PLATFORM_FEE_BPS: Env.schema.number(),
 })

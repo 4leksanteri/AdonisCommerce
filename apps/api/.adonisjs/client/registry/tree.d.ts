@@ -8,6 +8,7 @@ export interface ApiDefinition {
   uploads: {
     show: typeof routes['uploads.show']
   }
+  stripeWebhook: typeof routes['stripe_webhook']
   storefront: {
     exchangeRates: {
       index: typeof routes['storefront.exchange_rates.index']
@@ -45,6 +46,11 @@ export interface ApiDefinition {
       store: typeof routes['sellers.sellers.store']
       show: typeof routes['sellers.sellers.show']
       update: typeof routes['sellers.sellers.update']
+    }
+    stripeConnect: {
+      show: typeof routes['sellers.stripe_connect.show']
+      onboarding: typeof routes['sellers.stripe_connect.onboarding']
+      dashboard: typeof routes['sellers.stripe_connect.dashboard']
     }
   }
   shippingProfiles: {
