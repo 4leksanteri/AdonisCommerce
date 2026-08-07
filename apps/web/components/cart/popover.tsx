@@ -138,7 +138,7 @@ export function CartPopover() {
         </Badge.Anchor>
       </Popover.Trigger>
 
-      <Popover.Content placement="bottom end" className="w-96">
+      <Popover.Content placement="bottom end" className="w-[26rem]">
         <Popover.Dialog>
           <Popover.Heading>{t("heading")}</Popover.Heading>
 
@@ -215,9 +215,13 @@ export function CartPopover() {
                                 setQuantity(line.variantId, Number.isNaN(value) ? 1 : value)
                               }
                             >
-                              <NumberField.Group className="w-24">
+                              {/* The steppers take a fixed 40px each, so the
+                                  input keeps only what's left — its default
+                                  side padding alone would swallow that and
+                                  clip the digits. */}
+                              <NumberField.Group className="w-32">
                                 <NumberField.DecrementButton />
-                                <NumberField.Input className="text-center" />
+                                <NumberField.Input className="min-w-0 flex-1 px-1 text-center" />
                                 <NumberField.IncrementButton />
                               </NumberField.Group>
                             </NumberField>

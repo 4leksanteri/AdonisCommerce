@@ -293,7 +293,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             <Label>{t("quantityLabel")}</Label>
             <NumberField.Group className="w-32">
               <NumberField.DecrementButton />
-              <NumberField.Input className="text-center" />
+              <NumberField.Input className="min-w-0 flex-1 px-1 text-center" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
