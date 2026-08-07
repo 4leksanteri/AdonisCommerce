@@ -21,7 +21,7 @@ export default class StorefrontProductsController {
       .where('status', 'active')
       .whereHas('seller', (query) => query.where('status', 'approved'))
       .preload('seller')
-      .preload('variants')
+      .preload('variants', (query) => query.orderBy('createdAt'))
       .preload('images', (query) => query.orderBy('position'))
       .orderBy('createdAt', 'desc')
       .limit(limit)
@@ -48,7 +48,7 @@ export default class StorefrontProductsController {
       .preload('options', (query) =>
         query.orderBy('position').preload('values', (values) => values.orderBy('position'))
       )
-      .preload('variants', (query) => query.preload('optionValues'))
+      .preload('variants', (query) => query.orderBy('createdAt').preload('optionValues'))
       .preload('images', (query) => query.orderBy('position'))
       .first()
 

@@ -8,6 +8,8 @@ export type ScannedRoutes = {
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.cart.hydrate': { paramsTuple?: []; params?: {} }
+    'storefront.orders.store': { paramsTuple?: []; params?: {} }
+    'storefront.orders.show': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
@@ -31,6 +33,7 @@ export type ScannedRoutes = {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
+    'storefront.orders.show': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
@@ -42,6 +45,7 @@ export type ScannedRoutes = {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
+    'storefront.orders.show': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
@@ -51,6 +55,7 @@ export type ScannedRoutes = {
   }
   POST: {
     'storefront.cart.hydrate': { paramsTuple?: []; params?: {} }
+    'storefront.orders.store': { paramsTuple?: []; params?: {} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'auth.password_reset_link.store': { paramsTuple?: []; params?: {} }

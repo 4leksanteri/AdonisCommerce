@@ -55,6 +55,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/cart_controller').default['hydrate']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'storefront.orders.store': {
+    methods: ["POST"]
+    pattern: '/api/storefront/orders'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/order').createOrderValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/order').createOrderValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'storefront.orders.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/storefront/orders/:reference'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { reference: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['show']>>>
+    }
+  }
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/products'

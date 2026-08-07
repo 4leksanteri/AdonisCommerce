@@ -15,6 +15,10 @@ export interface ApiDefinition {
     cart: {
       hydrate: typeof routes['storefront.cart.hydrate']
     }
+    orders: {
+      store: typeof routes['storefront.orders.store']
+      show: typeof routes['storefront.orders.show']
+    }
     storefrontProducts: {
       index: typeof routes['storefront.storefront_products.index']
       show: typeof routes['storefront.storefront_products.show']

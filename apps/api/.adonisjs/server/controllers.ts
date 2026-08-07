@@ -8,6 +8,7 @@ export const controllers = {
   Cart: () => import('#controllers/cart_controller'),
   ExchangeRates: () => import('#controllers/exchange_rates_controller'),
   NewPassword: () => import('#controllers/new_password_controller'),
+  Orders: () => import('#controllers/orders_controller'),
   PasswordResetLink: () => import('#controllers/password_reset_link_controller'),
   ProductImages: () => import('#controllers/product_images_controller'),
   Products: () => import('#controllers/products_controller'),

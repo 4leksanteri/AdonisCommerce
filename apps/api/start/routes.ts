@@ -24,6 +24,15 @@ router
   .group(() => {
     router.get('exchange-rates', [controllers.ExchangeRates, 'index'])
     router.post('cart', [controllers.Cart, 'hydrate'])
+
+    // Placing and reading orders needs a signed-in buyer; guest checkout is
+    // a later job.
+    router
+      .group(() => {
+        router.post('orders', [controllers.Orders, 'store'])
+        router.get('orders/:reference', [controllers.Orders, 'show'])
+      })
+      .use(middleware.auth())
     router.get('products', [controllers.StorefrontProducts, 'index'])
     router.get('shops/:shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
   })

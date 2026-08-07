@@ -15,15 +15,16 @@ export default class ProductsController {
   /**
    * Base query with every relation the transformer needs preloaded. Options,
    * their values and images are ordered by `position` so the seller-facing
-   * form rebuilds them in the order the seller arranged them; variants keep
-   * insertion order, which is the option-combination order they were built in.
+   * form rebuilds them in the order the seller arranged them. Variants are
+   * ordered by `createdAt` explicitly — an unordered query returns them in
+   * heap order, so updating one variant's stock reshuffles the whole list.
    */
   private productQuery() {
     return Product.query()
       .preload('options', (query) =>
         query.orderBy('position').preload('values', (values) => values.orderBy('position'))
       )
-      .preload('variants', (query) => query.preload('optionValues'))
+      .preload('variants', (query) => query.orderBy('createdAt').preload('optionValues'))
       .preload('images', (query) => query.orderBy('position'))
   }
 

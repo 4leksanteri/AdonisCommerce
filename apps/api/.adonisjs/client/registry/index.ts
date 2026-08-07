@@ -30,6 +30,18 @@ const routes = {
     tokens: [{"old":"/api/storefront/cart","type":0,"val":"api","end":""},{"old":"/api/storefront/cart","type":0,"val":"storefront","end":""},{"old":"/api/storefront/cart","type":0,"val":"cart","end":""}],
     types: placeholder as Registry['storefront.cart.hydrate']['types'],
   },
+  'storefront.orders.store': {
+    methods: ["POST"],
+    pattern: '/api/storefront/orders',
+    tokens: [{"old":"/api/storefront/orders","type":0,"val":"api","end":""},{"old":"/api/storefront/orders","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders","type":0,"val":"orders","end":""}],
+    types: placeholder as Registry['storefront.orders.store']['types'],
+  },
+  'storefront.orders.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/storefront/orders/:reference',
+    tokens: [{"old":"/api/storefront/orders/:reference","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference","type":1,"val":"reference","end":""}],
+    types: placeholder as Registry['storefront.orders.show']['types'],
+  },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/products',

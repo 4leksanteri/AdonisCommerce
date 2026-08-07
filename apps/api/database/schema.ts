@@ -32,6 +32,72 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class OrderItemSchema extends BaseModel {
+  static $columns = ['createdAt', 'currency', 'id', 'imagePath', 'orderId', 'productSlug', 'productTitle', 'productVariantId', 'quantity', 'unitPriceCents', 'updatedAt', 'variantLabel'] as const
+  $columns = OrderItemSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare imagePath: string | null
+  @column()
+  declare orderId: string
+  @column()
+  declare productSlug: string
+  @column()
+  declare productTitle: string
+  @column()
+  declare productVariantId: string | null
+  @column()
+  declare quantity: number
+  @column()
+  declare unitPriceCents: bigint | number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare variantLabel: string
+}
+
+export class OrderSchema extends BaseModel {
+  static $columns = ['contactEmail', 'createdAt', 'currency', 'id', 'reference', 'sellerId', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'subtotalCents', 'updatedAt', 'userId'] as const
+  $columns = OrderSchema.$columns
+  @column()
+  declare contactEmail: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare reference: string
+  @column()
+  declare sellerId: string
+  @column()
+  declare shippingCity: string
+  @column()
+  declare shippingCountry: string
+  @column()
+  declare shippingLine1: string
+  @column()
+  declare shippingLine2: string | null
+  @column()
+  declare shippingName: string
+  @column()
+  declare shippingPostalCode: string
+  @column()
+  declare status: string
+  @column()
+  declare subtotalCents: bigint | number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: string
+}
+
 export class PasswordResetTokenSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'id', 'token'] as const
   $columns = PasswordResetTokenSchema.$columns
