@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
 import { ShoppingBag, TrashBin } from "@gravity-ui/icons";
 import { Badge, Button, NumberField, Popover, Spinner } from "@heroui/react";
-import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { convertCents, currencyFormat, toMajorUnits } from "@/lib/format";
 import { useCart } from "@/lib/cart/context";
 import { useStorefrontPreferences } from "@/lib/storefront/preferences-context";
@@ -43,6 +44,8 @@ function groupByShop(lines: CartLine[]) {
 export function CartPopover() {
   const t = useTranslations("Cart");
   const format = useFormatter();
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const { lines, unavailable, isLoading, lineCount, items, setQuantity, remove } = useCart();
   const { displayCurrency, rates, shipToCountry } = useStorefrontPreferences();
 
@@ -123,7 +126,7 @@ export function CartPopover() {
   const hasUndeliverable = [...shippingByShop.values()].some((s) => !s.deliverable);
 
   return (
-    <Popover>
+    <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger
         aria-label={t("openCart")}
         className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
@@ -177,15 +180,22 @@ export function CartPopover() {
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <Link
-                              href={{
-                                pathname: "/shop/[shopSlug]/[productSlug]",
-                                params: { shopSlug: line.shopSlug, productSlug: line.productSlug },
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsOpen(false);
+                                router.push({
+                                  pathname: "/shop/[shopSlug]/[productSlug]",
+                                  params: {
+                                    shopSlug: line.shopSlug,
+                                    productSlug: line.productSlug,
+                                  },
+                                });
                               }}
-                              className="truncate text-sm font-medium text-foreground no-underline"
+                              className="block max-w-full truncate text-left text-sm font-medium text-foreground"
                             >
                               {line.productTitle}
-                            </Link>
+                            </button>
                             {line.optionValues.length > 0 && (
                               <p className="truncate text-xs text-muted">
                                 {line.optionValues.join(" / ")}
@@ -301,7 +311,18 @@ export function CartPopover() {
                 )}
               </div>
 
-              <Button className="mt-4" fullWidth isDisabled={hasUndeliverable || true}>
+              <Button
+                className="mt-4"
+                fullWidth
+                isDisabled={hasUndeliverable}
+                onPress={() => {
+                  // Close first: navigating while the overlay is open unmounts
+                  // it mid-flight and strands React Aria's `inert` attributes
+                  // on every sibling, making the next page unclickable.
+                  setIsOpen(false);
+                  router.push("/checkout");
+                }}
+              >
                 {t("checkout")}
               </Button>
             </>

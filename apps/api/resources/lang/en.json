@@ -187,7 +187,9 @@
       "deleted": "Shipping profile deleted.",
       "everywhereElse": "Everywhere else",
       "domestic": "{country} (domestic)",
-      "rateSummary": "{first} first, {additional} each extra"
+      "rateSummary": "{first} first, {additional} each extra",
+      "flatRateHint": "Set “each additional” to 0 to charge one flat rate per order, however many the buyer adds.",
+      "rateSummaryFlat": "{first} per order"
     }
   },
   "Cart": {
@@ -230,6 +232,48 @@
     "currency": {
       "change": "Change currency",
       "auto": "Currency"
+    }
+  },
+  "Checkout": {
+    "heading": "Checkout",
+    "subheading": "Review your order and enter a delivery address.",
+    "signInRequired": "Sign in to place your order.",
+    "empty": "Your cart is empty.",
+    "addressHeading": "Delivery address",
+    "summaryHeading": "Order summary",
+    "nameLabel": "Full name",
+    "line1Label": "Address",
+    "line2Label": "Apartment, suite (optional)",
+    "postalCodeLabel": "Postal code",
+    "cityLabel": "City",
+    "countryLabel": "Country",
+    "countryHint": "Changing this updates the shipping cost.",
+    "quantityTimes": "{quantity} × {price}",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingFree": "Free",
+    "shopTotal": "Total",
+    "undeliverable": "Not available",
+    "undeliverableHint": "Some items can't be shipped to this country. Remove them or choose another destination.",
+    "splitHint": "This basket will become {count} orders, one per shop — each seller ships and is paid separately.",
+    "placeOrder": "Place order",
+    "placed": "Order placed."
+  },
+  "Order": {
+    "heading": "Thanks for your order",
+    "subheading": "Order {reference}. A confirmation is on its way to {email}.",
+    "quantityTimes": "{quantity} × {price}",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingFree": "Free",
+    "total": "Total",
+    "shippingTo": "Delivering to",
+    "continueShopping": "← Continue shopping",
+    "status": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "shipped": "Shipped",
+      "cancelled": "Cancelled"
     }
   }
 }

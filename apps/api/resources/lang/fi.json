@@ -187,7 +187,9 @@
       "deleted": "Toimitusprofiili poistettu.",
       "everywhereElse": "Kaikkialle muualle",
       "domestic": "{country} (kotimaa)",
-      "rateSummary": "{first} ensimmäinen, {additional} kukin lisä"
+      "rateSummary": "{first} ensimmäinen, {additional} kukin lisä",
+      "flatRateHint": "Aseta ”jokainen lisä” nollaksi veloittaaksesi kiinteän hinnan tilaukselta riippumatta määrästä.",
+      "rateSummaryFlat": "{first} tilaukselta"
     }
   },
   "Cart": {
@@ -230,6 +232,48 @@
     "currency": {
       "change": "Vaihda valuutta",
       "auto": "Valuutta"
+    }
+  },
+  "Checkout": {
+    "heading": "Kassa",
+    "subheading": "Tarkista tilauksesi ja anna toimitusosoite.",
+    "signInRequired": "Kirjaudu sisään tehdäksesi tilauksen.",
+    "empty": "Ostoskorisi on tyhjä.",
+    "addressHeading": "Toimitusosoite",
+    "summaryHeading": "Tilauksen yhteenveto",
+    "nameLabel": "Koko nimi",
+    "line1Label": "Osoite",
+    "line2Label": "Asunto, huoneisto (valinnainen)",
+    "postalCodeLabel": "Postinumero",
+    "cityLabel": "Kaupunki",
+    "countryLabel": "Maa",
+    "countryHint": "Tämän muuttaminen päivittää toimituskulut.",
+    "quantityTimes": "{quantity} × {price}",
+    "subtotal": "Välisumma",
+    "shipping": "Toimitus",
+    "shippingFree": "Ilmainen",
+    "shopTotal": "Yhteensä",
+    "undeliverable": "Ei saatavilla",
+    "undeliverableHint": "Joitakin tuotteita ei voi toimittaa tähän maahan. Poista ne tai valitse toinen maa.",
+    "splitHint": "Tästä korista syntyy {count} tilausta, yksi per kauppa — jokainen myyjä toimittaa ja laskuttaa erikseen.",
+    "placeOrder": "Tee tilaus",
+    "placed": "Tilaus tehty."
+  },
+  "Order": {
+    "heading": "Kiitos tilauksestasi",
+    "subheading": "Tilaus {reference}. Vahvistus on matkalla osoitteeseen {email}.",
+    "quantityTimes": "{quantity} × {price}",
+    "subtotal": "Välisumma",
+    "shipping": "Toimitus",
+    "shippingFree": "Ilmainen",
+    "total": "Yhteensä",
+    "shippingTo": "Toimitetaan",
+    "continueShopping": "← Jatka ostoksia",
+    "status": {
+      "pending": "Odottaa",
+      "paid": "Maksettu",
+      "shipped": "Lähetetty",
+      "cancelled": "Peruutettu"
     }
   }
 }

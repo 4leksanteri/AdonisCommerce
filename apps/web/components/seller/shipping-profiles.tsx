@@ -167,10 +167,12 @@ export function ShippingProfiles({
                           ? t("domestic", { country: rate.destination })
                           : rate.destination}
                       {" · "}
-                      {t("rateSummary", {
-                        first: money(rate.firstItemCents),
-                        additional: money(rate.additionalItemCents),
-                      })}
+                      {rate.additionalItemCents === 0
+                        ? t("rateSummaryFlat", { first: money(rate.firstItemCents) })
+                        : t("rateSummary", {
+                            first: money(rate.firstItemCents),
+                            additional: money(rate.additionalItemCents),
+                          })}
                     </li>
                   ))}
                 </ul>
@@ -265,6 +267,7 @@ export function ShippingProfiles({
               {t("addRate")}
             </Button>
             <p className="text-xs text-muted">{t("destinationHint")}</p>
+            <p className="text-xs text-muted">{t("flatRateHint")}</p>
           </div>
 
           <div className="flex gap-2">
