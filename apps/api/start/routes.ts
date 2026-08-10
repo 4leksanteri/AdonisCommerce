@@ -33,8 +33,9 @@ router
     // a later job.
     router
       .group(() => {
-        router.post('orders', [controllers.Orders, 'store'])
-        router.get('orders/:reference', [controllers.Orders, 'show'])
+        router.post('orders', [controllers.StorefrontOrders, 'store'])
+        router.get('orders', [controllers.StorefrontOrders, 'index'])
+        router.get('orders/:reference', [controllers.StorefrontOrders, 'show'])
       })
       .use(middleware.auth())
     router.get('products', [controllers.StorefrontProducts, 'index'])
@@ -74,6 +75,24 @@ router
   })
   .prefix('/api/sellers')
   .as('sellers')
+  .use(middleware.auth())
+
+// The seller's own orders. Mirrors products: the bare path is the seller's
+// view of a resource, the `/api/storefront` one is the shopper's.
+router
+  .group(() => {
+    router.get('/', [controllers.Orders, 'index'])
+    router.get('/:id', [controllers.Orders, 'show'])
+    // Verbs rather than a PATCH on `status`: each one is a different piece of
+    // work — accepting is a promise, shipping records a dispatch, cancelling
+    // moves money — and none is interchangeable with the others.
+    router.post('/:id/accept', [controllers.Orders, 'accept'])
+    router.post('/:id/ship', [controllers.Orders, 'ship'])
+    router.post('/:id/cancel', [controllers.Orders, 'cancel'])
+  })
+  .prefix('/api/orders')
+  .as('orders')
+  .where('id', router.matchers.uuid())
   .use(middleware.auth())
 
 router

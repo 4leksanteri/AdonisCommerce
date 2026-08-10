@@ -40,6 +40,7 @@ export function Header({ platformName }: { platformName: string }) {
                 <Dropdown.Menu
                   onAction={(key) => {
                     if (key === "logout") handleLogout();
+                    if (key === "orders") router.push("/orders");
                     if (key === "seller-dashboard") router.push("/seller");
                   }}
                 >

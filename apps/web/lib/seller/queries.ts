@@ -3,6 +3,7 @@ import { redirect } from "@/i18n/navigation";
 import { apiFetch, ApiError } from "@/lib/api";
 import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
+import type { SellerOrder } from "@/lib/orders/types";
 import type { PayoutDetails } from "@/lib/payments/types";
 import type { Product } from "./types";
 import type { ShippingProfile } from "./shipping-types";
@@ -45,6 +46,27 @@ export async function getSellerProduct(id: string): Promise<Product | null> {
 export async function getShippingProfiles(): Promise<ShippingProfile[]> {
   const res = await apiFetch<{ data: ShippingProfile[] }>("/api/shipping-profiles");
   return res.data;
+}
+
+/**
+ * Scoped to the calling seller's shop by the API. Defaults to orders that are
+ * actually sales — unpaid checkouts are left out unless `status` asks for them.
+ */
+export async function getSellerOrders(status?: string): Promise<SellerOrder[]> {
+  const query = status ? `?status=${encodeURIComponent(status)}` : "";
+  const res = await apiFetch<{ data: SellerOrder[] }>(`/api/orders${query}`);
+  return res.data;
+}
+
+/** Another shop's order id is a 404 here, same as a missing one. */
+export async function getSellerOrder(id: string): Promise<SellerOrder | null> {
+  try {
+    const res = await apiFetch<{ data: SellerOrder }>(`/api/orders/${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
 }
 
 /**

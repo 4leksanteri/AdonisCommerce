@@ -20,6 +20,37 @@ const REFERENCE_LENGTH = 10
  */
 export const PAYMENT_WINDOW_MINUTES = 30
 
+/**
+ * ```
+ * pending_payment ──paid──> paid ──accept──> accepted ──ship──> shipped
+ *        │                    │                  │
+ *        ├─ expired           └────── cancel ─────┘
+ *        └─ cancelled                    │
+ *                                   (refunded)
+ * ```
+ *
+ * `pending` is not in here: it is what every order carried before payments
+ * existed, and those rows are kept as they are rather than rewritten into a
+ * state they were never in.
+ */
+export const ORDER_STATUSES = [
+  'pending_payment',
+  'paid',
+  'accepted',
+  'shipped',
+  'cancelled',
+  'expired',
+] as const
+
+export type OrderStatus = (typeof ORDER_STATUSES)[number]
+
+/**
+ * A paid order waits for the seller to take it on. Accepting is a promise to
+ * make and send the thing, which for made-to-order work is a decision, not a
+ * formality — so nothing moves until they make it.
+ */
+const SELLER_ACTIONABLE = ['paid', 'accepted'] as const
+
 export default class Order extends OrderSchema {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
@@ -32,6 +63,30 @@ export default class Order extends OrderSchema {
 
   @hasMany(() => OrderItem)
   declare items: HasMany<typeof OrderItem>
+
+  /** Paid for and waiting on the seller to say yes. */
+  get canAccept() {
+    return this.status === 'paid'
+  }
+
+  /** Accepted, so there is something to actually put in the post. */
+  get canShip() {
+    return this.status === 'accepted'
+  }
+
+  /**
+   * Cancellable right up to the moment it goes in the post, and not after:
+   * once the parcel is gone the goods can't be put back on the shelf, and
+   * getting them back is a returns flow with its own conversation.
+   */
+  get canCancel() {
+    return (SELLER_ACTIONABLE as readonly string[]).includes(this.status)
+  }
+
+  /** True once money has actually moved back to the buyer. */
+  get isRefunded() {
+    return this.stripeRefundId !== null
+  }
 
   /**
    * Takes the caller's transaction client on purpose. Querying on the default

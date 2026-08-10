@@ -1,10 +1,11 @@
 import type Stripe from 'stripe'
+import { DateTime } from 'luxon'
 import db from '@adonisjs/lucid/services/db'
 import logger from '@adonisjs/core/services/logger'
 import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 import { stripe } from '#config/stripe'
+import Payment from '#models/payment'
 import type Order from '#models/order'
-import type Payment from '#models/payment'
 import type User from '#models/user'
 
 /** Items plus postage — what the buyer is actually charged for this order. */
@@ -235,6 +236,90 @@ export async function cancelUnpaidOrdersForUser(userId: string): Promise<void> {
   for (const paymentId of new Set(rows.map((row) => row.payment_id).filter(Boolean))) {
     await cancelIntentForPayment(paymentId as string)
   }
+}
+
+/**
+ * Cancels a paid order and gives the buyer their money back.
+ *
+ * The buyer is made whole first and unconditionally. Clawing the seller's
+ * share back can fail — Stripe has nothing to take if the money already
+ * reached their bank — but that is the platform's problem to chase, not a
+ * reason to leave someone paid-up with no goods coming.
+ *
+ * The platform's commission is not kept. The buyer paid a total and gets that
+ * total back; the fee comes out of the platform's own balance, and Stripe's
+ * processing fee on the original charge is gone for good. That is the real
+ * cost of a cancellation and it belongs with the platform, not the buyer.
+ */
+export async function refundOrder(order: Order, reason: string | null): Promise<void> {
+  const payment = order.paymentId ? await Payment.find(order.paymentId) : null
+  const amount = orderTotalCents(order)
+
+  let refundId = order.stripeRefundId
+  let reversalId = order.stripeTransferReversalId
+
+  // An order can reach here without money behind it — an old pre-payments row,
+  // or one whose intent never settled. There is simply nothing to give back.
+  const owesMoney = payment?.status === 'succeeded' && payment.stripePaymentIntentId !== null
+
+  if (owesMoney && !refundId) {
+    /**
+     * A partial refund of the PaymentIntent, because one intent can cover
+     * several shops' orders — cancelling one must not refund the others.
+     */
+    const refund = await stripe.refunds.create(
+      {
+        payment_intent: payment!.stripePaymentIntentId!,
+        amount,
+        metadata: {
+          orderId: order.id,
+          orderReference: order.reference,
+          reason: reason ?? 'Cancelled by seller',
+        },
+      },
+      { idempotencyKey: `refund-${order.id}` }
+    )
+    refundId = refund.id
+
+    if (order.stripeTransferId && !reversalId) {
+      try {
+        const reversal = await stripe.transfers.createReversal(
+          order.stripeTransferId,
+          {
+            amount: sellerShareCents(order),
+            metadata: { orderId: order.id, orderReference: order.reference },
+          },
+          { idempotencyKey: `reversal-${order.id}` }
+        )
+        reversalId = reversal.id
+      } catch (error) {
+        // The buyer has their money; the platform is now out of pocket until
+        // this is chased. Loud, because nothing else will notice.
+        logger.error(
+          { err: error, orderId: order.id, reference: order.reference },
+          'Refunded the buyer but could not reverse the transfer to the seller'
+        )
+      }
+    }
+  }
+
+  await db.transaction(async (trx) => {
+    order.useTransaction(trx)
+    order.status = 'cancelled'
+    order.cancelledAt = DateTime.now()
+    order.cancelReason = reason
+    order.expiresAt = null
+    if (refundId) {
+      order.stripeRefundId = refundId
+      order.refundedCents = amount
+    }
+    if (reversalId) order.stripeTransferReversalId = reversalId
+    await order.save()
+
+    // Safe because cancelling is only allowed before dispatch — see
+    // `Order.canCancel`. Once a parcel is gone the goods are not back.
+    await restoreStock(trx, [order.id])
+  })
 }
 
 /**

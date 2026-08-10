@@ -69,7 +69,10 @@
     "ORDER_UNDELIVERABLE": "Yksi näistä kaupoista ei toimita valitsemaasi maahan.",
     "ORDER_SELLER_NOT_PAYABLE": "Yksi näistä kaupoista ei vielä vastaanota maksuja. Poista sen tuotteet jatkaaksesi.",
     "ORDER_NOT_FOUND": "Tilausta ei löytynyt.",
-    "PAYOUTS_NOT_CONNECTED": "Yhdistä ensin tilitystili."
+    "PAYOUTS_NOT_CONNECTED": "Yhdistä ensin tilitystili.",
+    "ORDER_NOT_ACCEPTABLE": "Tätä tilausta ei voi enää hyväksyä.",
+    "ORDER_NOT_SHIPPABLE": "Tätä tilausta ei voi vielä merkitä lähetetyksi.",
+    "ORDER_NOT_CANCELLABLE": "Tätä tilausta ei voi enää perua."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -80,7 +83,8 @@
       "products": "Tuotteet",
       "settings": "Kaupan asetukset",
       "shipping": "Toimitus",
-      "payouts": "Tilitykset"
+      "payouts": "Tilitykset",
+      "orders": "Tilaukset"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",
@@ -212,6 +216,50 @@
       "explainActionNeeded": "Stripe on keskeyttänyt tilitykset ja tarvitsee sinulta lisätietoja.",
       "explainConnected": "Tilitykset ovat käytössä. Stripe maksaa oman aikataulunsa mukaan, ja hallintapaneelista näet mitä on tulossa.",
       "stripeHint": "Maksut ja tilitykset hoitaa Stripe. Korttitiedot ja henkilöllisyystodistukset menevät Stripelle, eivät koskaan meille."
+    },
+    "orders": {
+      "heading": "Tilaukset",
+      "subheading": "Kaikki myydyt, uusimmat ensin.",
+      "awaiting": "{count, plural, one {# tilaus odottaa vastaustasi} other {# tilausta odottaa vastaustasi}}",
+      "empty": "Ei vielä tilauksia.",
+      "orderNumber": "Tilaus #{number}",
+      "itemCount": "{count, plural, one {# tuote} other {# tuotetta}}",
+      "backToOrders": "← Kaikki tilaukset",
+      "placedOn": "Tilattu {date}",
+      "itemsHeading": "Tuotteet",
+      "quantityTimes": "{quantity} × {price}",
+      "subtotal": "Välisumma",
+      "shipping": "Toimitus",
+      "buyerPaid": "Ostaja maksoi",
+      "commission": "Palvelumaksu",
+      "yourPayout": "Sinulle tilitetään",
+      "shipTo": "Toimitusosoite",
+      "timelineHeading": "Tapahtumat",
+      "timelinePlaced": "Tilattu {date}",
+      "timelineAccepted": "Hyväksytty {date}",
+      "timelineShipped": "Lähetetty {date}",
+      "timelineCancelled": "Peruttu {date}",
+      "tracking": "Seurantakoodi: {number}",
+      "accept": "Hyväksy tilaus",
+      "accepted": "Tilaus hyväksytty.",
+      "markShipped": "Merkitse lähetetyksi",
+      "cancel": "Peru tilaus",
+      "back": "Takaisin",
+      "shipHeading": "Merkitse lähetetyksi",
+      "shipHint": "Ostajalle kerrotaan, että paketti on matkalla. Lisää seurantakoodi, jos sellainen on.",
+      "trackingLabel": "Seurantakoodi (valinnainen)",
+      "trackingPlaceholder": "esim. JJFI64000000012345",
+      "confirmShipped": "Merkitse lähetetyksi",
+      "shipped": "Merkitty lähetetyksi.",
+      "cancelHeading": "Peru ja palauta rahat",
+      "cancelHint": "Ostaja saa rahansa kokonaan takaisin ja tuotteet palaavat varastoosi. Tätä ei voi perua.",
+      "reasonLabel": "Syy (valinnainen)",
+      "reasonPlaceholder": "Näytetään ostajalle",
+      "confirmCancel": "Peru ja palauta rahat",
+      "cancelled": "Tilaus peruttu ja rahat palautettu.",
+      "refunded": "Ostajalle palautettu {amount}.",
+      "reasonGiven": "Syy: {reason}",
+      "payoutNotReclaimed": "Osuuttasi ei saatu perittyä takaisin automaattisesti — olemme yhteydessä."
     }
   },
   "Cart": {
@@ -304,10 +352,22 @@
       "shipped": "Lähetetty",
       "cancelled": "Peruutettu",
       "pending_payment": "Odottaa maksua",
-      "expired": "Vanhentunut"
+      "expired": "Vanhentunut",
+      "accepted": "Hyväksytty"
     },
     "sellerOrderNumber": "Kaupan tilaus #{number}",
     "confirmingHeading": "Vahvistetaan maksuasi",
-    "confirmingHint": "Tämä kestää muutaman sekunnin. Voit poistua sivulta — lähetämme sähköpostin joka tapauksessa."
+    "confirmingHint": "Tämä kestää muutaman sekunnin. Voit poistua sivulta — lähetämme sähköpostin joka tapauksessa.",
+    "trackingNumber": "Seurantakoodi: {number}",
+    "refundedNotice": "Sinulle on palautettu {amount}.",
+    "cancelReason": "Ilmoitettu syy: {reason}"
+  },
+  "Orders": {
+    "heading": "Tilauksesi",
+    "subheading": "Kaikki ostoksesi, uusimmat ensin.",
+    "signInRequired": "Kirjaudu sisään nähdäksesi tilauksesi.",
+    "empty": "Et ole vielä tilannut mitään.",
+    "startShopping": "Aloita ostokset",
+    "itemCount": "{count, plural, one {# tuote} other {# tuotetta}}"
   }
 }

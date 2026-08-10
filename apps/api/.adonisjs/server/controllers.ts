@@ -15,6 +15,7 @@ export const controllers = {
   RegisteredUser: () => import('#controllers/registered_user_controller'),
   Sellers: () => import('#controllers/sellers_controller'),
   ShippingProfiles: () => import('#controllers/shipping_profiles_controller'),
+  StorefrontOrders: () => import('#controllers/storefront_orders_controller'),
   StorefrontProducts: () => import('#controllers/storefront_products_controller'),
   StripeConnect: () => import('#controllers/stripe_connect_controller'),
   StripeWebhook: () => import('#controllers/stripe_webhook_controller'),

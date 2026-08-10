@@ -107,7 +107,22 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
               <span>{money(order.totalCents)}</span>
             </div>
           </div>
+
+          {order.trackingNumber && (
+            <p className="border-t border-border pt-3 text-sm text-muted">
+              {t("trackingNumber", { number: order.trackingNumber })}
+            </p>
+          )}
         </div>
+
+        {order.isRefunded && (
+          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+            <p>{t("refundedNotice", { amount: money(order.refundedCents) })}</p>
+            {order.cancelReason && (
+              <p className="mt-1">{t("cancelReason", { reason: order.cancelReason })}</p>
+            )}
+          </div>
+        )}
 
         <div className="rounded-lg border border-border p-4 text-sm">
           <p className="font-medium text-foreground">{t("shippingTo")}</p>

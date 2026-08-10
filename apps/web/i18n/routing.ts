@@ -13,6 +13,10 @@ export const routing = defineRouting({
       en: "/checkout",
       fi: "/kassa",
     },
+    "/orders": {
+      en: "/orders",
+      fi: "/tilaukset",
+    },
     "/orders/[reference]": {
       en: "/orders/[reference]",
       fi: "/tilaukset/[reference]",
@@ -24,6 +28,16 @@ export const routing = defineRouting({
     "/seller": {
       en: "/seller",
       fi: "/myyja",
+    },
+    "/seller/orders": {
+      en: "/seller/orders",
+      fi: "/myyja/tilaukset",
+    },
+    // Below the static entry, same reason as the products routes: these match
+    // in declaration order and `[id]` would otherwise swallow nothing useful.
+    "/seller/orders/[id]": {
+      en: "/seller/orders/[id]",
+      fi: "/myyja/tilaukset/[id]",
     },
     "/seller/shipping": {
       en: "/seller/shipping",

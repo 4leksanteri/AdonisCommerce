@@ -2,6 +2,7 @@
 
 import { apiFetch, ApiError, type ApiErrorItem } from "@/lib/api";
 import type { Seller } from "@/lib/auth/types";
+import type { SellerOrder } from "@/lib/orders/types";
 import type { Product, ProductImage } from "./types";
 import type { ShippingProfile, ShippingRateInput } from "./shipping-types";
 
@@ -135,6 +136,47 @@ export async function deleteShippingProfileAction(id: string): Promise<{ errors?
   try {
     await apiFetch<void>(`/api/shipping-profiles/${id}`, { method: "DELETE" });
     return {};
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+type SellerOrderResult =
+  | { order: SellerOrder; errors?: undefined }
+  | { order?: undefined; errors: ApiErrorItem[] };
+
+/** The seller committing to make and send the thing. */
+export async function acceptOrderAction(orderId: string): Promise<SellerOrderResult> {
+  return orderAction(`/api/orders/${orderId}/accept`, {});
+}
+
+export async function shipOrderAction(
+  orderId: string,
+  trackingNumber: string
+): Promise<SellerOrderResult> {
+  return orderAction(`/api/orders/${orderId}/ship`, {
+    trackingNumber: trackingNumber.trim() || undefined,
+  });
+}
+
+/**
+ * Cancelling refunds the buyer in the same step — there is no version of this
+ * that calls the order off and keeps the money.
+ */
+export async function cancelOrderAction(
+  orderId: string,
+  reason: string
+): Promise<SellerOrderResult> {
+  return orderAction(`/api/orders/${orderId}/cancel`, { reason: reason.trim() || undefined });
+}
+
+async function orderAction(path: string, body: object): Promise<SellerOrderResult> {
+  try {
+    const res = await apiFetch<{ data: SellerOrder }>(path, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    return { order: res.data };
   } catch (error) {
     return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
   }

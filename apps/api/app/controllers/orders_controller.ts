@@ -1,295 +1,146 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
-import db from '@adonisjs/lucid/services/db'
-import Order, { PAYMENT_WINDOW_MINUTES } from '#models/order'
-import OrderItem from '#models/order_item'
-import Payment from '#models/payment'
-import ProductVariant from '#models/product_variant'
+import Order from '#models/order'
+import Seller from '#models/seller'
 import OrderTransformer from '#transformers/order_transformer'
-import PaymentTransformer from '#transformers/payment_transformer'
-import { createOrderValidator } from '#validators/order'
-import { shippingCentsFor } from '#services/shipping'
-import { platformFeeCents } from '#config/stripe'
-import {
-  cancelUnpaidOrdersForUser,
-  createPaymentIntent,
-  orderTotalCents,
-  releaseExpiredReservations,
-} from '#services/payments'
+import { cancelOrderValidator, shipOrderValidator } from '#validators/seller_order'
+import { refundOrder } from '#services/payments'
+
+/**
+ * Orders the seller has to do something about, newest first.
+ *
+ * Unpaid orders are deliberately absent unless asked for. A `pending_payment`
+ * row is a checkout someone opened and may never finish; listing them as
+ * sales would make every shop look busier than it is and bury the orders that
+ * actually need a response.
+ */
+const DEFAULT_STATUSES = ['paid', 'accepted', 'shipped', 'cancelled'] as const
 
 export default class OrdersController {
-  /**
-   * Turns a cart into orders — one per seller, since each is fulfilled and
-   * paid separately — plus the payment(s) that will settle them.
-   *
-   * Everything the buyer agreed to is re-derived server-side. The client
-   * sends only variant ids and quantities; prices, titles and availability
-   * come from the database inside the transaction, so a tampered or simply
-   * stale cart can't dictate what anything costs.
-   */
-  async store({ request, auth, response, serialize }: HttpContext) {
-    const user = auth.getUserOrFail()
-    const { items, shipping } = await request.validateUsing(createOrderValidator)
+  async index({ auth, request, response, serialize }: HttpContext) {
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
 
-    // Before taking any locks: hand back stock held by checkouts that were
-    // started and never paid for — everyone's expired ones, and this buyer's
-    // own unfinished attempt, which would otherwise be holding the very items
-    // they are trying to buy again. Done outside the transaction below so the
-    // two can never wait on each other.
-    await releaseExpiredReservations()
-    await cancelUnpaidOrdersForUser(user.id)
+    const status = request.input('status') as string | undefined
+    const page = Number(request.input('page', 1)) || 1
 
-    // Collapse duplicate lines up front: the same variant twice would
-    // otherwise pass the stock check separately and oversell.
-    const quantities = new Map<string, number>()
-    for (const item of items) {
-      quantities.set(item.variantId, (quantities.get(item.variantId) ?? 0) + item.quantity)
-    }
+    const orders = await this.baseQuery(seller.id)
+      .if(status !== undefined, (query) => query.where('status', status!))
+      .if(status === undefined, (query) => query.whereIn('status', [...DEFAULT_STATUSES]))
+      .orderBy('createdAt', 'desc')
+      .paginate(page, 25)
 
-    try {
-      const { orders, payments } = await db.transaction(async (trx) => {
-        /**
-         * `forUpdate` locks the variant rows for the life of the transaction.
-         * Without it two shoppers can both read "1 left" and both succeed —
-         * the check and the decrement have to be one atomic step.
-         */
-        const variants = await ProductVariant.query({ client: trx })
-          .whereIn('id', [...quantities.keys()])
-          .whereHas('product', (product) =>
-            product
-              .where('status', 'active')
-              .whereHas('seller', (seller) => seller.where('status', 'approved'))
-          )
-          .preload('optionValues', (query) => query.preload('option'))
-          .preload('product', (product) => {
-            product.preload('seller')
-            product.preload('images', (images) => images.orderBy('position').limit(1))
-            product.preload('shippingProfile', (profile) => profile.preload('rates'))
-          })
-          .forUpdate()
-
-        if (variants.length !== quantities.size) {
-          throw new OrderError('ORDER_ITEM_UNAVAILABLE', 'An item is no longer available.')
-        }
-
-        for (const variant of variants) {
-          const wanted = quantities.get(variant.id)!
-          if (variant.product.tracksInventory && variant.stockQuantity < wanted) {
-            throw new OrderError(
-              'ORDER_INSUFFICIENT_STOCK',
-              `Only ${variant.stockQuantity} left of ${variant.product.title}.`
-            )
-          }
-
-          /**
-           * Checked before taking any money. Without a connected payout
-           * account there is nowhere to send the seller's share, so the
-           * platform would be holding funds it has no way to pass on.
-           */
-          if (variant.product.seller.payoutStatus !== 'connected') {
-            throw new OrderError(
-              'ORDER_SELLER_NOT_PAYABLE',
-              `${variant.product.seller.shopName} is not accepting payments yet.`
-            )
-          }
-        }
-
-        // Group by seller — one order each.
-        const bySeller = new Map<string, ProductVariant[]>()
-        for (const variant of variants) {
-          const sellerId = variant.product.sellerId
-          bySeller.set(sellerId, [...(bySeller.get(sellerId) ?? []), variant])
-        }
-
-        const created: Order[] = []
-
-        for (const [sellerId, sellerVariants] of bySeller) {
-          const currency = sellerVariants[0].product.currency
-          const subtotal = sellerVariants.reduce(
-            (sum, variant) => sum + Number(variant.priceCents) * quantities.get(variant.id)!,
-            0
-          )
-
-          /**
-           * Priced here rather than trusted from the client, same as the
-           * items. Grouping by profile means three soaps travel as one
-           * parcel; a separate "large parcel" profile is a second box and
-           * costs again.
-           */
-          const { cents: shippingCents, undeliverable } = shippingCentsFor(
-            sellerVariants.map((variant) => ({
-              profile: variant.product.shippingProfile ?? null,
-              quantity: quantities.get(variant.id)!,
-            })),
-            shipping.country
-          )
-
-          if (undeliverable.length > 0) {
-            throw new OrderError(
-              'ORDER_UNDELIVERABLE',
-              `${sellerVariants[0].product.seller.shopName} does not ship to ${shipping.country.toUpperCase()}.`
-            )
-          }
-
-          /**
-           * Bumped in a single statement so two concurrent orders for the same
-           * shop can't both read the same value. `RETURNING` sees the updated
-           * row, so subtracting one gives the number this order just claimed.
-           */
-          const allocated = await trx.rawQuery(
-            'UPDATE sellers SET next_order_number = next_order_number + 1 WHERE id = ? RETURNING next_order_number - 1 AS assigned',
-            [sellerId]
-          )
-
-          const order = new Order()
-          order.useTransaction(trx)
-          order.reference = await Order.generateReference(trx)
-          order.sellerOrderNumber = Number(allocated.rows[0].assigned)
-          order.userId = user.id
-          order.sellerId = sellerId
-          order.status = 'pending_payment'
-          order.currency = currency
-          order.subtotalCents = subtotal
-          order.shippingCents = shippingCents
-          // Frozen at purchase time so a later change to the commission rate
-          // can't rewrite what a seller was owed for a past order.
-          order.platformFeeCents = platformFeeCents(subtotal + shippingCents)
-          order.expiresAt = DateTime.now().plus({ minutes: PAYMENT_WINDOW_MINUTES })
-          order.contactEmail = user.email
-          order.shippingName = shipping.name
-          order.shippingLine1 = shipping.line1
-          order.shippingLine2 = shipping.line2 ?? null
-          order.shippingCity = shipping.city
-          order.shippingPostalCode = shipping.postalCode
-          order.shippingCountry = shipping.country.toUpperCase()
-          await order.save()
-
-          for (const variant of sellerVariants) {
-            const quantity = quantities.get(variant.id)!
-
-            const item = new OrderItem()
-            item.useTransaction(trx)
-            item.orderId = order.id
-            item.productVariantId = variant.id
-            // Snapshots — see the order_items migration for why.
-            item.productTitle = variant.product.title
-            item.productSlug = variant.product.slug
-            item.variantLabel = [...variant.optionValues]
-              .sort((a, b) => a.option.position - b.option.position)
-              .map((optionValue) => optionValue.value)
-              .join(' / ')
-            item.imagePath = variant.product.images.at(0)?.path ?? null
-            item.unitPriceCents = Number(variant.priceCents)
-            item.currency = currency
-            item.quantity = quantity
-            await item.save()
-
-            if (variant.product.tracksInventory) {
-              variant.useTransaction(trx)
-              variant.stockQuantity -= quantity
-              await variant.save()
-            }
-          }
-
-          created.push(order)
-        }
-
-        /**
-         * One payment per currency. A PaymentIntent carries a single
-         * currency, so a basket holding a Finnish shop's euros and a Swedish
-         * shop's kronor is honestly two charges rather than an exchange rate
-         * neither seller agreed to.
-         */
-        const byCurrency = new Map<string, Order[]>()
-        for (const order of created) {
-          byCurrency.set(order.currency, [...(byCurrency.get(order.currency) ?? []), order])
-        }
-
-        const paymentRows: Payment[] = []
-
-        for (const [currency, currencyOrders] of byCurrency) {
-          const payment = new Payment()
-          payment.useTransaction(trx)
-          payment.userId = user.id
-          payment.currency = currency
-          payment.amountCents = currencyOrders.reduce(
-            (sum, order) => sum + orderTotalCents(order),
-            0
-          )
-          payment.status = 'requires_payment_method'
-          await payment.save()
-
-          for (const order of currencyOrders) {
-            order.useTransaction(trx)
-            order.paymentId = payment.id
-            await order.save()
-          }
-
-          paymentRows.push(payment)
-        }
-
-        return { orders: created, payments: paymentRows }
-      })
-
-      /**
-       * Stripe is called only once the orders are safely committed. If this
-       * throws, the buyer sees an error and the reservation lapses on its own
-       * within the payment window — the alternative, holding row locks across
-       * a network call, would stall every other shopper wanting these items.
-       */
-      for (const payment of payments) {
-        await createPaymentIntent(
-          payment,
-          user,
-          orders.filter((order) => order.paymentId === payment.id)
-        )
-      }
-
-      // Loaded after commit: this is presentation, and holding the row locks
-      // open for it would lengthen every checkout for no benefit.
-      for (const order of orders) {
-        await order.load((preloader) => preloader.load('items').load('seller'))
-      }
-
-      response.status(201)
-      return serialize({
-        orders: OrderTransformer.transform(orders),
-        payments: PaymentTransformer.transform(payments),
-      })
-    } catch (error) {
-      if (error instanceof OrderError) {
-        return response.conflict({ errors: [{ code: error.code, message: error.message }] })
-      }
-      throw error
-    }
+    return serialize(OrderTransformer.paginate(orders.all(), orders.getMeta()).depth(2))
   }
 
   async show({ auth, params, response, serialize }: HttpContext) {
-    const user = auth.getUserOrFail()
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
 
-    const order = await Order.query()
-      .where('reference', params.reference)
-      .where('userId', user.id)
-      .preload('items')
-      .preload('seller')
-      .first()
+    const order = await this.baseQuery(seller.id).where('id', params.id).first()
+    if (!order) return this.notFound(response)
 
-    if (!order) {
-      return response.notFound({
-        errors: [{ code: 'ORDER_NOT_FOUND', message: 'Order not found.' }],
-      })
+    return serialize(OrderTransformer.transform(order).depth(2))
+  }
+
+  /**
+   * The seller taking the job on. For made-to-order work this is a real
+   * decision rather than a formality, which is why the buyer sees "awaiting
+   * confirmation" until it happens.
+   */
+  async accept({ auth, params, response, serialize }: HttpContext) {
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
+
+    const order = await this.baseQuery(seller.id).where('id', params.id).first()
+    if (!order) return this.notFound(response)
+
+    if (!order.canAccept) {
+      return this.wrongState(response, 'ORDER_NOT_ACCEPTABLE', 'This order cannot be accepted.')
     }
 
-    return serialize(OrderTransformer.transform(order))
-  }
-}
+    order.status = 'accepted'
+    order.acceptedAt = DateTime.now()
+    await order.save()
 
-/** Carries a translatable code out of the transaction to the HTTP layer. */
-class OrderError extends Error {
-  constructor(
-    public code: string,
-    message: string
-  ) {
-    super(message)
+    return serialize(OrderTransformer.transform(order).depth(2))
+  }
+
+  async ship({ auth, params, request, response, serialize }: HttpContext) {
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
+
+    const { trackingNumber } = await request.validateUsing(shipOrderValidator)
+
+    const order = await this.baseQuery(seller.id).where('id', params.id).first()
+    if (!order) return this.notFound(response)
+
+    if (!order.canShip) {
+      return this.wrongState(response, 'ORDER_NOT_SHIPPABLE', 'This order cannot be shipped.')
+    }
+
+    order.status = 'shipped'
+    order.shippedAt = DateTime.now()
+    order.trackingNumber = trackingNumber ?? null
+    await order.save()
+
+    return serialize(OrderTransformer.transform(order).depth(2))
+  }
+
+  /**
+   * Cancels and refunds in one step. There is no way to cancel *without*
+   * refunding: the seller is calling off something the buyer has already paid
+   * for, and any other outcome is just keeping their money.
+   */
+  async cancel({ auth, params, request, response, serialize }: HttpContext) {
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
+
+    const { reason } = await request.validateUsing(cancelOrderValidator)
+
+    const order = await this.baseQuery(seller.id).where('id', params.id).first()
+    if (!order) return this.notFound(response)
+
+    if (!order.canCancel) {
+      return this.wrongState(
+        response,
+        'ORDER_NOT_CANCELLABLE',
+        'This order can no longer be cancelled.'
+      )
+    }
+
+    await refundOrder(order, reason ?? null)
+    await order.load((preloader) => preloader.load('items').load('seller'))
+
+    return serialize(OrderTransformer.transform(order).depth(2))
+  }
+
+  /**
+   * Scoped to the seller on every route, so another shop's order id is a 404
+   * here rather than a leak. Items carry their own snapshots, so nothing else
+   * needs preloading to render an order.
+   */
+  private baseQuery(sellerId: string) {
+    return Order.query().where('sellerId', sellerId).preload('items').preload('seller')
+  }
+
+  private sellerFor(auth: HttpContext['auth']) {
+    return Seller.query().where('userId', auth.getUserOrFail().id).first()
+  }
+
+  private notASeller(response: HttpContext['response']) {
+    return response.forbidden({
+      errors: [{ code: 'NOT_A_SELLER', message: 'You need a seller account to manage orders.' }],
+    })
+  }
+
+  private notFound(response: HttpContext['response']) {
+    return response.notFound({
+      errors: [{ code: 'ORDER_NOT_FOUND', message: 'Order not found.' }],
+    })
+  }
+
+  private wrongState(response: HttpContext['response'], code: string, message: string) {
+    return response.conflict({ errors: [{ code, message }] })
   }
 }

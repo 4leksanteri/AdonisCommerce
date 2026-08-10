@@ -69,7 +69,10 @@
     "ORDER_UNDELIVERABLE": "One of these shops doesn't deliver to the country you chose.",
     "ORDER_SELLER_NOT_PAYABLE": "One of these shops isn't accepting payments yet. Remove their items to continue.",
     "ORDER_NOT_FOUND": "Order not found.",
-    "PAYOUTS_NOT_CONNECTED": "Connect a payout account first."
+    "PAYOUTS_NOT_CONNECTED": "Connect a payout account first.",
+    "ORDER_NOT_ACCEPTABLE": "This order can no longer be accepted.",
+    "ORDER_NOT_SHIPPABLE": "This order isn't ready to be marked as sent.",
+    "ORDER_NOT_CANCELLABLE": "This order can no longer be cancelled."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -80,7 +83,8 @@
       "products": "Products",
       "settings": "Shop settings",
       "shipping": "Shipping",
-      "payouts": "Payouts"
+      "payouts": "Payouts",
+      "orders": "Orders"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",
@@ -212,6 +216,50 @@
       "explainActionNeeded": "Stripe has paused payouts and needs more information from you.",
       "explainConnected": "Payouts are active. Stripe pays out on its own schedule; the dashboard shows what's on its way.",
       "stripeHint": "Payments and payouts are handled by Stripe. Card details and identity documents go to Stripe, never to us."
+    },
+    "orders": {
+      "heading": "Orders",
+      "subheading": "Everything sold, newest first.",
+      "awaiting": "{count, plural, one {# order needs your answer} other {# orders need your answer}}",
+      "empty": "No orders yet.",
+      "orderNumber": "Order #{number}",
+      "itemCount": "{count, plural, one {# item} other {# items}}",
+      "backToOrders": "← All orders",
+      "placedOn": "Placed {date}",
+      "itemsHeading": "Items",
+      "quantityTimes": "{quantity} × {price}",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "buyerPaid": "Buyer paid",
+      "commission": "Commission",
+      "yourPayout": "Your payout",
+      "shipTo": "Send to",
+      "timelineHeading": "History",
+      "timelinePlaced": "Ordered {date}",
+      "timelineAccepted": "Accepted {date}",
+      "timelineShipped": "Sent {date}",
+      "timelineCancelled": "Cancelled {date}",
+      "tracking": "Tracking: {number}",
+      "accept": "Accept order",
+      "accepted": "Order accepted.",
+      "markShipped": "Mark as sent",
+      "cancel": "Cancel order",
+      "back": "Back",
+      "shipHeading": "Mark as sent",
+      "shipHint": "The buyer is told it's on its way. Add a tracking number if there is one.",
+      "trackingLabel": "Tracking number (optional)",
+      "trackingPlaceholder": "e.g. JJFI64000000012345",
+      "confirmShipped": "Mark as sent",
+      "shipped": "Marked as sent.",
+      "cancelHeading": "Cancel and refund",
+      "cancelHint": "The buyer gets their money back in full and the items return to your stock. This can't be undone.",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Shown to the buyer",
+      "confirmCancel": "Cancel and refund",
+      "cancelled": "Order cancelled and refunded.",
+      "refunded": "Refunded {amount} to the buyer.",
+      "reasonGiven": "Reason: {reason}",
+      "payoutNotReclaimed": "Your share couldn't be taken back automatically — we'll be in touch."
     }
   },
   "Cart": {
@@ -304,10 +352,22 @@
       "shipped": "Shipped",
       "cancelled": "Cancelled",
       "pending_payment": "Awaiting payment",
-      "expired": "Expired"
+      "expired": "Expired",
+      "accepted": "Accepted"
     },
     "sellerOrderNumber": "Shop order #{number}",
     "confirmingHeading": "Confirming your payment",
-    "confirmingHint": "This takes a few seconds. You can leave this page — we'll email you either way."
+    "confirmingHint": "This takes a few seconds. You can leave this page — we'll email you either way.",
+    "trackingNumber": "Tracking: {number}",
+    "refundedNotice": "{amount} has been refunded to you.",
+    "cancelReason": "Reason given: {reason}"
+  },
+  "Orders": {
+    "heading": "Your orders",
+    "subheading": "Everything you've bought, newest first.",
+    "signInRequired": "Sign in to see your orders.",
+    "empty": "You haven't ordered anything yet.",
+    "startShopping": "Start shopping",
+    "itemCount": "{count, plural, one {# item} other {# items}}"
   }
 }

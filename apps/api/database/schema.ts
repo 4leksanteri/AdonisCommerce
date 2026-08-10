@@ -62,8 +62,14 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'platformFeeCents', 'reference', 'sellerId', 'sellerOrderNumber', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeTransferId', 'subtotalCents', 'updatedAt', 'userId'] as const
+  static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
+  @column.dateTime()
+  declare acceptedAt: DateTime | null
+  @column()
+  declare cancelReason: string | null
+  @column.dateTime()
+  declare cancelledAt: DateTime | null
   @column()
   declare contactEmail: string
   @column.dateTime({ autoCreate: true })
@@ -81,9 +87,13 @@ export class OrderSchema extends BaseModel {
   @column()
   declare reference: string
   @column()
+  declare refundedCents: bigint | number
+  @column()
   declare sellerId: string
   @column()
   declare sellerOrderNumber: number
+  @column.dateTime()
+  declare shippedAt: DateTime | null
   @column()
   declare shippingCents: bigint | number
   @column()
@@ -101,9 +111,15 @@ export class OrderSchema extends BaseModel {
   @column()
   declare status: string
   @column()
+  declare stripeRefundId: string | null
+  @column()
   declare stripeTransferId: string | null
   @column()
+  declare stripeTransferReversalId: string | null
+  @column()
   declare subtotalCents: bigint | number
+  @column()
+  declare trackingNumber: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
   @column()

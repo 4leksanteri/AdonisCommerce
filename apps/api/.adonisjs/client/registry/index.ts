@@ -36,17 +36,23 @@ const routes = {
     tokens: [{"old":"/api/storefront/cart","type":0,"val":"api","end":""},{"old":"/api/storefront/cart","type":0,"val":"storefront","end":""},{"old":"/api/storefront/cart","type":0,"val":"cart","end":""}],
     types: placeholder as Registry['storefront.cart.hydrate']['types'],
   },
-  'storefront.orders.store': {
+  'storefront.storefront_orders.store': {
     methods: ["POST"],
     pattern: '/api/storefront/orders',
     tokens: [{"old":"/api/storefront/orders","type":0,"val":"api","end":""},{"old":"/api/storefront/orders","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders","type":0,"val":"orders","end":""}],
-    types: placeholder as Registry['storefront.orders.store']['types'],
+    types: placeholder as Registry['storefront.storefront_orders.store']['types'],
   },
-  'storefront.orders.show': {
+  'storefront.storefront_orders.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/storefront/orders',
+    tokens: [{"old":"/api/storefront/orders","type":0,"val":"api","end":""},{"old":"/api/storefront/orders","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders","type":0,"val":"orders","end":""}],
+    types: placeholder as Registry['storefront.storefront_orders.index']['types'],
+  },
+  'storefront.storefront_orders.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/orders/:reference',
     tokens: [{"old":"/api/storefront/orders/:reference","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference","type":1,"val":"reference","end":""}],
-    types: placeholder as Registry['storefront.orders.show']['types'],
+    types: placeholder as Registry['storefront.storefront_orders.show']['types'],
   },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
@@ -131,6 +137,36 @@ const routes = {
     pattern: '/api/sellers/me/payouts/dashboard',
     tokens: [{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"api","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"me","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"payouts","end":""},{"old":"/api/sellers/me/payouts/dashboard","type":0,"val":"dashboard","end":""}],
     types: placeholder as Registry['sellers.stripe_connect.dashboard']['types'],
+  },
+  'orders.orders.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/orders',
+    tokens: [{"old":"/api/orders","type":0,"val":"api","end":""},{"old":"/api/orders","type":0,"val":"orders","end":""}],
+    types: placeholder as Registry['orders.orders.index']['types'],
+  },
+  'orders.orders.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/orders/:id',
+    tokens: [{"old":"/api/orders/:id","type":0,"val":"api","end":""},{"old":"/api/orders/:id","type":0,"val":"orders","end":""},{"old":"/api/orders/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['orders.orders.show']['types'],
+  },
+  'orders.orders.accept': {
+    methods: ["POST"],
+    pattern: '/api/orders/:id/accept',
+    tokens: [{"old":"/api/orders/:id/accept","type":0,"val":"api","end":""},{"old":"/api/orders/:id/accept","type":0,"val":"orders","end":""},{"old":"/api/orders/:id/accept","type":1,"val":"id","end":""},{"old":"/api/orders/:id/accept","type":0,"val":"accept","end":""}],
+    types: placeholder as Registry['orders.orders.accept']['types'],
+  },
+  'orders.orders.ship': {
+    methods: ["POST"],
+    pattern: '/api/orders/:id/ship',
+    tokens: [{"old":"/api/orders/:id/ship","type":0,"val":"api","end":""},{"old":"/api/orders/:id/ship","type":0,"val":"orders","end":""},{"old":"/api/orders/:id/ship","type":1,"val":"id","end":""},{"old":"/api/orders/:id/ship","type":0,"val":"ship","end":""}],
+    types: placeholder as Registry['orders.orders.ship']['types'],
+  },
+  'orders.orders.cancel': {
+    methods: ["POST"],
+    pattern: '/api/orders/:id/cancel',
+    tokens: [{"old":"/api/orders/:id/cancel","type":0,"val":"api","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"orders","end":""},{"old":"/api/orders/:id/cancel","type":1,"val":"id","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"cancel","end":""}],
+    types: placeholder as Registry['orders.orders.cancel']['types'],
   },
   'shippingProfiles.shipping_profiles.index': {
     methods: ["GET","HEAD"],

@@ -16,9 +16,10 @@ export interface ApiDefinition {
     cart: {
       hydrate: typeof routes['storefront.cart.hydrate']
     }
-    orders: {
-      store: typeof routes['storefront.orders.store']
-      show: typeof routes['storefront.orders.show']
+    storefrontOrders: {
+      store: typeof routes['storefront.storefront_orders.store']
+      index: typeof routes['storefront.storefront_orders.index']
+      show: typeof routes['storefront.storefront_orders.show']
     }
     storefrontProducts: {
       index: typeof routes['storefront.storefront_products.index']
@@ -51,6 +52,15 @@ export interface ApiDefinition {
       show: typeof routes['sellers.stripe_connect.show']
       onboarding: typeof routes['sellers.stripe_connect.onboarding']
       dashboard: typeof routes['sellers.stripe_connect.dashboard']
+    }
+  }
+  orders: {
+    orders: {
+      index: typeof routes['orders.orders.index']
+      show: typeof routes['orders.orders.show']
+      accept: typeof routes['orders.orders.accept']
+      ship: typeof routes['orders.orders.ship']
+      cancel: typeof routes['orders.orders.cancel']
     }
   }
   shippingProfiles: {
