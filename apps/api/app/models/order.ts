@@ -69,6 +69,14 @@ const SELLER_ACTIONABLE = ['paid', 'accepted'] as const
 export const DOMESTIC_HOLD_DAYS = 14
 export const INTERNATIONAL_HOLD_DAYS = 30
 
+/**
+ * When to ask the buyer whether it arrived. Roughly when a parcel plausibly
+ * has, and far enough before the hold expires that answering still changes
+ * anything.
+ */
+export const DOMESTIC_NUDGE_DAYS = 4
+export const INTERNATIONAL_NUDGE_DAYS = 12
+
 export default class Order extends OrderSchema {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
@@ -142,9 +150,15 @@ export default class Order extends OrderSchema {
    * nothing silently depends on `seller` having been preloaded.
    */
   holdWindowDays(sellerCountry: string) {
+    return this.isDomestic(sellerCountry) ? DOMESTIC_HOLD_DAYS : INTERNATIONAL_HOLD_DAYS
+  }
+
+  nudgeAfterDays(sellerCountry: string) {
+    return this.isDomestic(sellerCountry) ? DOMESTIC_NUDGE_DAYS : INTERNATIONAL_NUDGE_DAYS
+  }
+
+  private isDomestic(sellerCountry: string) {
     return this.shippingCountry.toUpperCase() === sellerCountry.toUpperCase()
-      ? DOMESTIC_HOLD_DAYS
-      : INTERNATIONAL_HOLD_DAYS
   }
 
   /** True once money has actually moved back to the buyer. */

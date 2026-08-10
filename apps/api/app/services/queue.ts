@@ -65,6 +65,31 @@ export async function schedulePayoutRelease(order: Order): Promise<void> {
 }
 
 /**
+ * Books the "has it arrived?" nudge for a few days after dispatch.
+ *
+ * Sent well before the hold expires so the buyer has time to act on it — and
+ * because confirming early is the only way the seller gets paid quickly.
+ * Domestic post arrives in days; a parcel abroad does not, so asking after
+ * four days would just be noise.
+ */
+export async function scheduleDeliveryNudge(order: Order, days: number): Promise<void> {
+  if (!order.shippedAt) return
+
+  const due = order.shippedAt.plus({ days }).toMillis()
+
+  try {
+    await payoutsQueue.add(
+      'delivery-nudge',
+      { orderId: order.id },
+      { delay: Math.max(0, due - Date.now()), jobId: `nudge-${order.id}` }
+    )
+  } catch (error) {
+    // A missing nudge slows a payout down; it never loses one.
+    logger.error({ err: error, orderId: order.id }, 'Could not schedule the delivery nudge')
+  }
+}
+
+/**
  * The safety net: runs on a schedule and releases anything due, including
  * orders whose individual job never fired.
  */

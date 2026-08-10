@@ -24,3 +24,23 @@ export function resetPasswordUrl(locale: 'en' | 'fi', token: string, email: stri
 export function sellerPayoutsUrl(locale: 'en' | 'fi') {
   return `${env.get('FRONTEND_URL')}${SELLER_PAYOUTS_PATH[locale]}`
 }
+
+const BUYER_ORDER_PATH = {
+  en: '/en/orders',
+  fi: '/fi/tilaukset',
+} as const
+
+const SELLER_ORDER_PATH = {
+  en: '/en/seller/orders',
+  fi: '/fi/myyja/tilaukset',
+} as const
+
+/** Where a buyer follows a notification about their own order. */
+export function buyerOrderUrl(locale: 'en' | 'fi', reference: string) {
+  return `${env.get('FRONTEND_URL')}${BUYER_ORDER_PATH[locale]}/${encodeURIComponent(reference)}`
+}
+
+/** The seller's view of the same order — keyed by id, not reference. */
+export function sellerOrderUrl(locale: 'en' | 'fi', orderId: string) {
+  return `${env.get('FRONTEND_URL')}${SELLER_ORDER_PATH[locale]}/${orderId}`
+}

@@ -423,5 +423,60 @@
     "empty": "You haven't ordered anything yet.",
     "startShopping": "Start shopping",
     "itemCount": "{count, plural, one {# item} other {# items}}"
+  },
+  "Emails": {
+    "viewOrder": "View your order",
+    "viewInPanel": "Open in your shop",
+    "confirmOrReport": "Confirm or report a problem",
+    "orderPlaced": {
+      "subject": "Order {reference} confirmed",
+      "heading": "Thanks for your order",
+      "body": "{shopName} has your order for {total}. They'll confirm shortly, and we'll email you again when it's on its way."
+    },
+    "orderReceived": {
+      "subject": "New order #{orderNumber} — {total}",
+      "heading": "You have a new order",
+      "body": "{buyerName} ordered {total} from your shop. Accept it to let them know you're making it, or cancel to refund them in full."
+    },
+    "orderAccepted": {
+      "subject": "{shopName} is preparing order {reference}",
+      "heading": "Your order is being prepared",
+      "body": "{shopName} has accepted your order and is getting it ready. We'll email you when it's posted."
+    },
+    "orderShipped": {
+      "subject": "Order {reference} is on its way",
+      "heading": "Your order has been sent",
+      "body": "{shopName} has posted your order. Let us know once it arrives — that's what releases their payment."
+    },
+    "orderShippedTracked": {
+      "subject": "Order {reference} is on its way",
+      "heading": "Your order has been sent",
+      "body": "{shopName} has posted your order. Tracking: {tracking}. Let us know once it arrives — that's what releases their payment."
+    },
+    "deliveryNudge": {
+      "subject": "Has order {reference} arrived?",
+      "heading": "Has it arrived?",
+      "body": "{shopName} posted your order a few days ago. If it's here, confirming takes a second and pays them straight away. If it hasn't turned up, tell us and we'll hold their payment while we sort it out."
+    },
+    "orderRefunded": {
+      "subject": "Order {reference} cancelled and refunded",
+      "heading": "Your order has been refunded",
+      "body": "{shopName} cancelled order {reference} and refunded {refunded}. Reason given: {reason}. It can take a few days to appear on your statement."
+    },
+    "orderCancelled": {
+      "subject": "Order {reference} cancelled",
+      "heading": "Your order has been cancelled",
+      "body": "{shopName} cancelled order {reference}. Reason given: {reason}."
+    },
+    "problemReported": {
+      "subject": "Problem reported on order #{orderNumber}",
+      "heading": "A buyer reported a problem",
+      "body": "{buyerName} reported a problem with order #{orderNumber}. They said: {reason}. Your payout for this order is on hold until it's settled — you can refund them from your shop, or we'll step in."
+    },
+    "payoutReleased": {
+      "subject": "Payout released for order #{orderNumber}",
+      "heading": "You've been paid",
+      "body": "Order #{orderNumber} is complete and {payout} is on its way to your bank account on Stripe's usual schedule."
+    }
   }
 }

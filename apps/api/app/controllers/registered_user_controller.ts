@@ -5,9 +5,15 @@ import UserTransformer from '#transformers/user_transformer'
 
 export default class RegisteredUserController {
   async store({ request, serialize }: HttpContext) {
-    const { fullName, email, password } = await request.validateUsing(registerValidator)
+    const { fullName, email, password, locale } = await request.validateUsing(registerValidator)
 
-    const user = await User.create({ fullName, email, password, role: 'customer' })
+    const user = await User.create({
+      fullName,
+      email,
+      password,
+      role: 'customer',
+      locale: locale ?? 'en',
+    })
     await user.load((preloader) => preloader.load('seller'))
     const token = await User.accessTokens.create(user)
 

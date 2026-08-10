@@ -8,6 +8,7 @@ import Order from '#models/order'
 import Payment from '#models/payment'
 import Seller from '#models/seller'
 import { cancelOrdersForPayment } from '#services/payments'
+import { notifyOrderPaid } from '#services/order_notifications'
 import { syncPayoutStatus } from '#services/stripe_connect'
 
 /**
@@ -126,6 +127,9 @@ export default class StripeWebhookController {
         order.status = 'paid'
         order.expiresAt = null
         await order.save()
+
+        // Only on the transition, so a repeated webhook can't email twice.
+        await notifyOrderPaid(order)
       }
 
       /**

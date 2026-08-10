@@ -94,7 +94,8 @@ export function AuthModal() {
             String(formData.get("fullName")),
             email,
             password,
-            String(formData.get("passwordConfirmation"))
+            String(formData.get("passwordConfirmation")),
+            locale
           );
     setIsPending(false);
 

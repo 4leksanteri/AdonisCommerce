@@ -13,6 +13,7 @@ import { platformFeeCents } from '#config/stripe'
 import Dispute from '#models/dispute'
 import { openDisputeValidator } from '#validators/dispute'
 import { schedulePayoutRelease } from '#services/queue'
+import { notifyProblemReported } from '#services/order_notifications'
 import {
   cancelUnpaidOrdersForUser,
   completeOrder,
@@ -390,6 +391,10 @@ export default class StorefrontOrdersController {
     // The relation was preloaded before the dispute existed, so without this
     // the response would report the order as disputed with no dispute on it.
     await order.load('disputes')
+
+    // The seller's payout is now on hold, so they need to hear about this
+    // rather than discover it when the money doesn't arrive.
+    await notifyProblemReported(order, detail ?? '')
 
     return serialize(PublicOrderTransformer.transform(order))
   }

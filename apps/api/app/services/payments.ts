@@ -7,6 +7,7 @@ import { stripe } from '#config/stripe'
 import Payment from '#models/payment'
 import Order from '#models/order'
 import type User from '#models/user'
+import { notifyPayoutReleased } from '#services/order_notifications'
 
 /** Items plus postage — what the buyer is actually charged for this order. */
 export function orderTotalCents(order: Order): number {
@@ -153,7 +154,8 @@ export async function completeOrder(order: Order): Promise<void> {
   }
 
   try {
-    await releasePayout(order)
+    const released = await releasePayout(order)
+    if (released) await notifyPayoutReleased(order)
   } catch (error) {
     logger.error(
       { err: error, orderId: order.id, reference: order.reference },

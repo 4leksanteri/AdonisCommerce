@@ -14,6 +14,9 @@ export const registerValidator = vine.create({
   email: email().unique({ table: 'users', column: 'email' }),
   password: password(),
   passwordConfirmation: password().sameAs('password'),
+  // Remembered on the row, because order emails are sent from webhooks and
+  // background jobs where there is no request to read a locale from.
+  locale: vine.enum(['en', 'fi']).optional(),
 })
 
 /**

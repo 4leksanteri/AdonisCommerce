@@ -36,14 +36,20 @@ export async function registerAction(
   fullName: string,
   email: string,
   password: string,
-  passwordConfirmation: string
+  passwordConfirmation: string,
+  /**
+   * Remembered on the account. Order emails go out from webhooks and
+   * background jobs, which have no request to read a language from, so the
+   * one they signed up in is the only signal we get.
+   */
+  locale: string
 ): Promise<AuthActionResult> {
   try {
     const res = await apiFetch<{ data: { token: string; user: User } }>(
       "/api/auth/register",
       {
         method: "POST",
-        body: JSON.stringify({ fullName, email, password, passwordConfirmation }),
+        body: JSON.stringify({ fullName, email, password, passwordConfirmation, locale }),
       },
       ANONYMOUS
     );

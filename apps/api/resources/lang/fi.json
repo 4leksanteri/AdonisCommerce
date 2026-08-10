@@ -423,5 +423,60 @@
     "empty": "Et ole vielä tilannut mitään.",
     "startShopping": "Aloita ostokset",
     "itemCount": "{count, plural, one {# tuote} other {# tuotetta}}"
+  },
+  "Emails": {
+    "viewOrder": "Katso tilaus",
+    "viewInPanel": "Avaa kaupassasi",
+    "confirmOrReport": "Vahvista tai ilmoita ongelmasta",
+    "orderPlaced": {
+      "subject": "Tilaus {reference} vahvistettu",
+      "heading": "Kiitos tilauksestasi",
+      "body": "{shopName} on vastaanottanut tilauksesi, {total}. Kauppa vahvistaa sen pian, ja lähetämme uuden viestin kun paketti on matkalla."
+    },
+    "orderReceived": {
+      "subject": "Uusi tilaus #{orderNumber} — {total}",
+      "heading": "Sinulle on uusi tilaus",
+      "body": "{buyerName} tilasi kaupastasi {total}. Hyväksy tilaus kertoaksesi että teet sen, tai peru se ja palauta rahat kokonaan."
+    },
+    "orderAccepted": {
+      "subject": "{shopName} valmistelee tilausta {reference}",
+      "heading": "Tilaustasi valmistellaan",
+      "body": "{shopName} on hyväksynyt tilauksesi ja valmistelee sitä. Lähetämme viestin kun paketti on postitettu."
+    },
+    "orderShipped": {
+      "subject": "Tilaus {reference} on matkalla",
+      "heading": "Tilauksesi on lähetetty",
+      "body": "{shopName} on postittanut tilauksesi. Kerro meille kun se saapuu — se vapauttaa kaupan maksun."
+    },
+    "orderShippedTracked": {
+      "subject": "Tilaus {reference} on matkalla",
+      "heading": "Tilauksesi on lähetetty",
+      "body": "{shopName} on postittanut tilauksesi. Seurantakoodi: {tracking}. Kerro meille kun se saapuu — se vapauttaa kaupan maksun."
+    },
+    "deliveryNudge": {
+      "subject": "Onko tilaus {reference} saapunut?",
+      "heading": "Onko paketti saapunut?",
+      "body": "{shopName} postitti tilauksesi muutama päivä sitten. Jos se on saapunut, vahvistaminen vie hetken ja kauppa saa rahansa heti. Jos se ei ole tullut, kerro meille — pidämme maksun kunnes asia on selvitetty."
+    },
+    "orderRefunded": {
+      "subject": "Tilaus {reference} peruttu ja rahat palautettu",
+      "heading": "Rahasi on palautettu",
+      "body": "{shopName} perui tilauksen {reference} ja palautti {refunded}. Ilmoitettu syy: {reason}. Summan näkyminen tiliotteella voi kestää muutaman päivän."
+    },
+    "orderCancelled": {
+      "subject": "Tilaus {reference} peruttu",
+      "heading": "Tilauksesi on peruttu",
+      "body": "{shopName} perui tilauksen {reference}. Ilmoitettu syy: {reason}."
+    },
+    "problemReported": {
+      "subject": "Ongelma ilmoitettu tilauksessa #{orderNumber}",
+      "heading": "Ostaja ilmoitti ongelmasta",
+      "body": "{buyerName} ilmoitti ongelmasta tilauksessa #{orderNumber}. Ostaja kertoi: {reason}. Tämän tilauksen tilitys on pidossa kunnes asia on selvitetty — voit palauttaa rahat kaupastasi, tai me puutumme asiaan."
+    },
+    "payoutReleased": {
+      "subject": "Tilitys vapautettu tilauksesta #{orderNumber}",
+      "heading": "Rahasi ovat matkalla",
+      "body": "Tilaus #{orderNumber} on valmis, ja {payout} siirtyy pankkitilillesi Stripen normaalin aikataulun mukaan."
+    }
   }
 }

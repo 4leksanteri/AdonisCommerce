@@ -6,7 +6,12 @@ import Dispute from '#models/dispute'
 import OrderTransformer from '#transformers/order_transformer'
 import { cancelOrderValidator, shipOrderValidator } from '#validators/seller_order'
 import { refundOrder } from '#services/payments'
-import { schedulePayoutRelease } from '#services/queue'
+import { schedulePayoutRelease, scheduleDeliveryNudge } from '#services/queue'
+import {
+  notifyOrderAccepted,
+  notifyOrderCancelled,
+  notifyOrderShipped,
+} from '#services/order_notifications'
 
 /**
  * Checkouts that never became sales. A `pending_payment` row is a browser tab
@@ -69,6 +74,8 @@ export default class OrdersController {
     order.acceptedAt = DateTime.now()
     await order.save()
 
+    await notifyOrderAccepted(order)
+
     return serialize(OrderTransformer.transform(order).depth(2))
   }
 
@@ -99,6 +106,8 @@ export default class OrdersController {
     await order.save()
 
     await schedulePayoutRelease(order)
+    await scheduleDeliveryNudge(order, order.nudgeAfterDays(seller.country))
+    await notifyOrderShipped(order)
 
     return serialize(OrderTransformer.transform(order).depth(2))
   }
@@ -151,6 +160,7 @@ export default class OrdersController {
     }
 
     await order.load((preloader) => preloader.load('items').load('seller').load('disputes'))
+    await notifyOrderCancelled(order)
 
     return serialize(OrderTransformer.transform(order).depth(2))
   }
