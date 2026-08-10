@@ -103,6 +103,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['show']>>>
     }
   }
+  'storefront.storefront_orders.confirm_receipt': {
+    methods: ["POST"]
+    pattern: '/api/storefront/orders/:reference/confirm'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { reference: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['confirmReceipt']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['confirmReceipt']>>>
+    }
+  }
+  'storefront.storefront_orders.open_dispute': {
+    methods: ["POST"]
+    pattern: '/api/storefront/orders/:reference/problem'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/dispute').openDisputeValidator)>>
+      paramsTuple: [ParamValue]
+      params: { reference: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/dispute').openDisputeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['openDispute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['openDispute']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'storefront.storefront_orders.withdraw_dispute': {
+    methods: ["DELETE"]
+    pattern: '/api/storefront/orders/:reference/problem'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { reference: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['withdrawDispute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['withdrawDispute']>>>
+    }
+  }
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/products'

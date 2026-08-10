@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Spinner } from "@heroui/react";
 import { Container } from "@/components/ui/container";
+import { BuyerOrderActions } from "@/components/storefront/order-actions";
 import { OrderStatusPoller } from "@/components/storefront/order-status-poller";
 import { Link } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
@@ -27,6 +28,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
   // Stripe's webhook, not the browser, is what marks an order paid — so for a
   // second or two after checkout this page is genuinely still waiting.
   const awaitingPayment = order.status === "pending_payment";
+  const openDispute = order.disputes.find((dispute) => dispute.status === "open");
 
   return (
     <main className="flex-1 py-10">
@@ -114,6 +116,19 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
             </p>
           )}
         </div>
+
+        <BuyerOrderActions order={order} />
+
+        {openDispute && (
+          <div className="rounded-lg border border-border p-4 text-sm">
+            <p className="font-medium text-foreground">{t("problemOpen")}</p>
+            <p className="mt-1 text-muted">{t(`problemReason.${openDispute.reason}`)}</p>
+            {openDispute.detail && <p className="mt-1 text-muted">{openDispute.detail}</p>}
+            {/* The seller isn't paid while this is open — worth saying, so the
+                buyer knows the platform still has leverage on their behalf. */}
+            <p className="mt-2 text-muted">{t("problemHeld")}</p>
+          </div>
+        )}
 
         {order.isRefunded && (
           <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">

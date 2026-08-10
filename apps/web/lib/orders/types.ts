@@ -21,11 +21,14 @@ export type ShippingAddress = {
 
 /**
  * ```
- * pending_payment ──paid──> paid ──accept──> accepted ──ship──> shipped
- *        │                    │                  │
- *        ├─ expired           └────── cancel ─────┘
+ * pending_payment ─paid─> paid ─accept─> accepted ─ship─> shipped ─┬─> completed
+ *        │                  │                │                     │      ↑
+ *        ├─ expired         └───── cancel ───┘                  disputed ─┘
  *        └─ cancelled
  * ```
+ *
+ * The seller's money is held until `completed` — the buyer confirming
+ * receipt, or the hold lapsing after dispatch.
  *
  * `pending` also exists on orders placed before payments were added; it is
  * not reachable any more but old rows still carry it.
@@ -36,8 +39,22 @@ export type OrderStatus =
   | "paid"
   | "accepted"
   | "shipped"
+  | "disputed"
+  | "completed"
   | "cancelled"
   | "expired";
+
+export type DisputeReason = "not_received" | "damaged" | "not_as_described" | "other";
+
+export type Dispute = {
+  id: string;
+  reason: DisputeReason;
+  detail: string | null;
+  status: "open" | "resolved_refunded" | "resolved_released" | "withdrawn";
+  resolutionNote: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
+};
 
 /**
  * One order per seller. Every buyer-facing figure here is a snapshot taken at
@@ -62,6 +79,15 @@ export type Order = {
   acceptedAt: string | null;
   shippedAt: string | null;
   cancelledAt: string | null;
+  completedAt: string | null;
+  /** When the order closes on its own if the buyer never confirms. */
+  payoutReleaseAt: string | null;
+  actions: {
+    canConfirmReceipt: boolean;
+    canReportProblem: boolean;
+    canWithdrawProblem: boolean;
+  };
+  disputes: Dispute[];
   shop: { name: string; slug: string };
   shipping: ShippingAddress;
   contactEmail: string;
@@ -76,8 +102,10 @@ export type Order = {
  * lives on the server, and a second copy in the browser would drift and start
  * offering buttons that 409.
  */
-export type SellerOrder = Omit<Order, "shop" | "contactEmail"> & {
+export type SellerOrder = Omit<Order, "shop" | "contactEmail" | "actions"> & {
   platformFeeCents: number;
+  /** False until the order completes — the payout is held until then. */
+  isPaidOut: boolean;
   payoutCents: number;
   /** False on a refunded order means the shop's share couldn't be clawed back. */
   transferReversed: boolean;

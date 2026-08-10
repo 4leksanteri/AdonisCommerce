@@ -2,19 +2,25 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import Order from '#models/order'
 import Seller from '#models/seller'
+import Dispute from '#models/dispute'
 import OrderTransformer from '#transformers/order_transformer'
 import { cancelOrderValidator, shipOrderValidator } from '#validators/seller_order'
 import { refundOrder } from '#services/payments'
+import { schedulePayoutRelease } from '#services/queue'
 
 /**
- * Orders the seller has to do something about, newest first.
+ * Checkouts that never became sales. A `pending_payment` row is a browser tab
+ * someone left open and `expired` is one they abandoned; listing either would
+ * make every shop look busier than it is and bury the orders that need a
+ * response.
  *
- * Unpaid orders are deliberately absent unless asked for. A `pending_payment`
- * row is a checkout someone opened and may never finish; listing them as
- * sales would make every shop look busier than it is and bury the orders that
- * actually need a response.
+ * Deliberately a list of what to *hide* rather than what to show. The first
+ * version of this named the statuses to include, and adding `disputed` and
+ * `completed` to the state machine silently dropped them out of every seller's
+ * order list — the one order a seller most needs to see was the one that
+ * disappeared. Anything new is visible by default now.
  */
-const DEFAULT_STATUSES = ['paid', 'accepted', 'shipped', 'cancelled'] as const
+const HIDDEN_STATUSES = ['pending_payment', 'expired'] as const
 
 export default class OrdersController {
   async index({ auth, request, response, serialize }: HttpContext) {
@@ -26,7 +32,7 @@ export default class OrdersController {
 
     const orders = await this.baseQuery(seller.id)
       .if(status !== undefined, (query) => query.where('status', status!))
-      .if(status === undefined, (query) => query.whereIn('status', [...DEFAULT_STATUSES]))
+      .if(status === undefined, (query) => query.whereNotIn('status', [...HIDDEN_STATUSES]))
       .orderBy('createdAt', 'desc')
       .paginate(page, 25)
 
@@ -79,10 +85,20 @@ export default class OrdersController {
       return this.wrongState(response, 'ORDER_NOT_SHIPPABLE', 'This order cannot be shipped.')
     }
 
+    const shippedAt = DateTime.now()
+
     order.status = 'shipped'
-    order.shippedAt = DateTime.now()
+    order.shippedAt = shippedAt
     order.trackingNumber = trackingNumber ?? null
+    /**
+     * The payout clock starts at dispatch, not at payment — otherwise a maker
+     * who spends ten days on a commission would be paid before it was even in
+     * the post. The buyer confirming receipt releases it sooner.
+     */
+    order.payoutReleaseAt = shippedAt.plus({ days: order.holdWindowDays(seller.country) })
     await order.save()
+
+    await schedulePayoutRelease(order)
 
     return serialize(OrderTransformer.transform(order).depth(2))
   }
@@ -91,8 +107,15 @@ export default class OrdersController {
    * Cancels and refunds in one step. There is no way to cancel *without*
    * refunding: the seller is calling off something the buyer has already paid
    * for, and any other outcome is just keeping their money.
+   *
+   * On a disputed order this doubles as the seller settling it themselves,
+   * which is the common case — a parcel lost in the post that they would
+   * rather refund than argue about. It closes the dispute as
+   * `resolved_refunded` with the seller recorded as the resolver, so the
+   * history reads the same whether they settled it or we did.
    */
   async cancel({ auth, params, request, response, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
     const seller = await this.sellerFor(auth)
     if (!seller) return this.notASeller(response)
 
@@ -109,8 +132,25 @@ export default class OrdersController {
       )
     }
 
-    await refundOrder(order, reason ?? null)
-    await order.load((preloader) => preloader.load('items').load('seller'))
+    // Post-dispatch goods don't come back to the shelf, so a dispute refund
+    // must not credit the stock the way a pre-dispatch cancellation does.
+    const settlingDispute = order.isDisputed
+    await refundOrder(order, reason ?? null, !settlingDispute)
+
+    if (settlingDispute) {
+      await Dispute.query()
+        .where('orderId', order.id)
+        .where('status', 'open')
+        .update({
+          status: 'resolved_refunded',
+          resolvedByUserId: user.id,
+          resolutionNote: reason ?? null,
+          resolvedAt: DateTime.now().toSQL(),
+          updatedAt: DateTime.now().toSQL(),
+        })
+    }
+
+    await order.load((preloader) => preloader.load('items').load('seller').load('disputes'))
 
     return serialize(OrderTransformer.transform(order).depth(2))
   }
@@ -121,7 +161,11 @@ export default class OrdersController {
    * needs preloading to render an order.
    */
   private baseQuery(sellerId: string) {
-    return Order.query().where('sellerId', sellerId).preload('items').preload('seller')
+    return Order.query()
+      .where('sellerId', sellerId)
+      .preload('items')
+      .preload('seller')
+      .preload('disputes', (query) => query.orderBy('createdAt', 'desc'))
   }
 
   private sellerFor(auth: HttpContext['auth']) {

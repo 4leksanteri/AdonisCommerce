@@ -54,6 +54,24 @@ const routes = {
     tokens: [{"old":"/api/storefront/orders/:reference","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference","type":1,"val":"reference","end":""}],
     types: placeholder as Registry['storefront.storefront_orders.show']['types'],
   },
+  'storefront.storefront_orders.confirm_receipt': {
+    methods: ["POST"],
+    pattern: '/api/storefront/orders/:reference/confirm',
+    tokens: [{"old":"/api/storefront/orders/:reference/confirm","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference/confirm","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference/confirm","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference/confirm","type":1,"val":"reference","end":""},{"old":"/api/storefront/orders/:reference/confirm","type":0,"val":"confirm","end":""}],
+    types: placeholder as Registry['storefront.storefront_orders.confirm_receipt']['types'],
+  },
+  'storefront.storefront_orders.open_dispute': {
+    methods: ["POST"],
+    pattern: '/api/storefront/orders/:reference/problem',
+    tokens: [{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference/problem","type":1,"val":"reference","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"problem","end":""}],
+    types: placeholder as Registry['storefront.storefront_orders.open_dispute']['types'],
+  },
+  'storefront.storefront_orders.withdraw_dispute': {
+    methods: ["DELETE"],
+    pattern: '/api/storefront/orders/:reference/problem',
+    tokens: [{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference/problem","type":1,"val":"reference","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"problem","end":""}],
+    types: placeholder as Registry['storefront.storefront_orders.withdraw_dispute']['types'],
+  },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/products',

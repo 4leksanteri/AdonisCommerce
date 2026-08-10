@@ -7,6 +7,7 @@ import User from '#models/user'
 import Seller from '#models/seller'
 import OrderItem from '#models/order_item'
 import Payment from '#models/payment'
+import Dispute from '#models/dispute'
 
 // No vowels, no 0/O or 1/I — a reference gets read down a phone line and
 // typed back in, so ambiguous glyphs cost more than the extra entropy.
@@ -22,12 +23,15 @@ export const PAYMENT_WINDOW_MINUTES = 30
 
 /**
  * ```
- * pending_payment ──paid──> paid ──accept──> accepted ──ship──> shipped
- *        │                    │                  │
- *        ├─ expired           └────── cancel ─────┘
- *        └─ cancelled                    │
- *                                   (refunded)
+ * pending_payment ─paid─> paid ─accept─> accepted ─ship─> shipped ─┬─> completed
+ *        │                  │                │                     │      ↑
+ *        ├─ expired         └───── cancel ───┘                  disputed ─┘
+ *        └─ cancelled                │                             │
+ *                              (refunded)                    (or cancelled)
  * ```
+ *
+ * The seller's money moves at `completed`, not at `paid` — see
+ * `payout_release_at` in the completion migration.
  *
  * `pending` is not in here: it is what every order carried before payments
  * existed, and those rows are kept as they are rather than rewritten into a
@@ -38,6 +42,8 @@ export const ORDER_STATUSES = [
   'paid',
   'accepted',
   'shipped',
+  'disputed',
+  'completed',
   'cancelled',
   'expired',
 ] as const
@@ -50,6 +56,18 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number]
  * formality — so nothing moves until they make it.
  */
 const SELLER_ACTIONABLE = ['paid', 'accepted'] as const
+
+/**
+ * How long the seller's money is held after dispatch before it releases on
+ * its own. Domestic post arrives in days; a parcel to Australia does not, and
+ * a single worst-case window would make every Helsinki-to-Helsinki sale wait
+ * three weeks for no reason.
+ *
+ * The buyer confirming receipt releases it immediately, so this is only ever
+ * the ceiling.
+ */
+export const DOMESTIC_HOLD_DAYS = 14
+export const INTERNATIONAL_HOLD_DAYS = 30
 
 export default class Order extends OrderSchema {
   @belongsTo(() => User)
@@ -64,6 +82,9 @@ export default class Order extends OrderSchema {
   @hasMany(() => OrderItem)
   declare items: HasMany<typeof OrderItem>
 
+  @hasMany(() => Dispute)
+  declare disputes: HasMany<typeof Dispute>
+
   /** Paid for and waiting on the seller to say yes. */
   get canAccept() {
     return this.status === 'paid'
@@ -75,12 +96,55 @@ export default class Order extends OrderSchema {
   }
 
   /**
-   * Cancellable right up to the moment it goes in the post, and not after:
-   * once the parcel is gone the goods can't be put back on the shelf, and
-   * getting them back is a returns flow with its own conversation.
+   * Cancellable up to dispatch — after that the goods are gone and can't be
+   * put back on the shelf — and again once the buyer reports a problem.
+   *
+   * The second case is the seller settling a dispute themselves rather than
+   * waiting for us to arbitrate it. Most problems are a lost or damaged
+   * parcel that the seller simply wants to refund, and routing every one of
+   * those through staff would be slow for the buyer and unaffordable for the
+   * platform. It refunds without restocking; see `refundOrder`.
    */
   get canCancel() {
-    return (SELLER_ACTIONABLE as readonly string[]).includes(this.status)
+    return (SELLER_ACTIONABLE as readonly string[]).includes(this.status) || this.isDisputed
+  }
+
+  /** A problem has been reported and nobody has settled it yet. */
+  get isDisputed() {
+    return this.status === 'disputed'
+  }
+
+  /**
+   * The buyer closing the order out early. Worth offering rather than always
+   * waiting out the hold: it is the fast path to the seller being paid, and
+   * someone who has the parcel in their hands has no reason to make them wait.
+   */
+  get canConfirmReceipt() {
+    return this.status === 'shipped'
+  }
+
+  /**
+   * Raising a problem is only possible between dispatch and completion. Before
+   * dispatch the seller can just cancel; after completion the money has gone
+   * and it is a returns conversation, which doesn't exist yet.
+   */
+  get canDispute() {
+    return this.status === 'shipped'
+  }
+
+  /** True once the seller's share has actually left the platform balance. */
+  get isPaidOut() {
+    return this.stripeTransferId !== null
+  }
+
+  /**
+   * Takes the seller's country rather than reading it off a relation, so
+   * nothing silently depends on `seller` having been preloaded.
+   */
+  holdWindowDays(sellerCountry: string) {
+    return this.shippingCountry.toUpperCase() === sellerCountry.toUpperCase()
+      ? DOMESTIC_HOLD_DAYS
+      : INTERNATIONAL_HOLD_DAYS
   }
 
   /** True once money has actually moved back to the buyer. */

@@ -72,7 +72,11 @@
     "PAYOUTS_NOT_CONNECTED": "Connect a payout account first.",
     "ORDER_NOT_ACCEPTABLE": "This order can no longer be accepted.",
     "ORDER_NOT_SHIPPABLE": "This order isn't ready to be marked as sent.",
-    "ORDER_NOT_CANCELLABLE": "This order can no longer be cancelled."
+    "ORDER_NOT_CANCELLABLE": "This order can no longer be cancelled.",
+    "ORDER_NOT_CONFIRMABLE": "This order can't be confirmed yet.",
+    "ORDER_NOT_DISPUTABLE": "This order can't be reported right now.",
+    "DISPUTE_ALREADY_OPEN": "You've already reported a problem with this order.",
+    "DISPUTE_NOT_OPEN": "There's no open problem on this order."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -259,7 +263,24 @@
       "cancelled": "Order cancelled and refunded.",
       "refunded": "Refunded {amount} to the buyer.",
       "reasonGiven": "Reason: {reason}",
-      "payoutNotReclaimed": "Your share couldn't be taken back automatically — we'll be in touch."
+      "payoutNotReclaimed": "Your share couldn't be taken back automatically — we'll be in touch.",
+      "payoutSent": "Paid out to you.",
+      "payoutOnHold": "Payout on hold while the reported problem is sorted out.",
+      "payoutDue": "Released {date}, or as soon as the buyer confirms it arrived.",
+      "payoutAfterDelivery": "Released once the order is marked as delivered.",
+      "disputeHeld": "The buyer reported a problem. Your payout is on hold until it's sorted out.",
+      "disputeReason": {
+        "not_received": "It never arrived",
+        "damaged": "It arrived damaged",
+        "not_as_described": "It isn't what was described",
+        "other": "Something else"
+      },
+      "disputedCount": "{count, plural, one {# order has a reported problem} other {# orders have reported problems}}",
+      "refundBuyer": "Refund the buyer",
+      "refundHeading": "Refund the buyer",
+      "refundHint": "This settles the reported problem and returns the full amount. Stock isn't added back, since the parcel has already gone.",
+      "confirmRefund": "Refund in full",
+      "refundedBuyer": "Refunded. The problem is closed."
     }
   },
   "Cart": {
@@ -353,14 +374,47 @@
       "cancelled": "Cancelled",
       "pending_payment": "Awaiting payment",
       "expired": "Expired",
-      "accepted": "Accepted"
+      "accepted": "Accepted",
+      "disputed": "Problem reported",
+      "completed": "Completed"
     },
     "sellerOrderNumber": "Shop order #{number}",
     "confirmingHeading": "Confirming your payment",
     "confirmingHint": "This takes a few seconds. You can leave this page — we'll email you either way.",
     "trackingNumber": "Tracking: {number}",
     "refundedNotice": "{amount} has been refunded to you.",
-    "cancelReason": "Reason given: {reason}"
+    "cancelReason": "Reason given: {reason}",
+    "problemOpen": "You reported a problem",
+    "problemHeld": "The shop hasn't been paid while this is open. We'll be in touch.",
+    "problemReason": {
+      "not_received": "It never arrived",
+      "damaged": "It arrived damaged",
+      "not_as_described": "It isn't what was described",
+      "other": "Something else"
+    },
+    "actions": {
+      "prompt": "Has your order arrived?",
+      "confirmReceipt": "Yes, it arrived",
+      "confirmed": "Thanks — the shop has been paid.",
+      "reportProblem": "Report a problem",
+      "problemHeading": "Report a problem",
+      "problemHint": "The shop won't be paid while this is open, and we'll help sort it out.",
+      "reasonLabel": "What went wrong?",
+      "detailLabel": "Anything else (optional)",
+      "detailPlaceholder": "Tell us what happened",
+      "submitProblem": "Report problem",
+      "problemSent": "Problem reported. We'll be in touch.",
+      "back": "Back",
+      "reason": {
+        "not_received": "It never arrived",
+        "damaged": "It arrived damaged",
+        "not_as_described": "It isn't what was described",
+        "other": "Something else"
+      },
+      "withdrawPrompt": "Has it turned up since you reported the problem?",
+      "withdrawProblem": "It arrived after all",
+      "withdrawn": "Problem closed. Thanks for letting us know."
+    }
   },
   "Orders": {
     "heading": "Your orders",

@@ -11,6 +11,56 @@ type PlaceOrderResult =
   | { orders: Order[]; payments: Payment[]; errors?: undefined }
   | { orders?: undefined; payments?: undefined; errors: ApiErrorItem[] };
 
+type OrderResult = { order: Order; errors?: undefined } | { order?: undefined; errors: ApiErrorItem[] };
+
+/**
+ * The buyer saying it arrived. Closes the order and releases the seller's
+ * money immediately rather than waiting out the hold.
+ */
+export async function confirmReceiptAction(reference: string): Promise<OrderResult> {
+  return orderAction(`/api/storefront/orders/${encodeURIComponent(reference)}/confirm`, {});
+}
+
+/**
+ * Opening a problem holds the seller's payout until it's settled. Without
+ * this the buyer's only remaining move is a card chargeback.
+ */
+export async function reportProblemAction(
+  reference: string,
+  reason: string,
+  detail: string
+): Promise<OrderResult> {
+  return orderAction(`/api/storefront/orders/${encodeURIComponent(reference)}/problem`, {
+    reason,
+    detail: detail.trim() || undefined,
+  });
+}
+
+/** The parcel turned up — close the problem and let the payout resume. */
+export async function withdrawProblemAction(reference: string): Promise<OrderResult> {
+  return orderAction(
+    `/api/storefront/orders/${encodeURIComponent(reference)}/problem`,
+    undefined,
+    "DELETE"
+  );
+}
+
+async function orderAction(
+  path: string,
+  body: object | undefined,
+  method: "POST" | "DELETE" = "POST"
+): Promise<OrderResult> {
+  try {
+    const res = await apiFetch<{ data: Order }>(path, {
+      method,
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    return { order: res.data };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
 /**
  * Sends only variant ids and quantities — prices, shipping and availability
  * are all re-derived server-side inside a transaction, so nothing the browser

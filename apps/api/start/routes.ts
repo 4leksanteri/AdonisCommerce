@@ -36,6 +36,14 @@ router
         router.post('orders', [controllers.StorefrontOrders, 'store'])
         router.get('orders', [controllers.StorefrontOrders, 'index'])
         router.get('orders/:reference', [controllers.StorefrontOrders, 'show'])
+        // Closing the order out, or saying it went wrong. Keyed by reference
+        // like the rest of the buyer's order routes.
+        router.post('orders/:reference/confirm', [controllers.StorefrontOrders, 'confirmReceipt'])
+        router.post('orders/:reference/problem', [controllers.StorefrontOrders, 'openDispute'])
+        router.delete('orders/:reference/problem', [
+          controllers.StorefrontOrders,
+          'withdrawDispute',
+        ])
       })
       .use(middleware.auth())
     router.get('products', [controllers.StorefrontProducts, 'index'])

@@ -5,7 +5,7 @@ import logger from '@adonisjs/core/services/logger'
 import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 import { stripe } from '#config/stripe'
 import Payment from '#models/payment'
-import type Order from '#models/order'
+import Order from '#models/order'
 import type User from '#models/user'
 
 /** Items plus postage — what the buyer is actually charged for this order. */
@@ -105,6 +105,99 @@ export async function transferToSeller(order: Order, chargeId: string): Promise<
 
   order.stripeTransferId = transfer.id
   await order.save()
+}
+
+/**
+ * Pays the seller for a completed order.
+ *
+ * Split out from the payment webhook deliberately. The charge clearing means
+ * the buyer paid; it does not mean they got anything. Holding the transfer
+ * until the order closes means the ordinary "it never arrived" refund comes
+ * out of the platform balance, where the money still is, instead of depending
+ * on a reversal that Stripe cannot perform once the funds have paid out.
+ *
+ * Returns false when there is nothing to release, which is normal for old
+ * pre-payments rows and for orders whose intent never settled.
+ */
+export async function releasePayout(order: Order): Promise<boolean> {
+  if (order.stripeTransferId) return true
+
+  const payment = order.paymentId ? await Payment.find(order.paymentId) : null
+  if (payment?.status !== 'succeeded' || !payment.stripePaymentIntentId) return false
+
+  // The charge id isn't stored, so it's fetched here. One extra call on a
+  // background job is cheaper than another column to keep in step.
+  const intent = await stripe.paymentIntents.retrieve(payment.stripePaymentIntentId)
+  const chargeId = chargeIdFrom(intent)
+  if (!chargeId) return false
+
+  if (!order.seller) await order.load('seller')
+  await transferToSeller(order, chargeId)
+
+  return true
+}
+
+/**
+ * Closes an order out and pays the seller.
+ *
+ * A failed transfer does not undo the completion. The order genuinely is
+ * finished, and `stripe_transfer_id` staying null is the flag the sweep uses
+ * to try again — turning a payout problem into an incomplete order would only
+ * hide it.
+ */
+export async function completeOrder(order: Order): Promise<void> {
+  if (order.status !== 'completed') {
+    order.status = 'completed'
+    order.completedAt = DateTime.now()
+    await order.save()
+  }
+
+  try {
+    await releasePayout(order)
+  } catch (error) {
+    logger.error(
+      { err: error, orderId: order.id, reference: order.reference },
+      'Order completed but the payout to the seller failed'
+    )
+  }
+}
+
+/**
+ * Completes and pays out everything whose hold has run out, and retries any
+ * completed order still missing its transfer.
+ *
+ * The second half is the reconciliation: the queue schedules these releases,
+ * but Redis can be flushed and a job can die, whereas `payout_release_at` in
+ * the database cannot. Losing the queue costs timeliness, never the debt.
+ *
+ * An open dispute holds everything. Nothing is paid out while someone is
+ * saying the order went wrong.
+ */
+export async function releaseDuePayouts(): Promise<number> {
+  const due = await Order.query()
+    .where((query) =>
+      query
+        .where((shipped) =>
+          shipped
+            .where('status', 'shipped')
+            .whereNotNull('payoutReleaseAt')
+            .where('payoutReleaseAt', '<=', DateTime.now().toSQL()!)
+        )
+        // Completed but never paid — a transfer that failed earlier.
+        .orWhere((stuck) => stuck.where('status', 'completed').whereNull('stripeTransferId'))
+    )
+    .whereDoesntHave('disputes', (dispute) => dispute.where('status', 'open'))
+    .preload('seller')
+
+  for (const order of due) {
+    await completeOrder(order)
+  }
+
+  if (due.length > 0) {
+    logger.info({ count: due.length }, 'Released payouts for completed orders')
+  }
+
+  return due.length
 }
 
 /** Pulls the charge id off a PaymentIntent, whether expanded or a bare ref. */
@@ -251,7 +344,17 @@ export async function cancelUnpaidOrdersForUser(userId: string): Promise<void> {
  * processing fee on the original charge is gone for good. That is the real
  * cost of a cancellation and it belongs with the platform, not the buyer.
  */
-export async function refundOrder(order: Order, reason: string | null): Promise<void> {
+export async function refundOrder(
+  order: Order,
+  reason: string | null,
+  /**
+   * False when settling a dispute. Cancelling before dispatch puts the goods
+   * back on the shelf; refunding a parcel that is lost in the post does not —
+   * those units are gone, and crediting them back would invent stock the
+   * seller does not have.
+   */
+  restock = true
+): Promise<void> {
   const payment = order.paymentId ? await Payment.find(order.paymentId) : null
   const amount = orderTotalCents(order)
 
@@ -316,9 +419,7 @@ export async function refundOrder(order: Order, reason: string | null): Promise<
     if (reversalId) order.stripeTransferReversalId = reversalId
     await order.save()
 
-    // Safe because cancelling is only allowed before dispatch — see
-    // `Order.canCancel`. Once a parcel is gone the goods are not back.
-    await restoreStock(trx, [order.id])
+    if (restock) await restoreStock(trx, [order.id])
   })
 }
 

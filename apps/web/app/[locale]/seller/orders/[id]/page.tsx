@@ -25,7 +25,9 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
 
   const money = (cents: number) =>
     format.number(toMajorUnits(cents), currencyFormat(order.currency));
-  const when = (value: string) => format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" });
+  const when = (value: string) =>
+    format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" });
+  const openDispute = order.disputes.find((dispute) => dispute.status === "open");
 
   return (
     <div className="flex flex-col gap-6">
@@ -50,6 +52,14 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       </div>
 
       <OrderActions order={order} />
+
+      {openDispute && (
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+          <p className="font-medium">{t(`disputeReason.${openDispute.reason}`)}</p>
+          {openDispute.detail && <p className="mt-1">{openDispute.detail}</p>}
+          <p className="mt-2">{t("disputeHeld")}</p>
+        </div>
+      )}
 
       {order.isRefunded && (
         <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
@@ -118,6 +128,18 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
               <span>{money(order.payoutCents)}</span>
             </div>
           </div>
+
+          {/* The money is held until the order closes, so "when do I get paid"
+              is answered right next to the amount rather than left to guess. */}
+          <p className="border-t border-border pt-3 text-xs text-muted">
+            {order.isPaidOut
+              ? t("payoutSent")
+              : openDispute
+                ? t("payoutOnHold")
+                : order.payoutReleaseAt
+                  ? t("payoutDue", { date: when(order.payoutReleaseAt) })
+                  : t("payoutAfterDelivery")}
+          </p>
         </div>
 
         <div className="flex flex-col gap-4">

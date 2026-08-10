@@ -11,6 +11,9 @@ const COLORS: Record<OrderStatus, "success" | "warning" | "danger" | undefined> 
   paid: "warning",
   accepted: undefined,
   shipped: "success",
+  // Someone is waiting on an answer, same as `paid` — not a failure yet.
+  disputed: "warning",
+  completed: "success",
   cancelled: "danger",
   expired: "danger",
 };

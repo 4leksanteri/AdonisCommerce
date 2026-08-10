@@ -19,6 +19,11 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
   // Orders waiting on the seller come first as a count, because that is the
   // only number on this page anyone acts on.
   const awaiting = orders.filter((order) => order.actions.canAccept).length;
+  // Counted separately and worded differently: there is nothing for the seller
+  // to press yet on a dispute, so calling it "needs your answer" would be a lie.
+  const disputed = orders.filter((order) =>
+    order.disputes.some((dispute) => dispute.status === "open")
+  ).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,6 +32,9 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
         <p className="mt-1 text-sm text-muted">
           {awaiting > 0 ? t("awaiting", { count: awaiting }) : t("subheading")}
         </p>
+        {disputed > 0 && (
+          <p className="mt-1 text-sm text-danger">{t("disputedCount", { count: disputed })}</p>
+        )}
       </div>
 
       {orders.length === 0 ? (

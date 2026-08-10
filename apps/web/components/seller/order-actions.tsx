@@ -57,6 +57,14 @@ export function OrderActions({ order }: { order: SellerOrder }) {
   const { canAccept, canShip, canCancel } = order.actions;
   if (!canAccept && !canShip && !canCancel) return null;
 
+  /**
+   * One action, two meanings. Before dispatch it calls the order off; on a
+   * disputed order it is the seller settling the problem themselves rather
+   * than waiting for us to arbitrate — same refund, and the copy has to say
+   * which one is happening.
+   */
+  const settling = order.status === "disputed";
+
   return (
     <div className="flex flex-col gap-3">
       {errorMessages.length > 0 && (
@@ -90,7 +98,7 @@ export function OrderActions({ order }: { order: SellerOrder }) {
 
         {canCancel && (
           <Button variant="outline" isDisabled={isPending} onPress={() => setIsCancelOpen(true)}>
-            {t("cancel")}
+            {settling ? t("refundBuyer") : t("cancel")}
           </Button>
         )}
       </div>
@@ -134,12 +142,14 @@ export function OrderActions({ order }: { order: SellerOrder }) {
           <Modal.Dialog className="sm:max-w-md">
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>{t("cancelHeading")}</Modal.Heading>
+              <Modal.Heading>{settling ? t("refundHeading") : t("cancelHeading")}</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="flex flex-col gap-3">
               {/* Says plainly that this moves money — cancelling and refunding
                   are the same button, and nobody should discover that after. */}
-              <p className="text-sm text-muted">{t("cancelHint")}</p>
+              <p className="text-sm text-muted">
+                {settling ? t("refundHint") : t("cancelHint")}
+              </p>
               <TextField isDisabled={isPending} value={reason} onChange={setReason}>
                 <Label>{t("reasonLabel")}</Label>
                 <Input className="border border-border" placeholder={t("reasonPlaceholder")} />
@@ -155,12 +165,17 @@ export function OrderActions({ order }: { order: SellerOrder }) {
               </Button>
               <Button
                 isPending={isPending}
-                onPress={() => run(() => cancelOrderAction(order.id, reason), t("cancelled"))}
+                onPress={() =>
+                  run(
+                    () => cancelOrderAction(order.id, reason),
+                    settling ? t("refundedBuyer") : t("cancelled")
+                  )
+                }
               >
                 {({ isPending: pending }) => (
                   <>
                     {pending && <Spinner color="current" size="sm" />}
-                    {t("confirmCancel")}
+                    {settling ? t("confirmRefund") : t("confirmCancel")}
                   </>
                 )}
               </Button>

@@ -7,7 +7,7 @@ import { stripe } from '#config/stripe'
 import Order from '#models/order'
 import Payment from '#models/payment'
 import Seller from '#models/seller'
-import { cancelOrdersForPayment, chargeIdFrom, transferToSeller } from '#services/payments'
+import { cancelOrdersForPayment } from '#services/payments'
 import { syncPayoutStatus } from '#services/stripe_connect'
 
 /**
@@ -105,7 +105,6 @@ export default class StripeWebhookController {
     }
 
     const orders = await Order.query().where('paymentId', payment.id).preload('seller')
-    const chargeId = chargeIdFrom(intent)
 
     for (const order of orders) {
       if (order.status === 'expired' || order.status === 'cancelled') {
@@ -130,22 +129,12 @@ export default class StripeWebhookController {
       }
 
       /**
-       * A failed transfer must not fail the whole event. The buyer's money
-       * has moved and that fact has to be recorded; retrying the event would
-       * only re-run everything above, and if the seller's account is the
-       * problem no number of retries fixes it. `stripe_transfer_id` stays
-       * null, which is the flag that this one still owes a payout.
+       * No transfer here. The money stays on the platform balance until the
+       * order completes — the buyer confirming receipt, or the hold lapsing
+       * after dispatch. Paying the seller at this point is what made a later
+       * refund depend on clawing money back out of their account, which is
+       * the one step that can fail outright.
        */
-      if (chargeId) {
-        try {
-          await transferToSeller(order, chargeId)
-        } catch (error) {
-          logger.error(
-            { err: error, orderId: order.id, reference: order.reference },
-            'Order is paid but the transfer to the seller failed'
-          )
-        }
-      }
     }
   }
 

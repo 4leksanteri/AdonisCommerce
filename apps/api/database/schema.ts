@@ -32,6 +32,33 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class DisputeSchema extends BaseModel {
+  static $columns = ['createdAt', 'detail', 'id', 'openedByUserId', 'orderId', 'reason', 'resolutionNote', 'resolvedAt', 'resolvedByUserId', 'status', 'updatedAt'] as const
+  $columns = DisputeSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare detail: string | null
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare openedByUserId: string
+  @column()
+  declare orderId: string
+  @column()
+  declare reason: string
+  @column()
+  declare resolutionNote: string | null
+  @column.dateTime()
+  declare resolvedAt: DateTime | null
+  @column()
+  declare resolvedByUserId: string | null
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class OrderItemSchema extends BaseModel {
   static $columns = ['createdAt', 'currency', 'id', 'imagePath', 'orderId', 'productSlug', 'productTitle', 'productVariantId', 'quantity', 'unitPriceCents', 'updatedAt', 'variantLabel'] as const
   $columns = OrderItemSchema.$columns
@@ -62,7 +89,7 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
+  static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'completedAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'payoutReleaseAt', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
   @column.dateTime()
   declare acceptedAt: DateTime | null
@@ -70,6 +97,8 @@ export class OrderSchema extends BaseModel {
   declare cancelReason: string | null
   @column.dateTime()
   declare cancelledAt: DateTime | null
+  @column.dateTime()
+  declare completedAt: DateTime | null
   @column()
   declare contactEmail: string
   @column.dateTime({ autoCreate: true })
@@ -82,6 +111,8 @@ export class OrderSchema extends BaseModel {
   declare id: string
   @column()
   declare paymentId: string | null
+  @column.dateTime()
+  declare payoutReleaseAt: DateTime | null
   @column()
   declare platformFeeCents: bigint | number
   @column()

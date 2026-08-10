@@ -10,8 +10,12 @@ import PaymentTransformer from '#transformers/payment_transformer'
 import { createOrderValidator } from '#validators/order'
 import { shippingCentsFor } from '#services/shipping'
 import { platformFeeCents } from '#config/stripe'
+import Dispute from '#models/dispute'
+import { openDisputeValidator } from '#validators/dispute'
+import { schedulePayoutRelease } from '#services/queue'
 import {
   cancelUnpaidOrdersForUser,
+  completeOrder,
   createPaymentIntent,
   orderTotalCents,
   releaseExpiredReservations,
@@ -278,6 +282,7 @@ export default class StorefrontOrdersController {
       .whereNotIn('status', ['pending_payment', 'expired'])
       .preload('items')
       .preload('seller')
+      .preload('disputes', (query) => query.orderBy('createdAt', 'desc'))
       .orderBy('createdAt', 'desc')
       .paginate(page, 20)
 
@@ -292,6 +297,7 @@ export default class StorefrontOrdersController {
       .where('userId', user.id)
       .preload('items')
       .preload('seller')
+      .preload('disputes', (query) => query.orderBy('createdAt', 'desc'))
       .first()
 
     if (!order) {
@@ -301,6 +307,148 @@ export default class StorefrontOrdersController {
     }
 
     return serialize(PublicOrderTransformer.transform(order))
+  }
+
+  /**
+   * The buyer saying it arrived. Closes the order and releases the seller's
+   * money straight away rather than making them wait out the hold — someone
+   * holding the parcel has no reason to keep the maker waiting.
+   */
+  async confirmReceipt({ auth, params, response, serialize }: HttpContext) {
+    const order = await this.ownedOrder(auth, params.reference)
+    if (!order) {
+      return response.notFound({
+        errors: [{ code: 'ORDER_NOT_FOUND', message: 'Order not found.' }],
+      })
+    }
+
+    if (!order.canConfirmReceipt) {
+      return response.conflict({
+        errors: [{ code: 'ORDER_NOT_CONFIRMABLE', message: 'This order cannot be confirmed yet.' }],
+      })
+    }
+
+    await completeOrder(order)
+
+    return serialize(PublicOrderTransformer.transform(order))
+  }
+
+  /**
+   * Something went wrong. Opening a problem holds the seller's payout until
+   * it is settled, which is the entire reason the money is still on the
+   * platform balance at this point.
+   */
+  async openDispute({ auth, params, request, response, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const { reason, detail } = await request.validateUsing(openDisputeValidator)
+
+    const order = await this.ownedOrder(auth, params.reference)
+    if (!order) {
+      return response.notFound({
+        errors: [{ code: 'ORDER_NOT_FOUND', message: 'Order not found.' }],
+      })
+    }
+
+    if (!order.canDispute) {
+      return response.conflict({
+        errors: [{ code: 'ORDER_NOT_DISPUTABLE', message: 'This order cannot be disputed.' }],
+      })
+    }
+
+    /**
+     * The partial unique index on `disputes` allows only one open case per
+     * order, so a double submit collides there rather than opening a second.
+     */
+    const existing = await Dispute.query()
+      .where('orderId', order.id)
+      .where('status', 'open')
+      .first()
+
+    if (existing) {
+      return response.conflict({
+        errors: [
+          { code: 'DISPUTE_ALREADY_OPEN', message: 'A problem is already open for this order.' },
+        ],
+      })
+    }
+
+    await db.transaction(async (trx) => {
+      const dispute = new Dispute()
+      dispute.useTransaction(trx)
+      dispute.orderId = order.id
+      dispute.openedByUserId = user.id
+      dispute.reason = reason
+      dispute.detail = detail ?? null
+      dispute.status = 'open'
+      await dispute.save()
+
+      order.useTransaction(trx)
+      order.status = 'disputed'
+      await order.save()
+    })
+
+    // The relation was preloaded before the dispute existed, so without this
+    // the response would report the order as disputed with no dispute on it.
+    await order.load('disputes')
+
+    return serialize(PublicOrderTransformer.transform(order))
+  }
+
+  /**
+   * The parcel turned up. Closes the problem and puts the order back where it
+   * was, which lets the payout resume on its normal clock — a late delivery
+   * shouldn't need anyone to arbitrate it.
+   */
+  async withdrawDispute({ auth, params, response, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    const order = await this.ownedOrder(auth, params.reference)
+    if (!order) {
+      return response.notFound({
+        errors: [{ code: 'ORDER_NOT_FOUND', message: 'Order not found.' }],
+      })
+    }
+
+    const open = await Dispute.query().where('orderId', order.id).where('status', 'open').first()
+
+    if (!open) {
+      return response.conflict({
+        errors: [{ code: 'DISPUTE_NOT_OPEN', message: 'There is no open problem to withdraw.' }],
+      })
+    }
+
+    await db.transaction(async (trx) => {
+      open.useTransaction(trx)
+      open.status = 'withdrawn'
+      open.resolvedByUserId = user.id
+      open.resolvedAt = DateTime.now()
+      await open.save()
+
+      order.useTransaction(trx)
+      order.status = 'shipped'
+      await order.save()
+    })
+
+    /**
+     * Re-booked because the original job may have already run and been turned
+     * away by the hold. If the release date has passed in the meantime the
+     * delay is zero and it pays out on the next tick, which is right — the
+     * parcel arrived and the wait is over.
+     */
+    await schedulePayoutRelease(order)
+    await order.load('disputes')
+
+    return serialize(PublicOrderTransformer.transform(order))
+  }
+
+  private async ownedOrder(auth: HttpContext['auth'], reference: string) {
+    return Order.query()
+      .where('reference', reference)
+      .where('userId', auth.getUserOrFail().id)
+      .preload('items')
+      .preload('seller')
+      .preload('disputes', (query) => query.orderBy('createdAt', 'desc'))
+      .first()
   }
 }
 

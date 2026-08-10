@@ -1,6 +1,7 @@
 import type Order from '#models/order'
 import { BaseTransformer } from '@adonisjs/core/transformers'
 import OrderItemTransformer from '#transformers/order_item_transformer'
+import DisputeTransformer from '#transformers/dispute_transformer'
 import { orderTotalCents, sellerShareCents } from '#services/payments'
 
 /**
@@ -27,7 +28,13 @@ export default class OrderTransformer extends BaseTransformer<Order> {
         'acceptedAt',
         'shippedAt',
         'cancelledAt',
+        'completedAt',
+        'payoutReleaseAt',
       ]),
+      // The seller's money is held until the order completes, so "have I been
+      // paid, and if not when" is a question this page has to answer.
+      isPaidOut: this.resource.isPaidOut,
+      disputes: DisputeTransformer.transform(this.whenLoaded(this.resource.disputes)),
       subtotalCents: Number(this.resource.subtotalCents),
       shippingCents: Number(this.resource.shippingCents),
       totalCents: orderTotalCents(this.resource),

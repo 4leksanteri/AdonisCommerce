@@ -72,7 +72,11 @@
     "PAYOUTS_NOT_CONNECTED": "Yhdistä ensin tilitystili.",
     "ORDER_NOT_ACCEPTABLE": "Tätä tilausta ei voi enää hyväksyä.",
     "ORDER_NOT_SHIPPABLE": "Tätä tilausta ei voi vielä merkitä lähetetyksi.",
-    "ORDER_NOT_CANCELLABLE": "Tätä tilausta ei voi enää perua."
+    "ORDER_NOT_CANCELLABLE": "Tätä tilausta ei voi enää perua.",
+    "ORDER_NOT_CONFIRMABLE": "Tätä tilausta ei voi vielä vahvistaa.",
+    "ORDER_NOT_DISPUTABLE": "Tästä tilauksesta ei voi juuri nyt ilmoittaa ongelmaa.",
+    "DISPUTE_ALREADY_OPEN": "Olet jo ilmoittanut ongelmasta tässä tilauksessa.",
+    "DISPUTE_NOT_OPEN": "Tässä tilauksessa ei ole avointa ongelmaa."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -259,7 +263,24 @@
       "cancelled": "Tilaus peruttu ja rahat palautettu.",
       "refunded": "Ostajalle palautettu {amount}.",
       "reasonGiven": "Syy: {reason}",
-      "payoutNotReclaimed": "Osuuttasi ei saatu perittyä takaisin automaattisesti — olemme yhteydessä."
+      "payoutNotReclaimed": "Osuuttasi ei saatu perittyä takaisin automaattisesti — olemme yhteydessä.",
+      "payoutSent": "Tilitetty sinulle.",
+      "payoutOnHold": "Tilitys on pidossa, kunnes ilmoitettu ongelma on selvitetty.",
+      "payoutDue": "Vapautuu {date} tai heti kun ostaja vahvistaa saapumisen.",
+      "payoutAfterDelivery": "Vapautuu, kun tilaus on merkitty toimitetuksi.",
+      "disputeHeld": "Ostaja ilmoitti ongelmasta. Tilityksesi on pidossa, kunnes asia on selvitetty.",
+      "disputeReason": {
+        "not_received": "Ei koskaan saapunut",
+        "damaged": "Saapui vaurioituneena",
+        "not_as_described": "Ei vastaa kuvausta",
+        "other": "Jokin muu"
+      },
+      "disputedCount": "{count, plural, one {# tilauksessa on ilmoitettu ongelma} other {# tilauksessa on ilmoitettu ongelma}}",
+      "refundBuyer": "Palauta rahat ostajalle",
+      "refundHeading": "Palauta rahat ostajalle",
+      "refundHint": "Tämä sulkee ilmoitetun ongelman ja palauttaa koko summan. Varastosaldoa ei kasvateta, koska paketti on jo lähtenyt.",
+      "confirmRefund": "Palauta koko summa",
+      "refundedBuyer": "Rahat palautettu. Ongelma on suljettu."
     }
   },
   "Cart": {
@@ -353,14 +374,47 @@
       "cancelled": "Peruutettu",
       "pending_payment": "Odottaa maksua",
       "expired": "Vanhentunut",
-      "accepted": "Hyväksytty"
+      "accepted": "Hyväksytty",
+      "disputed": "Ongelma ilmoitettu",
+      "completed": "Valmis"
     },
     "sellerOrderNumber": "Kaupan tilaus #{number}",
     "confirmingHeading": "Vahvistetaan maksuasi",
     "confirmingHint": "Tämä kestää muutaman sekunnin. Voit poistua sivulta — lähetämme sähköpostin joka tapauksessa.",
     "trackingNumber": "Seurantakoodi: {number}",
     "refundedNotice": "Sinulle on palautettu {amount}.",
-    "cancelReason": "Ilmoitettu syy: {reason}"
+    "cancelReason": "Ilmoitettu syy: {reason}",
+    "problemOpen": "Ilmoitit ongelmasta",
+    "problemHeld": "Kaupalle ei ole maksettu niin kauan kuin tämä on auki. Olemme yhteydessä.",
+    "problemReason": {
+      "not_received": "Ei koskaan saapunut",
+      "damaged": "Saapui vaurioituneena",
+      "not_as_described": "Ei vastaa kuvausta",
+      "other": "Jokin muu"
+    },
+    "actions": {
+      "prompt": "Onko tilauksesi saapunut?",
+      "confirmReceipt": "Kyllä, se saapui",
+      "confirmed": "Kiitos — kaupalle on maksettu.",
+      "reportProblem": "Ilmoita ongelmasta",
+      "problemHeading": "Ilmoita ongelmasta",
+      "problemHint": "Kaupalle ei makseta niin kauan kuin tämä on auki, ja autamme selvittämään asian.",
+      "reasonLabel": "Mikä meni pieleen?",
+      "detailLabel": "Muuta kerrottavaa (valinnainen)",
+      "detailPlaceholder": "Kerro mitä tapahtui",
+      "submitProblem": "Ilmoita ongelma",
+      "problemSent": "Ongelma ilmoitettu. Olemme yhteydessä.",
+      "back": "Takaisin",
+      "reason": {
+        "not_received": "Ei koskaan saapunut",
+        "damaged": "Saapui vaurioituneena",
+        "not_as_described": "Ei vastaa kuvausta",
+        "other": "Jokin muu"
+      },
+      "withdrawPrompt": "Onko tilaus saapunut ilmoituksesi jälkeen?",
+      "withdrawProblem": "Se saapui sittenkin",
+      "withdrawn": "Ongelma suljettu. Kiitos ilmoituksesta."
+    }
   },
   "Orders": {
     "heading": "Tilauksesi",
