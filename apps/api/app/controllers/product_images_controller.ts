@@ -8,7 +8,7 @@ import Seller from '#models/seller'
 import Product from '#models/product'
 import ProductImage from '#models/product_image'
 import ProductImageTransformer from '#transformers/product_image_transformer'
-import { MAX_IMAGES } from '#validators/product'
+import { MAX_IMAGES, MAX_IMAGE_DIMENSION } from '#validators/product'
 
 export default class ProductImagesController {
   async store({ request, auth, response, params, serialize }: HttpContext) {
@@ -80,9 +80,19 @@ export default class ProductImagesController {
     const images: ProductImage[] = []
     for (const file of files) {
       const filename = `${randomUUID()}.webp`
-      // Re-encode to webp on the way in — smaller files and one consistent
-      // format to serve, regardless of what the seller uploaded.
+      /**
+       * Re-encoded to webp and capped on the way in — one consistent format
+       * to serve, and no pixels beyond what any screen will show.
+       *
+       * `inside` preserves the aspect ratio rather than cropping: a seller
+       * framing a tall vase deliberately should not have it squared off.
+       * `withoutEnlargement` leaves anything already smaller alone.
+       */
       await sharp(file.tmpPath)
+        .resize(MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
         .webp({ quality: 80 })
         .toFile(app.makePath('storage/uploads', filename))
       images.push(

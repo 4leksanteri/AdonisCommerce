@@ -16,6 +16,16 @@ import { SUPPORTED_CURRENCIES } from '#services/currencies'
  */
 export const MAX_IMAGES = 10
 
+/**
+ * Longest edge of a stored product photo.
+ *
+ * The biggest a product image is ever rendered is the 800px main frame on the
+ * product page, so 1600 covers it on a 2x display with nothing to spare.
+ * Storing what came off the phone instead — often 4000px — costs disk and
+ * ships megabytes to anyone on a phone, for pixels no screen will show.
+ */
+export const MAX_IMAGE_DIMENSION = 1600
+
 export const MAX_OPTIONS = 3
 export const MAX_VALUES_PER_OPTION = 50
 export const MAX_VARIANTS = 200
