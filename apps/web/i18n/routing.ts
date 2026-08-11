@@ -30,6 +30,21 @@ export const routing = defineRouting({
       en: "/shop/[shopSlug]/[productSlug]",
       fi: "/kauppa/[shopSlug]/[productSlug]",
     },
+    // "Ylläpito" is what Finnish sites call the people who run the place,
+    // which is exactly what staff are. Without diacritics, like every other
+    // Finnish path here (`/myyja`, not `/myyjä`).
+    "/staff": {
+      en: "/staff",
+      fi: "/yllapito",
+    },
+    "/staff/disputes": {
+      en: "/staff/disputes",
+      fi: "/yllapito/riitatapaukset",
+    },
+    "/staff/disputes/[id]": {
+      en: "/staff/disputes/[id]",
+      fi: "/yllapito/riitatapaukset/[id]",
+    },
     "/seller": {
       en: "/seller",
       fi: "/myyja",

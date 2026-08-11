@@ -5,6 +5,7 @@
 
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
+import type DisputeOrderTransformer from '#transformers/dispute_order_transformer'
 import type DisputeTransformer from '#transformers/dispute_transformer'
 import type OrderItemTransformer from '#transformers/order_item_transformer'
 import type OrderTransformer from '#transformers/order_transformer'
@@ -23,9 +24,14 @@ import type ReviewTransformer from '#transformers/review_transformer'
 import type SellerTransformer from '#transformers/seller_transformer'
 import type ShippingProfileTransformer from '#transformers/shipping_profile_transformer'
 import type ShippingRateTransformer from '#transformers/shipping_rate_transformer'
+import type StaffDisputeTransformer from '#transformers/staff_dispute_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 
 export namespace Data {
+  export type DisputeOrder = InferData<DisputeOrderTransformer>
+  export namespace DisputeOrder {
+    export type Variants = InferVariants<DisputeOrderTransformer>
+  }
   export type Dispute = InferData<DisputeTransformer>
   export namespace Dispute {
     export type Variants = InferVariants<DisputeTransformer>
@@ -97,6 +103,10 @@ export namespace Data {
   export type ShippingRate = InferData<ShippingRateTransformer>
   export namespace ShippingRate {
     export type Variants = InferVariants<ShippingRateTransformer>
+  }
+  export type StaffDispute = InferData<StaffDisputeTransformer>
+  export namespace StaffDispute {
+    export type Variants = InferVariants<StaffDisputeTransformer>
   }
   export type User = InferData<UserTransformer>
   export namespace User {

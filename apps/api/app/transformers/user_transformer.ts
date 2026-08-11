@@ -14,6 +14,13 @@ export default class UserTransformer extends BaseTransformer<User> {
         'updatedAt',
         'initials',
       ]),
+      /**
+       * The answers, not the input. Sending `role` alone would make every
+       * client re-derive "does admin count as staff?", and the second copy of
+       * that rule is the one that goes stale.
+       */
+      canAccessStaffPanel: this.resource.canAccessStaffPanel,
+      canAccessAdminPanel: this.resource.canAccessAdminPanel,
       // `seller` must be preloaded via `user.load('seller')` before
       // transforming — Lucid won't lazy-load it.
       seller: this.resource.seller ? SellerTransformer.transform(this.resource.seller) : null,

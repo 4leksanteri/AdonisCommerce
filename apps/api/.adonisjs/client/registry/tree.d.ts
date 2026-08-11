@@ -96,4 +96,15 @@ export interface ApiDefinition {
       destroy: typeof routes['products.product_images.destroy']
     }
   }
+  staff: {
+    staffOverview: {
+      show: typeof routes['staff.staff_overview.show']
+    }
+    staffDisputes: {
+      index: typeof routes['staff.staff_disputes.index']
+      show: typeof routes['staff.staff_disputes.show']
+      refund: typeof routes['staff.staff_disputes.refund']
+      release: typeof routes['staff.staff_disputes.release']
+    }
+  }
 }

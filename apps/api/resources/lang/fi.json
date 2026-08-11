@@ -4,7 +4,8 @@
     "myAccount": "Oma tili",
     "orders": "Tilaukset",
     "sellerDashboard": "Myyjän hallintapaneeli",
-    "logOut": "Kirjaudu ulos"
+    "logOut": "Kirjaudu ulos",
+    "staffPanel": "Ylläpito"
   },
   "AuthModal": {
     "logInHeading": "Kirjaudu sisään",
@@ -83,7 +84,9 @@
     "REVIEW_ALREADY_WRITTEN": "Olet jo arvioinut tämän.",
     "REVIEW_NOT_FOUND": "Arviota ei löytynyt.",
     "TOO_MANY_IMAGES": "Tuotteella voi olla enintään 10 kuvaa.",
-    "SHOP_NOT_FOUND": "Kauppaa ei löytynyt."
+    "SHOP_NOT_FOUND": "Kauppaa ei löytynyt.",
+    "DISPUTE_NOT_FOUND": "Tapausta ei löytynyt.",
+    "NOT_FOUND": "Ei löytynyt."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -521,5 +524,56 @@
     "thanks": "Kiitos arviostasi.",
     "updated": "Arvio päivitetty.",
     "anonymous": "Joku"
+  },
+  "Staff": {
+    "heading": "Riitatapaukset",
+    "waiting": "{count, plural, one {# tapaus odottaa ratkaisua} other {# tapausta odottaa ratkaisua}}",
+    "allClear": "Mikään ei odota ratkaisua.",
+    "empty": "Ei avoimia riitatapauksia.",
+    "held": "Tilitys pidossa",
+    "paidOut": "Jo tilitetty",
+    "backToQueue": "← Kaikki tapaukset",
+    "openedOn": "Avattu {date}",
+    "settledOn": "Ratkaistu {date}",
+    "buyerSaid": "Mitä ostaja ilmoitti",
+    "noDetail": "Ei tarkempia tietoja.",
+    "decideHeading": "Ratkaise tämä",
+    "decideHintPaidOut": "Tämä tilaus on jo tilitetty, joten rahat pitää periä takaisin kaupalta, mikä voi epäonnistua.",
+    "decideHint": "Rahat ovat yhä alustan saldolla, joten kumpi tahansa ratkaisu onnistuu yhdellä askeleella.",
+    "noteLabel": "Merkintä (valinnainen)",
+    "notePlaceholder": "Näytetään sekä ostajalle että kaupalle",
+    "refundBuyer": "Palauta rahat ostajalle",
+    "releaseSeller": "Vapauta tilitys",
+    "refunded": "Rahat palautettu, tapaus suljettu.",
+    "released": "Tilitys vapautettu, tapaus suljettu.",
+    "orderNumber": "Tilaus #{number}",
+    "orderTotal": "Tilauksen summa",
+    "alreadyRefunded": "Jo palautettu",
+    "buyer": "Ostaja",
+    "shop": "Kauppa",
+    "dispatch": "Lähetetty",
+    "notShipped": "Ei vielä lähetetty",
+    "outcome": {
+      "resolved_refunded": "Ratkaistu: ostajalle palautettiin rahat.",
+      "resolved_released": "Ratkaistu: tilitys vapautettiin kaupalle.",
+      "withdrawn": "Ostaja perui ilmoituksen.",
+      "open": "Avoin"
+    },
+    "nav": {
+      "overview": "Yleisnäkymä",
+      "disputes": "Riitatapaukset"
+    },
+    "overviewHeading": "Yleisnäkymä",
+    "overviewSubheading": "Mikä odottaa ratkaisua ja mitä alusta pitää hallussaan.",
+    "statOpenDisputes": "Avoimet tapaukset",
+    "statOldest": "Vanhin avattu {ago}",
+    "statSettled": "Ratkaistu tällä viikolla",
+    "statStuckPayouts": "Epäonnistuneet tilitykset",
+    "statStuckHint": "Valmiita tilauksia, joita ei saatu tilitettyä. Yleensä kaupan Stripe-tili.",
+    "heldHeading": "Pidossa olevat rahat",
+    "heldSubheading": "Maksettu ja lähetetty, odottaa tilauksen sulkeutumista.",
+    "heldNone": "Mitään ei ole juuri nyt pidossa.",
+    "heldOrders": "{count, plural, one {# tilaus} other {# tilausta}} valuutassa {currency}",
+    "goToDisputes": "Siirry tapauksiin"
   }
 }

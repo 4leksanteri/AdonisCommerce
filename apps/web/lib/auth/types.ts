@@ -17,6 +17,12 @@ export type User = {
   fullName: string | null;
   email: string;
   role: string;
+  /**
+   * Served by the API rather than derived from `role` — the containment rule
+   * (admin includes staff) lives on the server, and one copy of it is enough.
+   */
+  canAccessStaffPanel: boolean;
+  canAccessAdminPanel: boolean;
   initials: string;
   seller: Seller | null;
 };

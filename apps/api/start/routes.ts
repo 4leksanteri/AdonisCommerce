@@ -138,3 +138,22 @@ router
   .where('id', router.matchers.uuid())
   .where('imageId', router.matchers.uuid())
   .use(middleware.auth())
+
+/**
+ * Staff tooling. `staff` runs behind `auth`, so there is always a user by the
+ * time it checks; admins pass it too, since admin contains staff.
+ */
+router
+  .group(() => {
+    router.get('overview', [controllers.StaffOverview, 'show'])
+    router.get('disputes', [controllers.StaffDisputes, 'index'])
+    router.get('disputes/:id', [controllers.StaffDisputes, 'show'])
+    // Verbs, because the two outcomes are different decisions about where
+    // money ends up — not two values of one field.
+    router.post('disputes/:id/refund', [controllers.StaffDisputes, 'refund'])
+    router.post('disputes/:id/release', [controllers.StaffDisputes, 'release'])
+  })
+  .prefix('/api/staff')
+  .as('staff')
+  .where('id', router.matchers.uuid())
+  .use([middleware.auth(), middleware.staff()])

@@ -50,6 +50,11 @@ export type ScannedRoutes = {
     'products.products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.product_images.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.product_images.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'imageId': ParamValue} }
+    'staff.staff_overview.show': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.index': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_disputes.refund': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_disputes.release': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
@@ -68,6 +73,9 @@ export type ScannedRoutes = {
     'shippingProfiles.shipping_profiles.index': { paramsTuple?: []; params?: {} }
     'products.products.index': { paramsTuple?: []; params?: {} }
     'products.products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_overview.show': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.index': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
@@ -86,6 +94,9 @@ export type ScannedRoutes = {
     'shippingProfiles.shipping_profiles.index': { paramsTuple?: []; params?: {} }
     'products.products.index': { paramsTuple?: []; params?: {} }
     'products.products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_overview.show': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.index': { paramsTuple?: []; params?: {} }
+    'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'stripe_webhook': { paramsTuple?: []; params?: {} }
@@ -110,6 +121,8 @@ export type ScannedRoutes = {
     'products.products.store': { paramsTuple?: []; params?: {} }
     'products.products.store_draft': { paramsTuple?: []; params?: {} }
     'products.product_images.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_disputes.refund': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'staff.staff_disputes.release': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'storefront.storefront_orders.withdraw_dispute': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }

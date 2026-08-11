@@ -9,7 +9,8 @@ export default class extends BaseSchema {
       table.string('full_name').nullable()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
-      table.string('role', 20).notNullable().defaultTo('customer').index() // customer, seller, staff, admin
+      table.string('role', 20).notNullable().defaultTo('customer').index() // customer, staff, admin — see USER_ROLES. Not 'seller': selling is a row
+      // in `sellers`, not a role.
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

@@ -42,6 +42,7 @@ export function Header({ platformName }: { platformName: string }) {
                     if (key === "logout") handleLogout();
                     if (key === "orders") router.push("/orders");
                     if (key === "seller-dashboard") router.push("/seller");
+                    if (key === "staff-panel") router.push("/staff");
                   }}
                 >
                   <Dropdown.Item id="account" textValue="My account">
@@ -53,6 +54,13 @@ export function Header({ platformName }: { platformName: string }) {
                   {user.seller && (
                     <Dropdown.Item id="seller-dashboard" textValue="Seller dashboard">
                       <Label>{t("sellerDashboard")}</Label>
+                    </Dropdown.Item>
+                  )}
+                  {/* Served by the API, not derived from `role` — admin
+                      includes staff, and that rule lives server-side. */}
+                  {user.canAccessStaffPanel && (
+                    <Dropdown.Item id="staff-panel" textValue="Staff panel">
+                      <Label>{t("staffPanel")}</Label>
                     </Dropdown.Item>
                   )}
                   <Dropdown.Item id="logout" textValue="Log out" variant="danger">

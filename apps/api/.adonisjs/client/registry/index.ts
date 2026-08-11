@@ -282,6 +282,36 @@ const routes = {
     tokens: [{"old":"/api/products/:id/images/:imageId","type":0,"val":"api","end":""},{"old":"/api/products/:id/images/:imageId","type":0,"val":"products","end":""},{"old":"/api/products/:id/images/:imageId","type":1,"val":"id","end":""},{"old":"/api/products/:id/images/:imageId","type":0,"val":"images","end":""},{"old":"/api/products/:id/images/:imageId","type":1,"val":"imageId","end":""}],
     types: placeholder as Registry['products.product_images.destroy']['types'],
   },
+  'staff.staff_overview.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/staff/overview',
+    tokens: [{"old":"/api/staff/overview","type":0,"val":"api","end":""},{"old":"/api/staff/overview","type":0,"val":"staff","end":""},{"old":"/api/staff/overview","type":0,"val":"overview","end":""}],
+    types: placeholder as Registry['staff.staff_overview.show']['types'],
+  },
+  'staff.staff_disputes.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/staff/disputes',
+    tokens: [{"old":"/api/staff/disputes","type":0,"val":"api","end":""},{"old":"/api/staff/disputes","type":0,"val":"staff","end":""},{"old":"/api/staff/disputes","type":0,"val":"disputes","end":""}],
+    types: placeholder as Registry['staff.staff_disputes.index']['types'],
+  },
+  'staff.staff_disputes.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/staff/disputes/:id',
+    tokens: [{"old":"/api/staff/disputes/:id","type":0,"val":"api","end":""},{"old":"/api/staff/disputes/:id","type":0,"val":"staff","end":""},{"old":"/api/staff/disputes/:id","type":0,"val":"disputes","end":""},{"old":"/api/staff/disputes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['staff.staff_disputes.show']['types'],
+  },
+  'staff.staff_disputes.refund': {
+    methods: ["POST"],
+    pattern: '/api/staff/disputes/:id/refund',
+    tokens: [{"old":"/api/staff/disputes/:id/refund","type":0,"val":"api","end":""},{"old":"/api/staff/disputes/:id/refund","type":0,"val":"staff","end":""},{"old":"/api/staff/disputes/:id/refund","type":0,"val":"disputes","end":""},{"old":"/api/staff/disputes/:id/refund","type":1,"val":"id","end":""},{"old":"/api/staff/disputes/:id/refund","type":0,"val":"refund","end":""}],
+    types: placeholder as Registry['staff.staff_disputes.refund']['types'],
+  },
+  'staff.staff_disputes.release': {
+    methods: ["POST"],
+    pattern: '/api/staff/disputes/:id/release',
+    tokens: [{"old":"/api/staff/disputes/:id/release","type":0,"val":"api","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"staff","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"disputes","end":""},{"old":"/api/staff/disputes/:id/release","type":1,"val":"id","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"release","end":""}],
+    types: placeholder as Registry['staff.staff_disputes.release']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

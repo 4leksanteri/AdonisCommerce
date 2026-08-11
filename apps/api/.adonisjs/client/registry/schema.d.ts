@@ -559,4 +559,64 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/product_images_controller').default['destroy']>>>
     }
   }
+  'staff.staff_overview.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/staff/overview'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/staff_overview_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_overview_controller').default['show']>>>
+    }
+  }
+  'staff.staff_disputes.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/staff/disputes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['index']>>>
+    }
+  }
+  'staff.staff_disputes.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/staff/disputes/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['show']>>>
+    }
+  }
+  'staff.staff_disputes.refund': {
+    methods: ["POST"]
+    pattern: '/api/staff/disputes/:id/refund'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['refund']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['refund']>>>
+    }
+  }
+  'staff.staff_disputes.release': {
+    methods: ["POST"]
+    pattern: '/api/staff/disputes/:id/release'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['release']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['release']>>>
+    }
+  }
 }

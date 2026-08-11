@@ -8,6 +8,15 @@ import type { HasOne } from '@adonisjs/lucid/types/relations'
 import Seller from '#models/seller'
 
 /**
+ * `seller` is deliberately *not* a role. Someone sells by having a row in
+ * `sellers`, which is what every check in the codebase actually tests — the
+ * original migration comment listed it here and would have invited someone to
+ * set `role = 'seller'` and quietly break that.
+ */
+export const USER_ROLES = ['customer', 'staff', 'admin'] as const
+export type UserRole = (typeof USER_ROLES)[number]
+
+/**
  * Deleting an account means **anonymising this row**, not removing it.
  *
  * `orders.user_id` and `orders.seller_id` both RESTRICT, so a user who has
@@ -40,7 +49,23 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
     return `${first.slice(0, 2)}`.toUpperCase()
   }
 
-  get isAdmin() {
+  /**
+   * Every check goes through one of these rather than comparing `role`
+   * directly. The comparison is trivial today — admin simply contains staff —
+   * but that nesting is an assumption, not a law: the first role that doesn't
+   * nest (someone who can issue refunds but must not see customer details)
+   * breaks it. Naming the abilities means that day changes this file and
+   * nothing else.
+   */
+  get canAccessStaffPanel() {
+    return this.role === 'staff' || this.role === 'admin'
+  }
+
+  get canAccessAdminPanel() {
     return this.role === 'admin'
+  }
+
+  get isAdmin() {
+    return this.canAccessAdminPanel
   }
 }

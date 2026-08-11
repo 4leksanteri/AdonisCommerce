@@ -4,7 +4,8 @@
     "myAccount": "My account",
     "orders": "Orders",
     "sellerDashboard": "Seller dashboard",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "staffPanel": "Staff panel"
   },
   "AuthModal": {
     "logInHeading": "Log in",
@@ -83,7 +84,9 @@
     "REVIEW_ALREADY_WRITTEN": "You've already reviewed this.",
     "REVIEW_NOT_FOUND": "Review not found.",
     "TOO_MANY_IMAGES": "A product can have at most 10 photos.",
-    "SHOP_NOT_FOUND": "Shop not found."
+    "SHOP_NOT_FOUND": "Shop not found.",
+    "DISPUTE_NOT_FOUND": "Dispute not found.",
+    "NOT_FOUND": "Not found."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -521,5 +524,56 @@
     "thanks": "Thanks for the review.",
     "updated": "Review updated.",
     "anonymous": "Someone"
+  },
+  "Staff": {
+    "heading": "Disputes",
+    "waiting": "{count, plural, one {# case is waiting on a decision} other {# cases are waiting on a decision}}",
+    "allClear": "Nothing waiting on a decision.",
+    "empty": "No open disputes.",
+    "held": "Payout held",
+    "paidOut": "Already paid out",
+    "backToQueue": "← All disputes",
+    "openedOn": "Opened {date}",
+    "settledOn": "Settled {date}",
+    "buyerSaid": "What the buyer reported",
+    "noDetail": "No detail given.",
+    "decideHeading": "Settle this",
+    "decideHint": "The money is still on the platform balance, so either outcome is a single step.",
+    "decideHintPaidOut": "This order was already paid out, so refunding has to claw the money back from the shop and may fail.",
+    "noteLabel": "Note (optional)",
+    "notePlaceholder": "Shown to both the buyer and the shop",
+    "refundBuyer": "Refund the buyer",
+    "releaseSeller": "Release the payout",
+    "refunded": "Buyer refunded, dispute closed.",
+    "released": "Payout released, dispute closed.",
+    "orderNumber": "Order #{number}",
+    "orderTotal": "Order total",
+    "alreadyRefunded": "Already refunded",
+    "buyer": "Buyer",
+    "shop": "Shop",
+    "dispatch": "Sent",
+    "notShipped": "Not sent yet",
+    "outcome": {
+      "resolved_refunded": "Settled: the buyer was refunded.",
+      "resolved_released": "Settled: the payout was released to the shop.",
+      "withdrawn": "The buyer withdrew this.",
+      "open": "Open"
+    },
+    "nav": {
+      "overview": "Overview",
+      "disputes": "Disputes"
+    },
+    "overviewHeading": "Overview",
+    "overviewSubheading": "What needs a decision, and what the platform is holding.",
+    "statOpenDisputes": "Open disputes",
+    "statOldest": "Oldest raised {ago}",
+    "statSettled": "Settled this week",
+    "statStuckPayouts": "Payouts that failed",
+    "statStuckHint": "Finished orders that never paid out. Usually a shop's Stripe account.",
+    "heldHeading": "Money held",
+    "heldSubheading": "Paid for and sent, waiting for the order to close.",
+    "heldNone": "Nothing held right now.",
+    "heldOrders": "{count, plural, one {# order} other {# orders}} in {currency}",
+    "goToDisputes": "Go to disputes"
   }
 }
