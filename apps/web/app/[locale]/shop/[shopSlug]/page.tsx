@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/components/storefront/product-card";
 import { CountryName } from "@/components/storefront/country-name";
+import { ShopAvatar } from "@/components/storefront/shop-avatar";
 import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 import { getShop } from "@/lib/storefront/queries";
 
@@ -27,7 +28,10 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
     <main className="flex-1 py-10">
       <Container className="flex flex-col gap-8">
         <header className="flex flex-col gap-3 border-b border-border pb-6">
-          <h1 className="text-2xl font-semibold text-foreground">{shop.name}</h1>
+          <div className="flex items-center gap-4">
+            <ShopAvatar name={shop.name} url={shop.avatarUrl} size="lg" />
+            <h1 className="text-2xl font-semibold text-foreground">{shop.name}</h1>
+          </div>
 
           {shop.description && (
             <p className="max-w-2xl text-sm whitespace-pre-line text-muted">{shop.description}</p>

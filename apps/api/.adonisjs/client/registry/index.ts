@@ -156,6 +156,18 @@ const routes = {
     tokens: [{"old":"/api/sellers/me","type":0,"val":"api","end":""},{"old":"/api/sellers/me","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['sellers.sellers.update']['types'],
   },
+  'sellers.sellers.upload_avatar': {
+    methods: ["POST"],
+    pattern: '/api/sellers/me/avatar',
+    tokens: [{"old":"/api/sellers/me/avatar","type":0,"val":"api","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"me","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"avatar","end":""}],
+    types: placeholder as Registry['sellers.sellers.upload_avatar']['types'],
+  },
+  'sellers.sellers.remove_avatar': {
+    methods: ["DELETE"],
+    pattern: '/api/sellers/me/avatar',
+    tokens: [{"old":"/api/sellers/me/avatar","type":0,"val":"api","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"sellers","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"me","end":""},{"old":"/api/sellers/me/avatar","type":0,"val":"avatar","end":""}],
+    types: placeholder as Registry['sellers.sellers.remove_avatar']['types'],
+  },
   'sellers.stripe_connect.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/sellers/me/payouts',

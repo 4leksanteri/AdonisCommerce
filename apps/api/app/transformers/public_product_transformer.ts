@@ -28,6 +28,9 @@ export default class PublicProductTransformer extends BaseTransformer<Product> {
       shop: {
         name: this.resource.seller.shopName,
         slug: this.resource.seller.slug,
+        avatarUrl: this.resource.seller.avatarPath
+          ? `/uploads/${this.resource.seller.avatarPath}`
+          : null,
       },
       // `.depth(2)` is required on options — `BaseTransformer.transform()`
       // bakes in a default maxDepth of 1, which would silently drop the

@@ -29,6 +29,8 @@ export type ScannedRoutes = {
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.upload_avatar': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.remove_avatar': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.show': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.onboarding': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.dashboard': { paramsTuple?: []; params?: {} }
@@ -98,6 +100,7 @@ export type ScannedRoutes = {
     'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
+    'sellers.sellers.upload_avatar': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.onboarding': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.dashboard': { paramsTuple?: []; params?: {} }
     'orders.orders.accept': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -110,6 +113,7 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'storefront.storefront_orders.withdraw_dispute': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
+    'sellers.sellers.remove_avatar': { paramsTuple?: []; params?: {} }
     'shippingProfiles.shipping_profiles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.product_images.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'imageId': ParamValue} }
   }

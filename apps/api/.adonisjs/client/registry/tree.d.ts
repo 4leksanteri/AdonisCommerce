@@ -57,6 +57,8 @@ export interface ApiDefinition {
       store: typeof routes['sellers.sellers.store']
       show: typeof routes['sellers.sellers.show']
       update: typeof routes['sellers.sellers.update']
+      uploadAvatar: typeof routes['sellers.sellers.upload_avatar']
+      removeAvatar: typeof routes['sellers.sellers.remove_avatar']
     }
     stripeConnect: {
       show: typeof routes['sellers.stripe_connect.show']

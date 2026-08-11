@@ -141,6 +141,28 @@ export async function deleteShippingProfileAction(id: string): Promise<{ errors?
   }
 }
 
+/** Multipart, so the boundary has to come from FormData — see `apiFetch`. */
+export async function uploadShopAvatarAction(formData: FormData): Promise<UpdateSellerResult> {
+  try {
+    const res = await apiFetch<{ data: Seller }>("/api/sellers/me/avatar", {
+      method: "POST",
+      body: formData,
+    });
+    return { seller: res.data };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+export async function removeShopAvatarAction(): Promise<UpdateSellerResult> {
+  try {
+    const res = await apiFetch<{ data: Seller }>("/api/sellers/me/avatar", { method: "DELETE" });
+    return { seller: res.data };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
 type SellerOrderResult =
   | { order: SellerOrder; errors?: undefined }
   | { order?: undefined; errors: ApiErrorItem[] };

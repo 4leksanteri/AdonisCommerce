@@ -307,6 +307,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'sellers.sellers.upload_avatar': {
+    methods: ["POST"]
+    pattern: '/api/sellers/me/avatar'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['uploadAvatar']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['uploadAvatar']>>>
+    }
+  }
+  'sellers.sellers.remove_avatar': {
+    methods: ["DELETE"]
+    pattern: '/api/sellers/me/avatar'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['removeAvatar']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/sellers_controller').default['removeAvatar']>>>
+    }
+  }
   'sellers.stripe_connect.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/sellers/me/payouts'

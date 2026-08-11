@@ -3,6 +3,8 @@ export type Seller = {
   shopName: string;
   slug: string;
   description: string | null;
+  /** Null until the seller uploads one; the UI falls back to initials. */
+  avatarUrl: string | null;
   status: string;
   payoutStatus: string;
   currency: string;

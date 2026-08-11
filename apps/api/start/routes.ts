@@ -77,6 +77,8 @@ router
     router.post('/', [controllers.Sellers, 'store'])
     router.get('me', [controllers.Sellers, 'show'])
     router.patch('me', [controllers.Sellers, 'update'])
+    router.post('me/avatar', [controllers.Sellers, 'uploadAvatar'])
+    router.delete('me/avatar', [controllers.Sellers, 'removeAvatar'])
 
     // Payouts live on Stripe; these only mint links into it and report back
     // whatever Stripe currently says about the account.

@@ -19,6 +19,10 @@ export default class PublicShopTransformer extends BaseTransformer<Seller> {
       slug: this.resource.slug,
       description: this.resource.description,
       country: this.resource.country,
+      // A URL rather than the stored filename — where files are served from
+      // is a deployment detail, not something every client should know.
+      avatarUrl: this.resource.avatarPath ? `/uploads/${this.resource.avatarPath}` : null,
+
       /** When the shop opened — the closest thing to a track record we have. */
       memberSince: this.resource.createdAt,
     }

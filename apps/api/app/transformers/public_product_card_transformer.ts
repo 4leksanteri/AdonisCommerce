@@ -18,6 +18,9 @@ export default class PublicProductCardTransformer extends BaseTransformer<Produc
       shop: {
         name: this.resource.seller.shopName,
         slug: this.resource.seller.slug,
+        avatarUrl: this.resource.seller.avatarPath
+          ? `/uploads/${this.resource.seller.avatarPath}`
+          : null,
       },
       // Sum and count are what's stored; the average is derived, so a
       // product with no reviews reads as null rather than a misleading zero.

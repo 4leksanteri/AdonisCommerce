@@ -30,7 +30,7 @@ export type Review = {
 export type ProductRating = { average: number | null; count: number };
 
 export type PublicProduct = Omit<Product, "status" | "variants" | "shippingProfileId"> & {
-  shop: { name: string; slug: string };
+  shop: { name: string; slug: string; avatarUrl: string | null };
   variants: PublicProductVariant[];
   /** Empty means the seller ships this product free. */
   shippingRates: PublicShippingRate[];
@@ -49,7 +49,7 @@ export type PublicProductCard = {
   title: string;
   slug: string;
   currency: string;
-  shop: { name: string; slug: string };
+  shop: { name: string; slug: string; avatarUrl: string | null };
   imageUrl: string | null;
   priceMinCents: number | null;
   priceMaxCents: number | null;
@@ -69,6 +69,8 @@ export type PublicShop = {
    * sentence — Finnish inflects place names and no API produces the endings.
    */
   country: string;
+  /** Null until the seller uploads one; the UI falls back to initials. */
+  avatarUrl: string | null;
   memberSince: string;
 };
 

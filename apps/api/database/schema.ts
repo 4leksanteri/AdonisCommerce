@@ -335,8 +335,10 @@ export class ReviewSchema extends BaseModel {
 }
 
 export class SellerSchema extends BaseModel {
-  static $columns = ['country', 'createdAt', 'currency', 'description', 'id', 'nextOrderNumber', 'payoutStatus', 'shopName', 'slug', 'status', 'stripeAccountId', 'updatedAt', 'userId'] as const
+  static $columns = ['avatarPath', 'country', 'createdAt', 'currency', 'description', 'id', 'nextOrderNumber', 'payoutStatus', 'shopName', 'slug', 'status', 'stripeAccountId', 'updatedAt', 'userId'] as const
   $columns = SellerSchema.$columns
+  @column()
+  declare avatarPath: string | null
   @column()
   declare country: string
   @column.dateTime({ autoCreate: true })

@@ -123,7 +123,13 @@
       "currencyLabel": "Currency",
       "currencyHint": "The currency new products are priced in. Products you've already listed keep the currency they were priced in.",
       "countryLabel": "Ships from",
-      "countryHint": "Decides which of your shipping rates counts as domestic."
+      "countryHint": "Decides which of your shipping rates counts as domestic.",
+      "avatarLabel": "Shop picture",
+      "avatarAdd": "Add a picture",
+      "avatarChange": "Change picture",
+      "avatarRemove": "Remove",
+      "avatarSaved": "Shop picture updated.",
+      "avatarHint": "Square works best. JPG, PNG or WebP, up to 5 MB."
     },
     "products": {
       "heading": "Products",

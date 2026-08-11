@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { requireSeller } from "@/lib/seller/queries";
 import { SellerSettingsForm } from "@/components/seller/settings-form";
+import { ShopAvatarField } from "@/components/seller/shop-avatar-field";
 
 export default async function SellerSettingsPage(props: PageProps<"/[locale]/seller/settings">) {
   const { locale } = await props.params;
@@ -13,6 +14,8 @@ export default async function SellerSettingsPage(props: PageProps<"/[locale]/sel
         <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
         <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
       </div>
+
+      <ShopAvatarField seller={seller} />
 
       <SellerSettingsForm seller={seller} />
     </div>

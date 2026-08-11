@@ -123,7 +123,13 @@
       "currencyLabel": "Valuutta",
       "currencyHint": "Valuutta, jossa uudet tuotteet hinnoitellaan. Jo listaamasi tuotteet säilyttävät sen valuutan, jossa ne hinnoiteltiin.",
       "countryLabel": "Lähetyspaikka",
-      "countryHint": "Määrittää, mikä toimitushinnoistasi lasketaan kotimaaksi."
+      "countryHint": "Määrittää, mikä toimitushinnoistasi lasketaan kotimaaksi.",
+      "avatarLabel": "Kaupan kuva",
+      "avatarAdd": "Lisää kuva",
+      "avatarChange": "Vaihda kuva",
+      "avatarRemove": "Poista",
+      "avatarSaved": "Kaupan kuva päivitetty.",
+      "avatarHint": "Neliön muotoinen toimii parhaiten. JPG, PNG tai WebP, enintään 5 Mt."
     },
     "products": {
       "heading": "Tuotteet",
