@@ -89,7 +89,7 @@ export class OrderItemSchema extends BaseModel {
 }
 
 export class OrderSchema extends BaseModel {
-  static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'completedAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'payoutReleaseAt', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
+  static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'completedAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'payoutReleaseAt', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'shopName', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns
   @column.dateTime()
   declare acceptedAt: DateTime | null
@@ -139,6 +139,8 @@ export class OrderSchema extends BaseModel {
   declare shippingName: string
   @column()
   declare shippingPostalCode: string
+  @column()
+  declare shopName: string
   @column()
   declare status: string
   @column()

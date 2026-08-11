@@ -42,7 +42,7 @@ export default class PublicOrderTransformer extends BaseTransformer<Order> {
       isRefunded: this.resource.isRefunded,
       // `seller` and `items` must be preloaded before transforming.
       shop: {
-        name: this.resource.seller.shopName,
+        name: this.resource.shopName,
         slug: this.resource.seller.slug,
       },
       shipping: {

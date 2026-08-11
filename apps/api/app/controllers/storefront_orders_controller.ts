@@ -153,6 +153,9 @@ export default class StorefrontOrdersController {
           order.userId = user.id
           order.sellerId = sellerId
           order.status = 'pending_payment'
+          // Snapshotted like everything else on the order: a later rename
+          // must not rewrite what this buyer was told they bought from.
+          order.shopName = sellerVariants[0].product.seller.shopName
           order.currency = currency
           order.subtotalCents = subtotal
           order.shippingCents = shippingCents

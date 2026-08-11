@@ -68,7 +68,7 @@ function baseParams(order: Order, locale: Locale) {
   return {
     orderNumber: order.sellerOrderNumber,
     reference: order.reference,
-    shopName: order.seller.shopName,
+    shopName: order.shopName,
     buyerName: order.shippingName,
     total: money(orderTotalCents(order), order.currency, locale),
   }
