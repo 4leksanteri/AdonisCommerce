@@ -28,10 +28,14 @@ export default class Review extends ReviewSchema {
    * Reviews are public and permanent, and someone buying a tea towel has not
    * agreed to have their full name indexed against it. An initial is enough
    * to read as a person, which is all the name is doing here.
+   *
+   * Null when there is no name to show — an erased account, or one that never
+   * gave one. The fallback wording is copy, so it belongs in the language
+   * files rather than here.
    */
-  static displayName(fullName: string | null): string {
+  static displayName(fullName: string | null | undefined): string | null {
     const parts = (fullName ?? '').trim().split(/\s+/).filter(Boolean)
-    if (parts.length === 0) return 'Anonymous'
+    if (parts.length === 0) return null
     if (parts.length === 1) return parts[0]
 
     return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`

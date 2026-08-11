@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { unlink } from 'node:fs/promises'
 import type { HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app'
+import db from '@adonisjs/lucid/services/db'
 import sharp from 'sharp'
 import Seller from '#models/seller'
 import Product from '#models/product'
@@ -102,10 +103,24 @@ export default class ProductImagesController {
       })
     }
 
+    const path = image.path
     await image.delete()
-    // Best-effort — the row is already gone, and a leftover file is far less
-    // harmful than failing a delete the seller has been told succeeded.
-    await unlink(app.makePath('storage/uploads', image.path)).catch(() => {})
+
+    /**
+     * Past orders keep the image *path* as a snapshot, not a reference — so
+     * removing a photo from the catalogue would otherwise blank the thumbnail
+     * on every order that ever included it. The seller is tidying their shop,
+     * not editing someone's receipt.
+     *
+     * Checked after the row is gone, so this counts orders only.
+     */
+    const inUse = await db.from('order_items').where('image_path', path).first()
+
+    if (!inUse) {
+      // Best-effort — the row is already gone, and a leftover file is far less
+      // harmful than failing a delete the seller has been told succeeded.
+      await unlink(app.makePath('storage/uploads', path)).catch(() => {})
+    }
 
     return response.noContent()
   }

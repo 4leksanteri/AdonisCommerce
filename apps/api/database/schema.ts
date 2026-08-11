@@ -306,7 +306,7 @@ export class ProductSchema extends BaseModel {
 }
 
 export class ReviewSchema extends BaseModel {
-  static $columns = ['body', 'createdAt', 'id', 'orderItemId', 'productId', 'rating', 'sellerId', 'updatedAt', 'userId'] as const
+  static $columns = ['body', 'createdAt', 'id', 'orderItemId', 'productId', 'productTitle', 'rating', 'sellerId', 'updatedAt', 'userId', 'variantLabel'] as const
   $columns = ReviewSchema.$columns
   @column()
   declare body: string | null
@@ -319,13 +319,17 @@ export class ReviewSchema extends BaseModel {
   @column()
   declare productId: string
   @column()
+  declare productTitle: string
+  @column()
   declare rating: number
   @column()
   declare sellerId: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
   @column()
-  declare userId: string
+  declare userId: string | null
+  @column()
+  declare variantLabel: string
 }
 
 export class SellerSchema extends BaseModel {

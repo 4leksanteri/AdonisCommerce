@@ -501,6 +501,7 @@
     "edit": "Muokkaa arviota",
     "yourRating": "Annoit tälle arvosanan {rating}/5.",
     "thanks": "Kiitos arviostasi.",
-    "updated": "Arvio päivitetty."
+    "updated": "Arvio päivitetty.",
+    "anonymous": "Joku"
   }
 }

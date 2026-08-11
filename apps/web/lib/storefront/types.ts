@@ -16,8 +16,12 @@ export type Review = {
   id: string;
   rating: number;
   body: string | null;
-  /** "Ale K." — reviews are public, so never the reviewer's full name. */
-  author: string;
+  /** "Ale K." — reviews are public, so never the reviewer's full name.
+   *  Null once the account has been erased. */
+  author: string | null;
+  /** Snapshotted at write time, so it survives the catalogue moving on. */
+  productTitle: string;
+  variantLabel: string;
   createdAt: string;
   updatedAt: string;
 };

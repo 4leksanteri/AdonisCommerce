@@ -74,6 +74,11 @@ export default class ReviewsController {
       created.productId = variant.product.id
       created.sellerId = variant.product.sellerId
       created.userId = user.id
+      // Copied from the order item, which is itself a snapshot taken at
+      // purchase — so the review keeps its subject even if the product is
+      // renamed, archived or the order is ever purged.
+      created.productTitle = item.productTitle
+      created.variantLabel = item.variantLabel
       created.rating = rating
       created.body = body ?? null
       await created.save()

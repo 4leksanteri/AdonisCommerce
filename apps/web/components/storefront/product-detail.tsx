@@ -390,7 +390,9 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
               <div key={review.id} className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <Stars value={review.rating} label={tReviews("stars", { count: review.rating })} />
-                  <span className="text-sm font-medium text-foreground">{review.author}</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {review.author ?? tReviews("anonymous")}
+                  </span>
                   <span className="text-xs text-muted">
                     {format.dateTime(new Date(review.createdAt), { dateStyle: "medium" })}
                   </span>

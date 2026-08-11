@@ -501,6 +501,7 @@
     "edit": "Edit review",
     "yourRating": "You rated this {rating} out of 5.",
     "thanks": "Thanks for the review.",
-    "updated": "Review updated."
+    "updated": "Review updated.",
+    "anonymous": "Someone"
   }
 }
