@@ -55,3 +55,27 @@ export type PublicProductCard = {
   priceMaxCents: number | null;
   rating: ProductRating;
 };
+
+/**
+ * A shop as a shopper sees it. Narrower than the seller's own view — whether
+ * a shop's payouts are in order is nobody else's business.
+ */
+export type PublicShop = {
+  name: string;
+  slug: string;
+  description: string | null;
+  /**
+   * ISO 3166-1 alpha-2. Rendered beside a standalone label, never inside a
+   * sentence — Finnish inflects place names and no API produces the endings.
+   */
+  country: string;
+  memberSince: string;
+};
+
+export type ShopPage = {
+  shop: PublicShop;
+  products: PublicProductCard[];
+  total: number;
+  page: number;
+  lastPage: number;
+};

@@ -54,9 +54,14 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
 
         <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium tracking-wide text-muted uppercase">
+            {/* Reads the order's snapshot of the name, but links by slug,
+                which a rename leaves alone. */}
+            <Link
+              href={{ pathname: "/shop/[shopSlug]", params: { shopSlug: order.shop.slug } }}
+              className="text-xs font-medium tracking-wide text-muted uppercase no-underline hover:text-foreground"
+            >
               {order.shop.name}
-            </p>
+            </Link>
             <div className="flex items-center gap-3">
               {/* The seller's own numbering — what they'll quote back to you. */}
               <span className="text-xs text-muted">

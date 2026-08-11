@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Link } from "@/i18n/navigation";
 import { Stars } from "@/components/storefront/stars";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
@@ -245,7 +246,12 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-muted">{product.shop.name}</p>
+          <Link
+            href={{ pathname: "/shop/[shopSlug]", params: { shopSlug: product.shop.slug } }}
+            className="text-sm text-muted no-underline hover:text-foreground"
+          >
+            {product.shop.name}
+          </Link>
           <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
           {product.rating.average !== null && (
             <span className="flex items-center gap-2">

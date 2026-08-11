@@ -82,7 +82,8 @@
     "REVIEW_PRODUCT_UNAVAILABLE": "This product can no longer be reviewed.",
     "REVIEW_ALREADY_WRITTEN": "You've already reviewed this.",
     "REVIEW_NOT_FOUND": "Review not found.",
-    "TOO_MANY_IMAGES": "A product can have at most 10 photos."
+    "TOO_MANY_IMAGES": "A product can have at most 10 photos.",
+    "SHOP_NOT_FOUND": "Shop not found."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -332,6 +333,13 @@
     "currency": {
       "change": "Change currency",
       "auto": "Currency"
+    },
+    "shop": {
+      "heading": "Shop",
+      "shipsFrom": "Ships from",
+      "openedLabel": "Open since",
+      "itemsLabel": "Items",
+      "empty": "This shop has nothing listed right now."
     }
   },
   "Checkout": {

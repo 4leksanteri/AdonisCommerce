@@ -175,6 +175,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_products_controller').default['index']>>>
     }
   }
+  'storefront.storefront_shops.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/storefront/shops/:shopSlug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { shopSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/storefront_shops_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_shops_controller').default['show']>>>
+    }
+  }
   'storefront.storefront_products.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/shops/:shopSlug/products/:productSlug'

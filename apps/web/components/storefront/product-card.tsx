@@ -10,9 +10,11 @@ type Props = {
   /** Null means the shopper hasn't picked one — show the seller's currency. */
   displayCurrency: string | null;
   rates: ExchangeRates;
+  /** False on a shop's own page, where every card is from the same shop. */
+  showShop?: boolean;
 };
 
-export async function ProductCard({ product, displayCurrency, rates }: Props) {
+export async function ProductCard({ product, displayCurrency, rates, showShop = true }: Props) {
   const [format, t] = await Promise.all([getFormatter(), getTranslations("Reviews")]);
   const { priceMinCents, priceMaxCents, currency } = product;
 
@@ -59,7 +61,7 @@ export async function ProductCard({ product, displayCurrency, rates }: Props) {
 
       <div className="flex flex-col gap-0.5">
         <p className="truncate font-medium text-foreground">{product.title}</p>
-        <p className="truncate text-sm text-muted">{product.shop.name}</p>
+        {showShop && <p className="truncate text-sm text-muted">{product.shop.name}</p>}
         {/* Only once someone has actually rated it — an empty row of grey
             stars reads as a bad score rather than as no score. */}
         {product.rating.average !== null && (

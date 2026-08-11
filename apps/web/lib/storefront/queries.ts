@@ -1,6 +1,6 @@
 import "server-only";
 import { apiFetch, ApiError } from "@/lib/api";
-import type { PublicProduct, PublicProductCard } from "./types";
+import type { PublicProduct, PublicProductCard, ShopPage } from "./types";
 
 /**
  * Newest active products across all shops, for the homepage grid.
@@ -32,6 +32,25 @@ export async function getPublicProduct(
   try {
     const res = await apiFetch<{ data: PublicProduct }>(
       `/api/storefront/shops/${encodeURIComponent(shopSlug)}/products/${encodeURIComponent(productSlug)}`,
+      {},
+      null
+    );
+    return res.data;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
+}
+
+/**
+ * A shop's front door and its listings. Anonymous like the rest of the
+ * storefront, and null on 404 so the page can hand off to `notFound()` — the
+ * API 404s an unapproved shop rather than 403ing it.
+ */
+export async function getShop(shopSlug: string): Promise<ShopPage | null> {
+  try {
+    const res = await apiFetch<{ data: ShopPage }>(
+      `/api/storefront/shops/${encodeURIComponent(shopSlug)}`,
       {},
       null
     );

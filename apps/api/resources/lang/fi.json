@@ -82,7 +82,8 @@
     "REVIEW_PRODUCT_UNAVAILABLE": "Tätä tuotetta ei voi enää arvioida.",
     "REVIEW_ALREADY_WRITTEN": "Olet jo arvioinut tämän.",
     "REVIEW_NOT_FOUND": "Arviota ei löytynyt.",
-    "TOO_MANY_IMAGES": "Tuotteella voi olla enintään 10 kuvaa."
+    "TOO_MANY_IMAGES": "Tuotteella voi olla enintään 10 kuvaa.",
+    "SHOP_NOT_FOUND": "Kauppaa ei löytynyt."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -332,6 +333,13 @@
     "currency": {
       "change": "Vaihda valuutta",
       "auto": "Valuutta"
+    },
+    "shop": {
+      "heading": "Kauppa",
+      "shipsFrom": "Lähetysmaa",
+      "openedLabel": "Avattu",
+      "itemsLabel": "Tuotteita",
+      "empty": "Tällä kaupalla ei ole juuri nyt tuotteita myynnissä."
     }
   },
   "Checkout": {

@@ -18,6 +18,7 @@ export type ScannedRoutes = {
     'storefront.reviews.store': { paramsTuple?: []; params?: {} }
     'storefront.reviews.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
+    'storefront.storefront_shops.show': { paramsTuple: [ParamValue]; params: {'shopSlug': ParamValue} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.registered_user.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
@@ -55,6 +56,7 @@ export type ScannedRoutes = {
     'storefront.storefront_orders.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_orders.show': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
+    'storefront.storefront_shops.show': { paramsTuple: [ParamValue]; params: {'shopSlug': ParamValue} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
@@ -72,6 +74,7 @@ export type ScannedRoutes = {
     'storefront.storefront_orders.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_orders.show': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
     'storefront.storefront_products.index': { paramsTuple?: []; params?: {} }
+    'storefront.storefront_shops.show': { paramsTuple: [ParamValue]; params: {'shopSlug': ParamValue} }
     'storefront.storefront_products.show': { paramsTuple: [ParamValue,ParamValue]; params: {'shopSlug': ParamValue,'productSlug': ParamValue} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }

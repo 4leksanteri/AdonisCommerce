@@ -90,6 +90,12 @@ const routes = {
     tokens: [{"old":"/api/storefront/products","type":0,"val":"api","end":""},{"old":"/api/storefront/products","type":0,"val":"storefront","end":""},{"old":"/api/storefront/products","type":0,"val":"products","end":""}],
     types: placeholder as Registry['storefront.storefront_products.index']['types'],
   },
+  'storefront.storefront_shops.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/storefront/shops/:shopSlug',
+    tokens: [{"old":"/api/storefront/shops/:shopSlug","type":0,"val":"api","end":""},{"old":"/api/storefront/shops/:shopSlug","type":0,"val":"storefront","end":""},{"old":"/api/storefront/shops/:shopSlug","type":0,"val":"shops","end":""},{"old":"/api/storefront/shops/:shopSlug","type":1,"val":"shopSlug","end":""}],
+    types: placeholder as Registry['storefront.storefront_shops.show']['types'],
+  },
   'storefront.storefront_products.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/shops/:shopSlug/products/:productSlug',

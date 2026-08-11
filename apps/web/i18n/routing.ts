@@ -21,6 +21,11 @@ export const routing = defineRouting({
       en: "/orders/[reference]",
       fi: "/tilaukset/[reference]",
     },
+    "/shop/[shopSlug]": {
+      en: "/shop/[shopSlug]",
+      fi: "/kauppa/[shopSlug]",
+    },
+    // Below the shop entry — matched in declaration order, same as products.
     "/shop/[shopSlug]/[productSlug]": {
       en: "/shop/[shopSlug]/[productSlug]",
       fi: "/kauppa/[shopSlug]/[productSlug]",

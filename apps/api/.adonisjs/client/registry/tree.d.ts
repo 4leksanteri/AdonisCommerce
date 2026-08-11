@@ -32,6 +32,9 @@ export interface ApiDefinition {
       index: typeof routes['storefront.storefront_products.index']
       show: typeof routes['storefront.storefront_products.show']
     }
+    storefrontShops: {
+      show: typeof routes['storefront.storefront_shops.show']
+    }
   }
   auth: {
     registeredUser: {

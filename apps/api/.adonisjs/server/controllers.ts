@@ -18,6 +18,7 @@ export const controllers = {
   ShippingProfiles: () => import('#controllers/shipping_profiles_controller'),
   StorefrontOrders: () => import('#controllers/storefront_orders_controller'),
   StorefrontProducts: () => import('#controllers/storefront_products_controller'),
+  StorefrontShops: () => import('#controllers/storefront_shops_controller'),
   StripeConnect: () => import('#controllers/stripe_connect_controller'),
   StripeWebhook: () => import('#controllers/stripe_webhook_controller'),
   Translations: () => import('#controllers/translations_controller'),

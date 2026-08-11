@@ -49,6 +49,7 @@ router
       })
       .use(middleware.auth())
     router.get('products', [controllers.StorefrontProducts, 'index'])
+    router.get('shops/:shopSlug', [controllers.StorefrontShops, 'show'])
     router.get('shops/:shopSlug/products/:productSlug', [controllers.StorefrontProducts, 'show'])
   })
   .prefix('/api/storefront')
