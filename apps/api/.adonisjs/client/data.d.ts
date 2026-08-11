@@ -18,6 +18,7 @@ import type PublicOrderTransformer from '#transformers/public_order_transformer'
 import type PublicProductCardTransformer from '#transformers/public_product_card_transformer'
 import type PublicProductTransformer from '#transformers/public_product_transformer'
 import type PublicProductVariantTransformer from '#transformers/public_product_variant_transformer'
+import type ReviewTransformer from '#transformers/review_transformer'
 import type SellerTransformer from '#transformers/seller_transformer'
 import type ShippingProfileTransformer from '#transformers/shipping_profile_transformer'
 import type ShippingRateTransformer from '#transformers/shipping_rate_transformer'
@@ -75,6 +76,10 @@ export namespace Data {
   export type PublicProductVariant = InferData<PublicProductVariantTransformer>
   export namespace PublicProductVariant {
     export type Variants = InferVariants<PublicProductVariantTransformer>
+  }
+  export type Review = InferData<ReviewTransformer>
+  export namespace Review {
+    export type Variants = InferVariants<ReviewTransformer>
   }
   export type Seller = InferData<SellerTransformer>
   export namespace Seller {

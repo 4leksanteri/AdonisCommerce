@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Spinner } from "@heroui/react";
 import { Container } from "@/components/ui/container";
 import { BuyerOrderActions } from "@/components/storefront/order-actions";
+import { ReviewForm } from "@/components/storefront/review-form";
 import { OrderStatusPoller } from "@/components/storefront/order-status-poller";
 import { Link } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
@@ -12,9 +13,10 @@ import { getOrder } from "@/lib/orders/queries";
 export default async function OrderPage(props: PageProps<"/[locale]/orders/[reference]">) {
   const { reference } = await props.params;
 
-  const [order, t, format] = await Promise.all([
+  const [order, t, tReviews, format] = await Promise.all([
     getOrder(reference),
     getTranslations("Order"),
+    getTranslations("Reviews"),
     getFormatter(),
   ]);
 
@@ -118,6 +120,24 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
         </div>
 
         <BuyerOrderActions order={order} />
+
+        {/* Only once the order has closed out — the point of a review is an
+            opinion of the thing in your hands, and the API refuses earlier. */}
+        {order.status === "completed" && (
+          <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+            <h2 className="font-medium text-foreground">{tReviews("orderHeading")}</h2>
+            {order.items.map((item) => (
+              <div key={item.id} className="flex flex-col gap-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
+                <p className="text-sm font-medium text-foreground">{item.productTitle}</p>
+                <ReviewForm
+                  orderItemId={item.id}
+                  productTitle={item.productTitle}
+                  existing={item.review ?? null}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {openDispute && (
           <div className="rounded-lg border border-border p-4 text-sm">

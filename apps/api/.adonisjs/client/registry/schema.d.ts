@@ -139,6 +139,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/storefront_orders_controller').default['withdrawDispute']>>>
     }
   }
+  'storefront.reviews.store': {
+    methods: ["POST"]
+    pattern: '/api/storefront/reviews'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/review').createReviewValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/review').createReviewValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reviews_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reviews_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'storefront.reviews.update': {
+    methods: ["PATCH"]
+    pattern: '/api/storefront/reviews/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/review').updateReviewValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/review').updateReviewValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reviews_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reviews_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/storefront/products'

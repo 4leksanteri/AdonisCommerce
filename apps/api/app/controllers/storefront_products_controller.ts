@@ -51,6 +51,10 @@ export default class StorefrontProductsController {
       .preload('variants', (query) => query.orderBy('createdAt').preload('optionValues'))
       .preload('images', (query) => query.orderBy('position'))
       .preload('shippingProfile', (profile) => profile.preload('rates'))
+      // Capped: a product page shows recent opinions, not an archive. The
+      // count and average come from the product's own totals, so nothing here
+      // depends on having loaded them all.
+      .preload('reviews', (query) => query.orderBy('createdAt', 'desc').limit(20).preload('user'))
       .first()
 
     if (!product) {

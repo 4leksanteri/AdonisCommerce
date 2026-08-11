@@ -76,7 +76,12 @@
     "ORDER_NOT_CONFIRMABLE": "Tätä tilausta ei voi vielä vahvistaa.",
     "ORDER_NOT_DISPUTABLE": "Tästä tilauksesta ei voi juuri nyt ilmoittaa ongelmaa.",
     "DISPUTE_ALREADY_OPEN": "Olet jo ilmoittanut ongelmasta tässä tilauksessa.",
-    "DISPUTE_NOT_OPEN": "Tässä tilauksessa ei ole avointa ongelmaa."
+    "DISPUTE_NOT_OPEN": "Tässä tilauksessa ei ole avointa ongelmaa.",
+    "ORDER_ITEM_NOT_FOUND": "Tuotetta ei löytynyt.",
+    "REVIEW_ORDER_NOT_COMPLETE": "Voit arvioida tämän kun tilauksesi on saapunut.",
+    "REVIEW_PRODUCT_UNAVAILABLE": "Tätä tuotetta ei voi enää arvioida.",
+    "REVIEW_ALREADY_WRITTEN": "Olet jo arvioinut tämän.",
+    "REVIEW_NOT_FOUND": "Arviota ei löytynyt."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -478,5 +483,24 @@
       "heading": "Rahasi ovat matkalla",
       "body": "Tilaus #{orderNumber} on valmis, ja {payout} siirtyy pankkitilillesi Stripen normaalin aikataulun mukaan."
     }
+  },
+  "Reviews": {
+    "heading": "{count, plural, =0 {Arviot} one {# arvio} other {# arviota}}",
+    "none": "Ei vielä arvioita.",
+    "ratingLabel": "{rating}/5, {count, plural, one {# arvio} other {# arviota}}",
+    "countSummary": "{rating} · {count, plural, one {# arvio} other {# arviota}}",
+    "stars": "{count, plural, one {# tähti} other {# tähteä}}",
+    "orderHeading": "Miten meni?",
+    "ratingRequired": "Valitse ensin arvosana.",
+    "ratingLabelFor": "Arvosana tuotteelle {product}",
+    "bodyLabel": "Haluatko kertoa lisää? (valinnainen)",
+    "bodyPlaceholder": "Millainen se oli?",
+    "submit": "Julkaise arvio",
+    "save": "Tallenna muutokset",
+    "cancel": "Peruuta",
+    "edit": "Muokkaa arviota",
+    "yourRating": "Annoit tälle arvosanan {rating}/5.",
+    "thanks": "Kiitos arviostasi.",
+    "updated": "Arvio päivitetty."
   }
 }

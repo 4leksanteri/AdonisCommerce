@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { getFormatter } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { Stars } from "@/components/storefront/stars";
 import { convertCents, currencyFormat, toMajorUnits, type ExchangeRates } from "@/lib/format";
 import type { PublicProductCard } from "@/lib/storefront/types";
 
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export async function ProductCard({ product, displayCurrency, rates }: Props) {
-  const format = await getFormatter();
+  const [format, t] = await Promise.all([getFormatter(), getTranslations("Reviews")]);
   const { priceMinCents, priceMaxCents, currency } = product;
 
   // Falls back to the seller's own currency whenever conversion isn't
@@ -59,6 +60,23 @@ export async function ProductCard({ product, displayCurrency, rates }: Props) {
       <div className="flex flex-col gap-0.5">
         <p className="truncate font-medium text-foreground">{product.title}</p>
         <p className="truncate text-sm text-muted">{product.shop.name}</p>
+        {/* Only once someone has actually rated it — an empty row of grey
+            stars reads as a bad score rather than as no score. */}
+        {product.rating.average !== null && (
+          <span className="flex items-center gap-1.5">
+            <Stars
+              value={product.rating.average}
+              label={t("ratingLabel", {
+                rating: format.number(product.rating.average, {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }),
+                count: product.rating.count,
+              })}
+            />
+            <span className="text-xs text-muted">({product.rating.count})</span>
+          </span>
+        )}
         {price && (
           <p className="text-sm text-foreground">
             {/* The "≈" is load-bearing: this is a converted estimate, and the

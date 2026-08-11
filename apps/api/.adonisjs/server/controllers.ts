@@ -13,6 +13,7 @@ export const controllers = {
   ProductImages: () => import('#controllers/product_images_controller'),
   Products: () => import('#controllers/products_controller'),
   RegisteredUser: () => import('#controllers/registered_user_controller'),
+  Reviews: () => import('#controllers/reviews_controller'),
   Sellers: () => import('#controllers/sellers_controller'),
   ShippingProfiles: () => import('#controllers/shipping_profiles_controller'),
   StorefrontOrders: () => import('#controllers/storefront_orders_controller'),

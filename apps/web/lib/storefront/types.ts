@@ -12,11 +12,27 @@ import type { PublicShippingRate } from "./shipping";
  */
 export type PublicProductVariant = Omit<ProductVariant, "sku" | "createdAt">;
 
+export type Review = {
+  id: string;
+  rating: number;
+  body: string | null;
+  /** "Ale K." — reviews are public, so never the reviewer's full name. */
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/** `average` is null until someone has actually rated the product. */
+export type ProductRating = { average: number | null; count: number };
+
 export type PublicProduct = Omit<Product, "status" | "variants" | "shippingProfileId"> & {
   shop: { name: string; slug: string };
   variants: PublicProductVariant[];
   /** Empty means the seller ships this product free. */
   shippingRates: PublicShippingRate[];
+  rating: ProductRating;
+  /** Most recent first, capped by the API — the count comes from `rating`. */
+  reviews: Review[];
 };
 
 /**
@@ -33,4 +49,5 @@ export type PublicProductCard = {
   imageUrl: string | null;
   priceMinCents: number | null;
   priceMaxCents: number | null;
+  rating: ProductRating;
 };

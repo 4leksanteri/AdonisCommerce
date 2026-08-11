@@ -1,5 +1,7 @@
 export type OrderItem = {
   id: string;
+  /** The buyer's own review of this line, once they've written one. */
+  review?: import("@/lib/storefront/types").Review | null;
   productTitle: string;
   productSlug: string;
   /** "Lavender / Small", or empty for a product without options. */

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Stars } from "@/components/storefront/stars";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
 import {
@@ -74,6 +75,10 @@ type Props = {
 
 export function ProductDetail({ product, displayCurrency, rates, shipToCountry }: Props) {
   const t = useTranslations("Storefront.product");
+  const tReviews = useTranslations("Reviews");
+  /** Locale-formatted, so Finnish reads 3,0 rather than 3.0. */
+  const ratingText = (value: number) =>
+    format.number(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const format = useFormatter();
   const { add } = useCart();
 
@@ -235,6 +240,24 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted">{product.shop.name}</p>
           <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
+          {product.rating.average !== null && (
+            <span className="flex items-center gap-2">
+              <Stars
+                value={product.rating.average}
+                size="lg"
+                label={tReviews("ratingLabel", {
+                  rating: ratingText(product.rating.average),
+                  count: product.rating.count,
+                })}
+              />
+              <span className="text-sm text-muted">
+                {tReviews("countSummary", {
+                  rating: ratingText(product.rating.average),
+                  count: product.rating.count,
+                })}
+              </span>
+            </span>
+          )}
           <p className="text-xl text-foreground">
             {isConverted && "≈ "}
             {selectedVariant
@@ -354,6 +377,31 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             <p className="text-sm whitespace-pre-line text-muted">{product.description}</p>
           </div>
         )}
+
+        <div className="flex flex-col gap-4 border-t border-border pt-6">
+          <h2 className="font-medium text-foreground">
+            {tReviews("heading", { count: product.rating.count })}
+          </h2>
+
+          {product.reviews.length === 0 ? (
+            <p className="text-sm text-muted">{tReviews("none")}</p>
+          ) : (
+            product.reviews.map((review) => (
+              <div key={review.id} className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <Stars value={review.rating} label={tReviews("stars", { count: review.rating })} />
+                  <span className="text-sm font-medium text-foreground">{review.author}</span>
+                  <span className="text-xs text-muted">
+                    {format.dateTime(new Date(review.createdAt), { dateStyle: "medium" })}
+                  </span>
+                </div>
+                {review.body && (
+                  <p className="text-sm whitespace-pre-line text-muted">{review.body}</p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

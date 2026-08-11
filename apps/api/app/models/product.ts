@@ -6,6 +6,7 @@ import ProductOption from '#models/product_option'
 import ProductVariant from '#models/product_variant'
 import ProductImage from '#models/product_image'
 import ShippingProfile from '#models/shipping_profile'
+import Review from '#models/review'
 
 export default class Product extends ProductSchema {
   @belongsTo(() => Seller)
@@ -22,6 +23,18 @@ export default class Product extends ProductSchema {
 
   @belongsTo(() => ShippingProfile)
   declare shippingProfile: BelongsTo<typeof ShippingProfile>
+
+  @hasMany(() => Review)
+  declare reviews: HasMany<typeof Review>
+
+  /**
+   * Divided at read time rather than stored. The count and sum are integers
+   * kept exact by incremental updates; an average column would accumulate
+   * rounding error every time it was rewritten.
+   */
+  get ratingAverage(): number | null {
+    return this.ratingCount > 0 ? this.ratingSum / this.ratingCount : null
+  }
 
   /**
    * Slugs only have to be unique within a shop, so collisions are resolved

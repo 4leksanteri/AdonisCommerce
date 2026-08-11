@@ -44,6 +44,8 @@ router
           controllers.StorefrontOrders,
           'withdrawDispute',
         ])
+        router.post('reviews', [controllers.Reviews, 'store'])
+        router.patch('reviews/:id', [controllers.Reviews, 'update'])
       })
       .use(middleware.auth())
     router.get('products', [controllers.StorefrontProducts, 'index'])

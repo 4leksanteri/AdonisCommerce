@@ -72,6 +72,18 @@ const routes = {
     tokens: [{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"api","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"storefront","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"orders","end":""},{"old":"/api/storefront/orders/:reference/problem","type":1,"val":"reference","end":""},{"old":"/api/storefront/orders/:reference/problem","type":0,"val":"problem","end":""}],
     types: placeholder as Registry['storefront.storefront_orders.withdraw_dispute']['types'],
   },
+  'storefront.reviews.store': {
+    methods: ["POST"],
+    pattern: '/api/storefront/reviews',
+    tokens: [{"old":"/api/storefront/reviews","type":0,"val":"api","end":""},{"old":"/api/storefront/reviews","type":0,"val":"storefront","end":""},{"old":"/api/storefront/reviews","type":0,"val":"reviews","end":""}],
+    types: placeholder as Registry['storefront.reviews.store']['types'],
+  },
+  'storefront.reviews.update': {
+    methods: ["PATCH"],
+    pattern: '/api/storefront/reviews/:id',
+    tokens: [{"old":"/api/storefront/reviews/:id","type":0,"val":"api","end":""},{"old":"/api/storefront/reviews/:id","type":0,"val":"storefront","end":""},{"old":"/api/storefront/reviews/:id","type":0,"val":"reviews","end":""},{"old":"/api/storefront/reviews/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['storefront.reviews.update']['types'],
+  },
   'storefront.storefront_products.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/storefront/products',

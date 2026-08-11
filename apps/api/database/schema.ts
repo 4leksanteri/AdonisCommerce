@@ -275,7 +275,7 @@ export class ProductVariantSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['createdAt', 'currency', 'description', 'id', 'sellerId', 'shippingProfileId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
+  static $columns = ['createdAt', 'currency', 'description', 'id', 'ratingCount', 'ratingSum', 'sellerId', 'shippingProfileId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -285,6 +285,10 @@ export class ProductSchema extends BaseModel {
   declare description: string | null
   @column({ isPrimary: true })
   declare id: string
+  @column()
+  declare ratingCount: number
+  @column()
+  declare ratingSum: number
   @column()
   declare sellerId: string
   @column()
@@ -299,6 +303,29 @@ export class ProductSchema extends BaseModel {
   declare tracksInventory: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+}
+
+export class ReviewSchema extends BaseModel {
+  static $columns = ['body', 'createdAt', 'id', 'orderItemId', 'productId', 'rating', 'sellerId', 'updatedAt', 'userId'] as const
+  $columns = ReviewSchema.$columns
+  @column()
+  declare body: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare orderItemId: string
+  @column()
+  declare productId: string
+  @column()
+  declare rating: number
+  @column()
+  declare sellerId: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: string
 }
 
 export class SellerSchema extends BaseModel {

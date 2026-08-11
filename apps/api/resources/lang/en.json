@@ -76,7 +76,12 @@
     "ORDER_NOT_CONFIRMABLE": "This order can't be confirmed yet.",
     "ORDER_NOT_DISPUTABLE": "This order can't be reported right now.",
     "DISPUTE_ALREADY_OPEN": "You've already reported a problem with this order.",
-    "DISPUTE_NOT_OPEN": "There's no open problem on this order."
+    "DISPUTE_NOT_OPEN": "There's no open problem on this order.",
+    "ORDER_ITEM_NOT_FOUND": "Item not found.",
+    "REVIEW_ORDER_NOT_COMPLETE": "You can review this once your order arrives.",
+    "REVIEW_PRODUCT_UNAVAILABLE": "This product can no longer be reviewed.",
+    "REVIEW_ALREADY_WRITTEN": "You've already reviewed this.",
+    "REVIEW_NOT_FOUND": "Review not found."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -478,5 +483,24 @@
       "heading": "You've been paid",
       "body": "Order #{orderNumber} is complete and {payout} is on its way to your bank account on Stripe's usual schedule."
     }
+  },
+  "Reviews": {
+    "heading": "{count, plural, =0 {Reviews} one {# review} other {# reviews}}",
+    "none": "No reviews yet.",
+    "ratingLabel": "{rating} out of 5, from {count, plural, one {# review} other {# reviews}}",
+    "countSummary": "{rating} · {count, plural, one {# review} other {# reviews}}",
+    "stars": "{count, plural, one {# star} other {# stars}}",
+    "orderHeading": "How did it go?",
+    "ratingRequired": "Pick a rating first.",
+    "ratingLabelFor": "Rating for {product}",
+    "bodyLabel": "Anything to add? (optional)",
+    "bodyPlaceholder": "What was it like?",
+    "submit": "Post review",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit review",
+    "yourRating": "You rated this {rating} out of 5.",
+    "thanks": "Thanks for the review.",
+    "updated": "Review updated."
   }
 }

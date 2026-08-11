@@ -24,6 +24,10 @@ export interface ApiDefinition {
       openDispute: typeof routes['storefront.storefront_orders.open_dispute']
       withdrawDispute: typeof routes['storefront.storefront_orders.withdraw_dispute']
     }
+    reviews: {
+      store: typeof routes['storefront.reviews.store']
+      update: typeof routes['storefront.reviews.update']
+    }
     storefrontProducts: {
       index: typeof routes['storefront.storefront_products.index']
       show: typeof routes['storefront.storefront_products.show']
