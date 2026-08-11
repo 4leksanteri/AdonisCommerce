@@ -208,7 +208,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
               alt={product.title}
               width={800}
               height={800}
-              unoptimized
+              sizes="(min-width: 768px) 50vw, 100vw"
               priority
               className="h-full w-full object-cover"
             />
@@ -236,7 +236,6 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
                   alt=""
                   width={64}
                   height={64}
-                  unoptimized
                   className="h-full w-full object-cover"
                 />
               </button>

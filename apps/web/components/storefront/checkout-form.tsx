@@ -217,7 +217,6 @@ export function CheckoutForm() {
                         alt=""
                         width={48}
                         height={48}
-                        unoptimized
                         className="h-full w-full object-cover"
                       />
                     )}

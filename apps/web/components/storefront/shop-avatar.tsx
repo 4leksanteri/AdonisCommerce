@@ -45,7 +45,6 @@ export function ShopAvatar({
           alt=""
           width={px}
           height={px}
-          unoptimized
           className="h-full w-full object-cover"
         />
       ) : (

@@ -53,7 +53,7 @@ export async function ProductCard({ product, displayCurrency, rates, showShop = 
             alt=""
             width={400}
             height={400}
-            unoptimized
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
           />
         )}

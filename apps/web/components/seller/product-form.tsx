@@ -395,7 +395,7 @@ export function ProductForm({
         <div className="flex flex-wrap gap-3">
           {images.map((image) => (
             <div key={image.id} className="relative h-24 w-24 overflow-hidden rounded-lg border border-border">
-              <Image src={image.url} alt="" width={96} height={96} unoptimized className="h-full w-full object-cover" />
+              <Image src={image.url} alt="" width={96} height={96} className="h-full w-full object-cover" />
               {removingImageId === image.id ? (
                 <div className="absolute inset-0 grid place-items-center bg-background/60">
                   <Spinner size="sm" />

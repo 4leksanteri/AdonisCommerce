@@ -84,7 +84,6 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
                     alt=""
                     width={48}
                     height={48}
-                    unoptimized
                     className="h-full w-full object-cover"
                   />
                 )}

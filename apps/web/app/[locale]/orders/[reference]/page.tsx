@@ -82,7 +82,6 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
                     alt=""
                     width={48}
                     height={48}
-                    unoptimized
                     className="h-full w-full object-cover"
                   />
                 )}

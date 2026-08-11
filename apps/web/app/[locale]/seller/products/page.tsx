@@ -65,7 +65,6 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
                         alt=""
                         width={48}
                         height={48}
-                        unoptimized
                         className="h-full w-full object-cover"
                       />
                     )}
