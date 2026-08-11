@@ -5,7 +5,8 @@
     "orders": "Orders",
     "sellerDashboard": "Seller dashboard",
     "logOut": "Log out",
-    "staffPanel": "Staff panel"
+    "staffPanel": "Staff panel",
+    "adminPanel": "Admin panel"
   },
   "AuthModal": {
     "logInHeading": "Log in",
@@ -88,7 +89,10 @@
     "DISPUTE_NOT_FOUND": "Dispute not found.",
     "NOT_FOUND": "Not found.",
     "CONVERSATION_NOT_FOUND": "Conversation not found.",
-    "CONVERSATION_READ_ONLY": "You can't add to this conversation."
+    "CONVERSATION_READ_ONLY": "You can't add to this conversation.",
+    "USER_NOT_FOUND": "User not found.",
+    "CANNOT_DEMOTE_SELF": "You can't remove your own admin access.",
+    "CATEGORY_NOT_FOUND": "Category not found."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -604,5 +608,52 @@
     "fromBuyer": "Buyer",
     "fromSeller": "Shop",
     "fromStaff": "Support"
+  },
+  "Admin": {
+    "nav": {
+      "overview": "Overview",
+      "users": "Users",
+      "categories": "Categories"
+    },
+    "overviewHeading": "Overview",
+    "overviewSubheading": "What the platform is made of.",
+    "statUsers": "Accounts",
+    "statUsersHint": "{team} with staff access · {recent} new this week",
+    "statShops": "Shops",
+    "statShopsHint": "{payable} can take payments",
+    "statListings": "Live listings",
+    "statUncategorised": "{count} still have no category",
+    "commissionHeading": "Commission earned",
+    "commissionSubheading": "On orders that were paid for and not refunded.",
+    "commissionNone": "Nothing yet.",
+    "commissionOrders": "{count, plural, one {# order} other {# orders}} in {currency}",
+    "goToCategories": "Manage categories",
+    "usersHeading": "Users",
+    "usersSubheading": "Everyone with an account, and who can reach the panels.",
+    "usersEmpty": "Nobody matches that.",
+    "search": "Search",
+    "searchPlaceholder": "Name or email",
+    "roleLabel": "Role",
+    "roleChanged": "{email} is now {role}.",
+    "roleSetBy": "Role set by {email}",
+    "role": {
+      "customer": "Customer",
+      "staff": "Staff",
+      "admin": "Admin"
+    },
+    "categoriesHeading": "Categories",
+    "categoriesSubheading": "The taxonomy sellers file products under, in both languages.",
+    "categoryName": "Name ({locale})",
+    "categorySlug": "Slug ({locale})",
+    "categorySlugAuto": "From the name",
+    "categoryPosition": "Order",
+    "categoryActive": "Shown to sellers",
+    "categoryHidden": "hidden",
+    "categoryProducts": "{count, plural, one {# product} other {# products}}",
+    "categorySaved": "Category saved.",
+    "newCategory": "New category",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }

@@ -5,7 +5,8 @@
     "orders": "Tilaukset",
     "sellerDashboard": "Myyjän hallintapaneeli",
     "logOut": "Kirjaudu ulos",
-    "staffPanel": "Ylläpito"
+    "staffPanel": "Ylläpito",
+    "adminPanel": "Hallinta"
   },
   "AuthModal": {
     "logInHeading": "Kirjaudu sisään",
@@ -88,7 +89,10 @@
     "DISPUTE_NOT_FOUND": "Tapausta ei löytynyt.",
     "NOT_FOUND": "Ei löytynyt.",
     "CONVERSATION_NOT_FOUND": "Keskustelua ei löytynyt.",
-    "CONVERSATION_READ_ONLY": "Et voi kirjoittaa tähän keskusteluun."
+    "CONVERSATION_READ_ONLY": "Et voi kirjoittaa tähän keskusteluun.",
+    "USER_NOT_FOUND": "Käyttäjää ei löytynyt.",
+    "CANNOT_DEMOTE_SELF": "Et voi poistaa omia pääkäyttäjän oikeuksiasi.",
+    "CATEGORY_NOT_FOUND": "Kategoriaa ei löytynyt."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -604,5 +608,52 @@
     "fromBuyer": "Ostaja",
     "fromSeller": "Kauppa",
     "fromStaff": "Asiakastuki"
+  },
+  "Admin": {
+    "nav": {
+      "overview": "Yleisnäkymä",
+      "users": "Käyttäjät",
+      "categories": "Kategoriat"
+    },
+    "overviewHeading": "Yleisnäkymä",
+    "overviewSubheading": "Mistä alusta koostuu.",
+    "statUsers": "Tilit",
+    "statUsersHint": "{team} ylläpito-oikeuksin · {recent} uutta tällä viikolla",
+    "statShops": "Kaupat",
+    "statShopsHint": "{payable} voi ottaa maksuja vastaan",
+    "statListings": "Julkaistut tuotteet",
+    "statUncategorised": "{count} on yhä ilman kategoriaa",
+    "commissionHeading": "Kertyneet palvelumaksut",
+    "commissionSubheading": "Maksetuista tilauksista, joita ei ole palautettu.",
+    "commissionNone": "Ei vielä mitään.",
+    "commissionOrders": "{count, plural, one {# tilaus} other {# tilausta}} valuutassa {currency}",
+    "goToCategories": "Hallitse kategorioita",
+    "usersHeading": "Käyttäjät",
+    "usersSubheading": "Kaikki tilit ja se, kuka pääsee paneeleihin.",
+    "usersEmpty": "Ei osumia.",
+    "search": "Hae",
+    "searchPlaceholder": "Nimi tai sähköposti",
+    "roleLabel": "Rooli",
+    "roleChanged": "{email} on nyt {role}.",
+    "roleSetBy": "Roolin asetti {email}",
+    "role": {
+      "customer": "Asiakas",
+      "staff": "Ylläpitäjä",
+      "admin": "Pääkäyttäjä"
+    },
+    "categoriesHeading": "Kategoriat",
+    "categoriesSubheading": "Luokittelu, johon myyjät sijoittavat tuotteensa, molemmilla kielillä.",
+    "categoryName": "Nimi ({locale})",
+    "categorySlug": "Polkutunnus ({locale})",
+    "categorySlugAuto": "Nimestä",
+    "categoryPosition": "Järjestys",
+    "categoryActive": "Näytetään myyjille",
+    "categoryHidden": "piilotettu",
+    "categoryProducts": "{count, plural, one {# tuote} other {# tuotetta}}",
+    "categorySaved": "Kategoria tallennettu.",
+    "newCategory": "Uusi kategoria",
+    "edit": "Muokkaa",
+    "save": "Tallenna",
+    "cancel": "Peruuta"
   }
 }

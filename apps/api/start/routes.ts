@@ -174,3 +174,21 @@ router
   .as('staff')
   .where('id', router.matchers.uuid())
   .use([middleware.auth(), middleware.staff()])
+
+/**
+ * Admin tooling. `admin` runs behind `auth`; staff do not pass it, since
+ * admin contains staff and not the other way round.
+ */
+router
+  .group(() => {
+    router.get('overview', [controllers.AdminOverview, 'show'])
+    router.get('users', [controllers.AdminUsers, 'index'])
+    router.patch('users/:id/role', [controllers.AdminUsers, 'setRole'])
+    router.get('categories', [controllers.AdminCategories, 'index'])
+    router.post('categories', [controllers.AdminCategories, 'store'])
+    router.patch('categories/:id', [controllers.AdminCategories, 'update'])
+  })
+  .prefix('/api/admin')
+  .as('admin')
+  .where('id', router.matchers.uuid())
+  .use([middleware.auth(), middleware.admin()])

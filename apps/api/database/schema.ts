@@ -472,7 +472,7 @@ export class StripeEventSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'locale', 'password', 'role', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'fullName', 'id', 'locale', 'password', 'role', 'roleChangedAt', 'roleChangedByUserId', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -488,6 +488,10 @@ export class UserSchema extends BaseModel {
   declare password: string
   @column()
   declare role: string
+  @column.dateTime()
+  declare roleChangedAt: DateTime | null
+  @column()
+  declare roleChangedByUserId: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

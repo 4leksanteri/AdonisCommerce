@@ -5,6 +5,9 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  AdminCategories: () => import('#controllers/admin_categories_controller'),
+  AdminOverview: () => import('#controllers/admin_overview_controller'),
+  AdminUsers: () => import('#controllers/admin_users_controller'),
   Cart: () => import('#controllers/cart_controller'),
   Categories: () => import('#controllers/categories_controller'),
   ExchangeRates: () => import('#controllers/exchange_rates_controller'),

@@ -58,6 +58,12 @@ export type ScannedRoutes = {
     'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'staff.staff_disputes.refund': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'staff.staff_disputes.release': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_overview.show': { paramsTuple?: []; params?: {} }
+    'admin.admin_users.index': { paramsTuple?: []; params?: {} }
+    'admin.admin_users.set_role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_categories.index': { paramsTuple?: []; params?: {} }
+    'admin.admin_categories.store': { paramsTuple?: []; params?: {} }
+    'admin.admin_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
@@ -81,6 +87,9 @@ export type ScannedRoutes = {
     'staff.staff_overview.show': { paramsTuple?: []; params?: {} }
     'staff.staff_disputes.index': { paramsTuple?: []; params?: {} }
     'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_overview.show': { paramsTuple?: []; params?: {} }
+    'admin.admin_users.index': { paramsTuple?: []; params?: {} }
+    'admin.admin_categories.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
@@ -104,6 +113,9 @@ export type ScannedRoutes = {
     'staff.staff_overview.show': { paramsTuple?: []; params?: {} }
     'staff.staff_disputes.index': { paramsTuple?: []; params?: {} }
     'staff.staff_disputes.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_overview.show': { paramsTuple?: []; params?: {} }
+    'admin.admin_users.index': { paramsTuple?: []; params?: {} }
+    'admin.admin_categories.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'stripe_webhook': { paramsTuple?: []; params?: {} }
@@ -131,6 +143,7 @@ export type ScannedRoutes = {
     'products.product_images.store': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'staff.staff_disputes.refund': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'staff.staff_disputes.release': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_categories.store': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'storefront.storefront_orders.withdraw_dispute': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
@@ -143,6 +156,8 @@ export type ScannedRoutes = {
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
     'shippingProfiles.shipping_profiles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_users.set_role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.admin_categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

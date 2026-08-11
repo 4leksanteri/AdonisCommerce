@@ -655,4 +655,76 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/staff_disputes_controller').default['release']>>>
     }
   }
+  'admin.admin_overview.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/overview'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_overview_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_overview_controller').default['show']>>>
+    }
+  }
+  'admin.admin_users.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/users'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['index']>>>
+    }
+  }
+  'admin.admin_users.set_role': {
+    methods: ["PATCH"]
+    pattern: '/api/admin/users/:id/role'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['setRole']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_users_controller').default['setRole']>>>
+    }
+  }
+  'admin.admin_categories.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/categories'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['index']>>>
+    }
+  }
+  'admin.admin_categories.store': {
+    methods: ["POST"]
+    pattern: '/api/admin/categories'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/category').categoryValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/category').categoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.admin_categories.update': {
+    methods: ["PATCH"]
+    pattern: '/api/admin/categories/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/category').categoryValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/category').categoryValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_categories_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

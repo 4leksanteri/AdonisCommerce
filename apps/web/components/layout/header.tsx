@@ -43,6 +43,7 @@ export function Header({ platformName }: { platformName: string }) {
                     if (key === "orders") router.push("/orders");
                     if (key === "seller-dashboard") router.push("/seller");
                     if (key === "staff-panel") router.push("/staff");
+                    if (key === "admin-panel") router.push("/admin");
                   }}
                 >
                   <Dropdown.Item id="account" textValue="My account">
@@ -61,6 +62,11 @@ export function Header({ platformName }: { platformName: string }) {
                   {user.canAccessStaffPanel && (
                     <Dropdown.Item id="staff-panel" textValue="Staff panel">
                       <Label>{t("staffPanel")}</Label>
+                    </Dropdown.Item>
+                  )}
+                  {user.canAccessAdminPanel && (
+                    <Dropdown.Item id="admin-panel" textValue="Admin panel">
+                      <Label>{t("adminPanel")}</Label>
                     </Dropdown.Item>
                   )}
                   <Dropdown.Item id="logout" textValue="Log out" variant="danger">

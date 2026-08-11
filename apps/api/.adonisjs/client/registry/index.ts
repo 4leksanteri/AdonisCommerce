@@ -330,6 +330,42 @@ const routes = {
     tokens: [{"old":"/api/staff/disputes/:id/release","type":0,"val":"api","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"staff","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"disputes","end":""},{"old":"/api/staff/disputes/:id/release","type":1,"val":"id","end":""},{"old":"/api/staff/disputes/:id/release","type":0,"val":"release","end":""}],
     types: placeholder as Registry['staff.staff_disputes.release']['types'],
   },
+  'admin.admin_overview.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/overview',
+    tokens: [{"old":"/api/admin/overview","type":0,"val":"api","end":""},{"old":"/api/admin/overview","type":0,"val":"admin","end":""},{"old":"/api/admin/overview","type":0,"val":"overview","end":""}],
+    types: placeholder as Registry['admin.admin_overview.show']['types'],
+  },
+  'admin.admin_users.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/users',
+    tokens: [{"old":"/api/admin/users","type":0,"val":"api","end":""},{"old":"/api/admin/users","type":0,"val":"admin","end":""},{"old":"/api/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['admin.admin_users.index']['types'],
+  },
+  'admin.admin_users.set_role': {
+    methods: ["PATCH"],
+    pattern: '/api/admin/users/:id/role',
+    tokens: [{"old":"/api/admin/users/:id/role","type":0,"val":"api","end":""},{"old":"/api/admin/users/:id/role","type":0,"val":"admin","end":""},{"old":"/api/admin/users/:id/role","type":0,"val":"users","end":""},{"old":"/api/admin/users/:id/role","type":1,"val":"id","end":""},{"old":"/api/admin/users/:id/role","type":0,"val":"role","end":""}],
+    types: placeholder as Registry['admin.admin_users.set_role']['types'],
+  },
+  'admin.admin_categories.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/categories',
+    tokens: [{"old":"/api/admin/categories","type":0,"val":"api","end":""},{"old":"/api/admin/categories","type":0,"val":"admin","end":""},{"old":"/api/admin/categories","type":0,"val":"categories","end":""}],
+    types: placeholder as Registry['admin.admin_categories.index']['types'],
+  },
+  'admin.admin_categories.store': {
+    methods: ["POST"],
+    pattern: '/api/admin/categories',
+    tokens: [{"old":"/api/admin/categories","type":0,"val":"api","end":""},{"old":"/api/admin/categories","type":0,"val":"admin","end":""},{"old":"/api/admin/categories","type":0,"val":"categories","end":""}],
+    types: placeholder as Registry['admin.admin_categories.store']['types'],
+  },
+  'admin.admin_categories.update': {
+    methods: ["PATCH"],
+    pattern: '/api/admin/categories/:id',
+    tokens: [{"old":"/api/admin/categories/:id","type":0,"val":"api","end":""},{"old":"/api/admin/categories/:id","type":0,"val":"admin","end":""},{"old":"/api/admin/categories/:id","type":0,"val":"categories","end":""},{"old":"/api/admin/categories/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.admin_categories.update']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

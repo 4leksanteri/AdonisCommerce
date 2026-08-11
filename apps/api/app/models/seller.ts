@@ -4,8 +4,23 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type User from '#models/user'
 import Product from '#models/product'
 
+/**
+ * `normalize('NFD')` splits an accented letter into its base plus a combining
+ * mark, which the next replace strips — so ä becomes a and ö becomes o.
+ *
+ * Without it every Finnish title produced a mangled slug: "Käsintehty
+ * saippua" came out as `k-sintehty-saippua`, because ä is simply not in
+ * `a-z0-9` and was replaced with a separator. On a Finnish marketplace that
+ * was most of the catalogue, and slugs are what end up in URLs and in search
+ * results.
+ *
+ * Existing slugs are left alone — they only regenerate when a title changes,
+ * and rewriting them would break links that are already out there.
+ */
 export function slugify(value: string) {
   return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, '-')

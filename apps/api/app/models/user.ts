@@ -3,8 +3,8 @@ import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import { hasOne } from '@adonisjs/lucid/orm'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
+import { belongsTo, hasOne } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import Seller from '#models/seller'
 
 /**
@@ -40,6 +40,10 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @hasOne(() => Seller)
   declare seller: HasOne<typeof Seller>
+
+  /** Who last granted or revoked this person's role — see the migration. */
+  @belongsTo(() => User, { foreignKey: 'roleChangedByUserId' })
+  declare roleChangedBy: BelongsTo<typeof User>
 
   get initials() {
     const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')

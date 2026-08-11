@@ -30,6 +30,23 @@ export const routing = defineRouting({
       en: "/shop/[shopSlug]/[productSlug]",
       fi: "/kauppa/[shopSlug]/[productSlug]",
     },
+    /**
+     * "Hallinta" is control, as against "ylläpito" for upkeep — which is the
+     * distinction between running the platform and running the day-to-day, so
+     * the two panels don't read as synonyms.
+     */
+    "/admin": {
+      en: "/admin",
+      fi: "/hallinta",
+    },
+    "/admin/users": {
+      en: "/admin/users",
+      fi: "/hallinta/kayttajat",
+    },
+    "/admin/categories": {
+      en: "/admin/categories",
+      fi: "/hallinta/kategoriat",
+    },
     // "Ylläpito" is what Finnish sites call the people who run the place,
     // which is exactly what staff are. Without diacritics, like every other
     // Finnish path here (`/myyja`, not `/myyjä`).

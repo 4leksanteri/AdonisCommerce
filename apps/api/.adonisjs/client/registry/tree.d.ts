@@ -116,4 +116,18 @@ export interface ApiDefinition {
       release: typeof routes['staff.staff_disputes.release']
     }
   }
+  admin: {
+    adminOverview: {
+      show: typeof routes['admin.admin_overview.show']
+    }
+    adminUsers: {
+      index: typeof routes['admin.admin_users.index']
+      setRole: typeof routes['admin.admin_users.set_role']
+    }
+    adminCategories: {
+      index: typeof routes['admin.admin_categories.index']
+      store: typeof routes['admin.admin_categories.store']
+      update: typeof routes['admin.admin_categories.update']
+    }
+  }
 }
