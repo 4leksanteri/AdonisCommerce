@@ -55,6 +55,13 @@ export interface ApiDefinition {
       store: typeof routes['auth.new_password.store']
     }
   }
+  account: {
+    account: {
+      updateProfile: typeof routes['account.account.update_profile']
+      updateEmail: typeof routes['account.account.update_email']
+      updatePassword: typeof routes['account.account.update_password']
+    }
+  }
   sellers: {
     sellers: {
       store: typeof routes['sellers.sellers.store']

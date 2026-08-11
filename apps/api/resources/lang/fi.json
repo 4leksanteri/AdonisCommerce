@@ -92,7 +92,8 @@
     "CONVERSATION_READ_ONLY": "Et voi kirjoittaa tähän keskusteluun.",
     "USER_NOT_FOUND": "Käyttäjää ei löytynyt.",
     "CANNOT_DEMOTE_SELF": "Et voi poistaa omia pääkäyttäjän oikeuksiasi.",
-    "CATEGORY_NOT_FOUND": "Kategoriaa ei löytynyt."
+    "CATEGORY_NOT_FOUND": "Kategoriaa ei löytynyt.",
+    "INVALID_CURRENT_PASSWORD": "Salasana ei täsmää."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -655,5 +656,44 @@
     "edit": "Muokkaa",
     "save": "Tallenna",
     "cancel": "Peruuta"
+  },
+  "Account": {
+    "nav": {
+      "orders": "Tilaukset",
+      "settings": "Asetukset"
+    },
+    "signInRequired": "Kirjaudu sisään nähdäksesi tilisi.",
+    "settings": {
+      "heading": "Asetukset",
+      "subheading": "Omat tietosi, kirjautumisosoitteesi ja salasanasi."
+    },
+    "profile": {
+      "heading": "Omat tiedot",
+      "nameLabel": "Nimi",
+      "nameHint": "Näkyy myyjille, joilta ostat, ja lyhennettynä jättämissäsi arvioissa.",
+      "localeLabel": "Sähköpostien kieli",
+      "localeHint": "Tilauspäivitykset lähetetään tällä kielellä. Sivuston kielen valitset sivun alalaidasta.",
+      "saveButton": "Tallenna",
+      "saveSuccess": "Tiedot tallennettu."
+    },
+    "email": {
+      "heading": "Sähköpostiosoite",
+      "emailLabel": "Sähköpostiosoite",
+      "emailHint": "Tällä kirjaudut sisään, ja tilausvahvistukset tulevat tähän.",
+      "currentPasswordLabel": "Nykyinen salasana",
+      "saveButton": "Vaihda sähköposti",
+      "saveSuccess": "Sähköpostiosoite vaihdettu."
+    },
+    "password": {
+      "heading": "Salasana",
+      "signsOutOthers": "Vaihtaminen kirjaa ulos kaikilta muilta laitteilta.",
+      "currentLabel": "Nykyinen salasana",
+      "newLabel": "Uusi salasana",
+      "newHint": "Vähintään {count} merkkiä.",
+      "confirmLabel": "Toista uusi salasana",
+      "mismatch": "Salasanat eivät täsmää.",
+      "saveButton": "Vaihda salasana",
+      "saveSuccess": "Salasana vaihdettu."
+    }
   }
 }

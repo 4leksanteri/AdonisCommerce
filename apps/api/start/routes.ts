@@ -74,6 +74,21 @@ router
   .prefix('/api/auth')
   .as('auth')
 
+/**
+ * Someone's own account. Separate from `/api/auth`, which is about proving
+ * who you are rather than editing who you are — reading `/api/auth/me` is
+ * part of signing in, changing your name is not.
+ */
+router
+  .group(() => {
+    router.patch('profile', [controllers.Account, 'updateProfile'])
+    router.patch('email', [controllers.Account, 'updateEmail'])
+    router.patch('password', [controllers.Account, 'updatePassword'])
+  })
+  .prefix('/api/account')
+  .as('account')
+  .use(middleware.auth())
+
 router
   .group(() => {
     router.post('/', [controllers.Sellers, 'store'])

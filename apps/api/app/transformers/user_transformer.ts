@@ -10,6 +10,9 @@ export default class UserTransformer extends BaseTransformer<User> {
         'fullName',
         'email',
         'role',
+        // The language their emails are written in, which is a setting they
+        // own rather than whichever locale this request happened to use.
+        'locale',
         'createdAt',
         'updatedAt',
         'initials',

@@ -283,6 +283,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
     }
   }
+  'account.account.update_profile': {
+    methods: ["PATCH"]
+    pattern: '/api/account/profile'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user').updateProfileValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').updateProfileValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updateProfile']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updateProfile']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.account.update_email': {
+    methods: ["PATCH"]
+    pattern: '/api/account/email'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user').updateEmailValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').updateEmailValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updateEmail']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updateEmail']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'account.account.update_password': {
+    methods: ["PATCH"]
+    pattern: '/api/account/password'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user').updatePasswordValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').updatePasswordValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updatePassword']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updatePassword']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'sellers.sellers.store': {
     methods: ["POST"]
     pattern: '/api/sellers'

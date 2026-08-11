@@ -144,6 +144,24 @@ const routes = {
     tokens: [{"old":"/api/auth/logout","type":0,"val":"api","end":""},{"old":"/api/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/auth/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['auth.access_tokens.destroy']['types'],
   },
+  'account.account.update_profile': {
+    methods: ["PATCH"],
+    pattern: '/api/account/profile',
+    tokens: [{"old":"/api/account/profile","type":0,"val":"api","end":""},{"old":"/api/account/profile","type":0,"val":"account","end":""},{"old":"/api/account/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['account.account.update_profile']['types'],
+  },
+  'account.account.update_email': {
+    methods: ["PATCH"],
+    pattern: '/api/account/email',
+    tokens: [{"old":"/api/account/email","type":0,"val":"api","end":""},{"old":"/api/account/email","type":0,"val":"account","end":""},{"old":"/api/account/email","type":0,"val":"email","end":""}],
+    types: placeholder as Registry['account.account.update_email']['types'],
+  },
+  'account.account.update_password': {
+    methods: ["PATCH"],
+    pattern: '/api/account/password',
+    tokens: [{"old":"/api/account/password","type":0,"val":"api","end":""},{"old":"/api/account/password","type":0,"val":"account","end":""},{"old":"/api/account/password","type":0,"val":"password","end":""}],
+    types: placeholder as Registry['account.account.update_password']['types'],
+  },
   'sellers.sellers.store': {
     methods: ["POST"],
     pattern: '/api/sellers',

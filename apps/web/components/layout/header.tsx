@@ -40,7 +40,11 @@ export function Header({ platformName }: { platformName: string }) {
                 <Dropdown.Menu
                   onAction={(key) => {
                     if (key === "logout") handleLogout();
-                    if (key === "orders") router.push("/orders");
+                    // Straight to settings: "Orders" below is the other half
+                    // of the same panel, and two items landing on one page
+                    // would be one item too many.
+                    if (key === "account") router.push("/account/settings");
+                    if (key === "orders") router.push("/account/orders");
                     if (key === "seller-dashboard") router.push("/seller");
                     if (key === "staff-panel") router.push("/staff");
                     if (key === "admin-panel") router.push("/admin");

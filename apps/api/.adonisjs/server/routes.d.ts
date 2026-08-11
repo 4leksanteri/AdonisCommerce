@@ -27,6 +27,9 @@ export type ScannedRoutes = {
     'auth.new_password.store': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.show': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
+    'account.account.update_profile': { paramsTuple?: []; params?: {} }
+    'account.account.update_email': { paramsTuple?: []; params?: {} }
+    'account.account.update_password': { paramsTuple?: []; params?: {} }
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
@@ -153,6 +156,9 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'storefront.reviews.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'account.account.update_profile': { paramsTuple?: []; params?: {} }
+    'account.account.update_email': { paramsTuple?: []; params?: {} }
+    'account.account.update_password': { paramsTuple?: []; params?: {} }
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
     'shippingProfiles.shipping_profiles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

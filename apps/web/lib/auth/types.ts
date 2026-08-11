@@ -18,6 +18,11 @@ export type User = {
   email: string;
   role: string;
   /**
+   * The language their emails are written in — a setting on the account, not
+   * whichever locale the page they're on happens to use.
+   */
+  locale: string;
+  /**
    * Served by the API rather than derived from `role` — the containment rule
    * (admin includes staff) lives on the server, and one copy of it is enough.
    */

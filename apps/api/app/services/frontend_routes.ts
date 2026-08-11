@@ -26,8 +26,8 @@ export function sellerPayoutsUrl(locale: 'en' | 'fi') {
 }
 
 const BUYER_ORDER_PATH = {
-  en: '/en/orders',
-  fi: '/fi/tilaukset',
+  en: '/en/account/orders',
+  fi: '/fi/tili/tilaukset',
 } as const
 
 const SELLER_ORDER_PATH = {

@@ -92,7 +92,8 @@
     "CONVERSATION_READ_ONLY": "You can't add to this conversation.",
     "USER_NOT_FOUND": "User not found.",
     "CANNOT_DEMOTE_SELF": "You can't remove your own admin access.",
-    "CATEGORY_NOT_FOUND": "Category not found."
+    "CATEGORY_NOT_FOUND": "Category not found.",
+    "INVALID_CURRENT_PASSWORD": "That password is not correct."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -655,5 +656,44 @@
     "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel"
+  },
+  "Account": {
+    "nav": {
+      "orders": "Orders",
+      "settings": "Settings"
+    },
+    "signInRequired": "Sign in to see your account.",
+    "settings": {
+      "heading": "Settings",
+      "subheading": "Your details, your address to sign in with, and your password."
+    },
+    "profile": {
+      "heading": "Profile",
+      "nameLabel": "Name",
+      "nameHint": "Shown to sellers you buy from, and shortened on reviews you leave.",
+      "localeLabel": "Language for emails",
+      "localeHint": "Order updates are sent in this language. The site's own language is the one you pick at the bottom of the page.",
+      "saveButton": "Save",
+      "saveSuccess": "Profile saved."
+    },
+    "email": {
+      "heading": "Email address",
+      "emailLabel": "Email address",
+      "emailHint": "You sign in with this, and order confirmations go here.",
+      "currentPasswordLabel": "Current password",
+      "saveButton": "Change email",
+      "saveSuccess": "Email address changed."
+    },
+    "password": {
+      "heading": "Password",
+      "signsOutOthers": "Changing it signs out every other device.",
+      "currentLabel": "Current password",
+      "newLabel": "New password",
+      "newHint": "At least {count} characters.",
+      "confirmLabel": "Repeat new password",
+      "mismatch": "The two passwords don't match.",
+      "saveButton": "Change password",
+      "saveSuccess": "Password changed."
+    }
   }
 }

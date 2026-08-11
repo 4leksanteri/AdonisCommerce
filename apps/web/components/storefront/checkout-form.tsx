@@ -114,7 +114,7 @@ export function CheckoutForm() {
     clear();
     toast.success(t("placed"));
     router.push({
-      pathname: "/orders/[reference]",
+      pathname: "/account/orders/[reference]",
       params: { reference: orders[0].reference },
     });
   }
@@ -288,7 +288,7 @@ export function CheckoutForm() {
         : window.location.origin +
           getPathname({
             href: {
-              pathname: "/orders/[reference]",
+              pathname: "/account/orders/[reference]",
               params: { reference: checkout.orders[0].reference },
             },
             locale,

@@ -13,6 +13,31 @@ export const routing = defineRouting({
       en: "/checkout",
       fi: "/kassa",
     },
+    /**
+     * The buyer's own corner of the site. "Tili" is the account itself, as
+     * against the panels, which are named for the job being done there.
+     */
+    "/account": {
+      en: "/account",
+      fi: "/tili",
+    },
+    "/account/orders": {
+      en: "/account/orders",
+      fi: "/tili/tilaukset",
+    },
+    "/account/orders/[reference]": {
+      en: "/account/orders/[reference]",
+      fi: "/tili/tilaukset/[reference]",
+    },
+    "/account/settings": {
+      en: "/account/settings",
+      fi: "/tili/asetukset",
+    },
+    /**
+     * Where buyer orders used to live, kept as redirects. Order emails
+     * already sent out point here, and those are in people's inboxes for
+     * good — the paths can go once no live link can reach them.
+     */
     "/orders": {
       en: "/orders",
       fi: "/tilaukset",

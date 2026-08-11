@@ -40,5 +40,21 @@ export async function clearSession() {
   if (sessionId) {
     await redis.del(`${SESSION_PREFIX}${sessionId}`);
   }
-  store.delete(COOKIE_NAME);
+
+  /**
+   * Deleting the Redis key is what actually ends the session; the cookie is
+   * only a pointer, and one pointing at nothing reads as signed out.
+   *
+   * Which matters because this is also called from `getCurrentUser` during a
+   * render, where Next forbids writing cookies — a rule worth keeping, but
+   * one that used to turn an expired token into a 500 on every page. The
+   * throw is swallowed rather than the call moved, because a stale cookie is
+   * harmless and the alternative is leaving the token live in Redis. The next
+   * request that reaches a server action or route handler clears it properly.
+   */
+  try {
+    store.delete(COOKIE_NAME);
+  } catch {
+    // Read-only cookie store — see above.
+  }
 }
