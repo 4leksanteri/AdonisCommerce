@@ -7,6 +7,15 @@ import { SUPPORTED_CURRENCIES } from '#services/currencies'
  * a thousand rows in one request — enough to wedge the seller form and bloat
  * the database by accident. Shopify holds a comparable line at three options.
  */
+/**
+ * Etsy's limit, and a real constraint rather than an arbitrary one: past ten,
+ * further angles of a handmade object stop adding information and start
+ * costing storage and page weight. It also keeps the gallery a size the page
+ * can lay out — an uncapped thumbnail strip pushes everything that matters
+ * below the fold on a phone.
+ */
+export const MAX_IMAGES = 10
+
 export const MAX_OPTIONS = 3
 export const MAX_VALUES_PER_OPTION = 50
 export const MAX_VARIANTS = 200

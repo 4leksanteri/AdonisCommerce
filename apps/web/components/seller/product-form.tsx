@@ -34,7 +34,7 @@ import {
 import { toMajorUnits, toMinorUnits } from "@/lib/format";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
-import type { Product, ProductImage } from "@/lib/seller/types";
+import { MAX_IMAGES, type Product, type ProductImage } from "@/lib/seller/types";
 import type { ShippingProfile } from "@/lib/seller/shipping-types";
 
 /** `delta` is what this value adds to the base price when filling prices. */
@@ -282,6 +282,12 @@ export function ProductForm({
       setProductId(currentProductId);
     }
 
+    if (images.length + files.length > MAX_IMAGES) {
+      setIsUploadingImages(false);
+      setErrorMessages([t("imagesTooMany", { max: MAX_IMAGES })]);
+      return;
+    }
+
     const formData = new FormData();
     for (const file of Array.from(files)) formData.append("images", file);
 
@@ -405,18 +411,28 @@ export function ProductForm({
             </div>
           ))}
 
-          <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border text-center text-xs text-muted hover:text-foreground">
-            {isUploadingImages ? <Spinner size="sm" /> : <span>{t("addImage")}</span>}
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              multiple
-              className="hidden"
-              disabled={isPending || isUploadingImages}
-              onChange={handleImagesSelected}
-            />
-          </label>
+          {/* The API enforces the cap; hiding the picker just avoids offering
+              an upload that is going to be refused. */}
+          {images.length < MAX_IMAGES && (
+            <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border text-center text-xs text-muted hover:text-foreground">
+              {isUploadingImages ? <Spinner size="sm" /> : <span>{t("addImage")}</span>}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                multiple
+                className="hidden"
+                disabled={isPending || isUploadingImages}
+                onChange={handleImagesSelected}
+              />
+            </label>
+          )}
         </div>
+
+        <p className="text-xs text-muted">
+          {images.length >= MAX_IMAGES
+            ? t("imagesFull", { max: MAX_IMAGES })
+            : t("imagesRemaining", { count: MAX_IMAGES - images.length })}
+        </p>
       </div>
 
       <div className="flex flex-col gap-3">

@@ -81,7 +81,8 @@
     "REVIEW_ORDER_NOT_COMPLETE": "Voit arvioida tämän kun tilauksesi on saapunut.",
     "REVIEW_PRODUCT_UNAVAILABLE": "Tätä tuotetta ei voi enää arvioida.",
     "REVIEW_ALREADY_WRITTEN": "Olet jo arvioinut tämän.",
-    "REVIEW_NOT_FOUND": "Arviota ei löytynyt."
+    "REVIEW_NOT_FOUND": "Arviota ei löytynyt.",
+    "TOO_MANY_IMAGES": "Tuotteella voi olla enintään 10 kuvaa."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -184,7 +185,10 @@
       "tracksInventoryHint": "Ota tämä pois käytöstä tilauksesta valmistettaville tai digitaalisille tuotteille, jotka eivät lopu. Varastomääriä ei huomioida, kun tämä on pois päältä.",
       "shippingProfileLabel": "Toimitus",
       "shippingFree": "Ilmainen toimitus",
-      "shippingHint": "Valitse profiili tai jätä ilmaiseksi toimitukseksi maksaaksesi postikulut itse."
+      "shippingHint": "Valitse profiili tai jätä ilmaiseksi toimitukseksi maksaaksesi postikulut itse.",
+      "imagesRemaining": "{count, plural, one {Voit lisätä vielä # kuvan} other {Voit lisätä vielä # kuvaa}}",
+      "imagesFull": "Enimmäismäärä {max} kuvaa on täynnä.",
+      "imagesTooMany": "Tuotteella voi olla enintään {max} kuvaa."
     },
     "shipping": {
       "heading": "Toimitusprofiilit",

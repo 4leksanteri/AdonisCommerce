@@ -194,7 +194,11 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
 
   return (
     <div className="grid gap-8 md:grid-cols-2 md:gap-12">
-      <div className="flex flex-col gap-3">
+      {/* `min-w-0` is load-bearing: a grid item defaults to `min-width: auto`
+          and so refuses to shrink below its content, which would let the
+          scrolling thumbnail strip widen the whole page instead of scrolling
+          inside it. */}
+      <div className="flex min-w-0 flex-col gap-3">
         <div className="aspect-square overflow-hidden rounded-xl border border-border bg-surface">
           {images[activeImage] && (
             <Image
@@ -209,8 +213,11 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
           )}
         </div>
 
+        {/* A single scrolling row rather than a wrapping grid. Stacked on a
+            phone, wrapped thumbnails sit between the photo and the price and
+            push the buy button off the screen entirely. */}
         {images.length > 1 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1">
             {images.map((image, index) => (
               <button
                 key={image.id}
@@ -218,7 +225,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
                 aria-label={t("viewImage", { number: index + 1 })}
                 aria-current={index === activeImage ? "true" : undefined}
                 onClick={() => setActiveImage(index)}
-                className={`size-16 overflow-hidden rounded-lg border ${
+                className={`size-16 shrink-0 overflow-hidden rounded-lg border ${
                   index === activeImage ? "border-foreground" : "border-border"
                 }`}
               >

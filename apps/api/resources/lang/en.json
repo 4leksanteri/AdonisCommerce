@@ -81,7 +81,8 @@
     "REVIEW_ORDER_NOT_COMPLETE": "You can review this once your order arrives.",
     "REVIEW_PRODUCT_UNAVAILABLE": "This product can no longer be reviewed.",
     "REVIEW_ALREADY_WRITTEN": "You've already reviewed this.",
-    "REVIEW_NOT_FOUND": "Review not found."
+    "REVIEW_NOT_FOUND": "Review not found.",
+    "TOO_MANY_IMAGES": "A product can have at most 10 photos."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -184,7 +185,10 @@
       "tracksInventoryHint": "Turn this off for made-to-order or digital items that never run out. Stock numbers are ignored while it's off.",
       "shippingProfileLabel": "Shipping",
       "shippingFree": "Free shipping",
-      "shippingHint": "Pick a profile, or leave as free shipping to cover postage yourself."
+      "shippingHint": "Pick a profile, or leave as free shipping to cover postage yourself.",
+      "imagesRemaining": "{count, plural, one {# more photo can be added} other {# more photos can be added}}",
+      "imagesFull": "That's the maximum of {max} photos.",
+      "imagesTooMany": "A product can have at most {max} photos."
     },
     "shipping": {
       "heading": "Shipping profiles",

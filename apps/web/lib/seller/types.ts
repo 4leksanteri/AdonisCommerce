@@ -1,3 +1,9 @@
+/**
+ * Mirrors MAX_IMAGES in the API's product validator, which is the authority —
+ * this only avoids offering an upload that would be refused.
+ */
+export const MAX_IMAGES = 10
+
 export type ProductOptionValue = {
   id: string;
   value: string;

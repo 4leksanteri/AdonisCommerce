@@ -8,6 +8,7 @@ import Seller from '#models/seller'
 import Product from '#models/product'
 import ProductImage from '#models/product_image'
 import ProductImageTransformer from '#transformers/product_image_transformer'
+import { MAX_IMAGES } from '#validators/product'
 
 export default class ProductImagesController {
   async store({ request, auth, response, params, serialize }: HttpContext) {
@@ -50,6 +51,24 @@ export default class ProductImagesController {
           errors: file.errors.map((error) => ({ code: 'INVALID_FILE', message: error.message })),
         })
       }
+    }
+
+    /**
+     * Counted against what the product already has, so the limit can't be
+     * walked past one upload at a time.
+     */
+    const existing = await ProductImage.query().where('productId', product.id).count('* as total')
+    const alreadyThere = Number(existing[0].$extras.total)
+
+    if (alreadyThere + files.length > MAX_IMAGES) {
+      return response.badRequest({
+        errors: [
+          {
+            code: 'TOO_MANY_IMAGES',
+            message: `A product can have at most ${MAX_IMAGES} images.`,
+          },
+        ],
+      })
     }
 
     const lastImage = await ProductImage.query()
