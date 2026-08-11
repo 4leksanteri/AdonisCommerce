@@ -22,6 +22,11 @@ export type Review = {
   /** Snapshotted at write time, so it survives the catalogue moving on. */
   productTitle: string;
   variantLabel: string;
+  /**
+   * Live, and only for linking back. Null where the product isn't preloaded —
+   * on a product's own page, where linking to itself would be pointless.
+   */
+  productSlug: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -76,6 +81,9 @@ export type PublicShop = {
 
 export type ShopPage = {
   shop: PublicShop;
+  /** Every review of this shop's products, combined. */
+  rating: ProductRating;
+  reviews: Review[];
   products: PublicProductCard[];
   total: number;
   page: number;

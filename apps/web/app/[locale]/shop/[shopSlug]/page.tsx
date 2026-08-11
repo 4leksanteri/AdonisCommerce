@@ -4,15 +4,18 @@ import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/components/storefront/product-card";
 import { CountryName } from "@/components/storefront/country-name";
 import { ShopAvatar } from "@/components/storefront/shop-avatar";
+import { Stars } from "@/components/storefront/stars";
+import { Link } from "@/i18n/navigation";
 import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 import { getShop } from "@/lib/storefront/queries";
 
 export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlug]">) {
   const { shopSlug } = await props.params;
 
-  const [data, t, displayCurrency, rates, format] = await Promise.all([
+  const [data, t, tReviews, displayCurrency, rates, format] = await Promise.all([
     getShop(shopSlug),
     getTranslations("Storefront.shop"),
+    getTranslations("Reviews"),
     getDisplayCurrency(),
     getExchangeRates(),
     getFormatter(),
@@ -22,7 +25,9 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
   // the API 404s both, and a shopper has no business telling them apart.
   if (!data) notFound();
 
-  const { shop, products, total } = data;
+  const { shop, products, total, rating, reviews } = data;
+  const ratingText = (value: number) =>
+    format.number(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
   return (
     <main className="flex-1 py-10">
@@ -30,7 +35,28 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
         <header className="flex flex-col gap-3 border-b border-border pb-6">
           <div className="flex items-center gap-4">
             <ShopAvatar name={shop.name} url={shop.avatarUrl} size="lg" />
-            <h1 className="text-2xl font-semibold text-foreground">{shop.name}</h1>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-2xl font-semibold text-foreground">{shop.name}</h1>
+              {/* A shop's rating is its items' reviews combined — there is no
+                  separate thing to write, same as Etsy. */}
+              {rating.average !== null && (
+                <span className="flex items-center gap-2">
+                  <Stars
+                    value={rating.average}
+                    label={tReviews("ratingLabel", {
+                      rating: ratingText(rating.average),
+                      count: rating.count,
+                    })}
+                  />
+                  <span className="text-sm text-muted">
+                    {tReviews("countSummary", {
+                      rating: ratingText(rating.average),
+                      count: rating.count,
+                    })}
+                  </span>
+                </span>
+              )}
+            </div>
           </div>
 
           {shop.description && (
@@ -74,6 +100,47 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
                 rates={rates}
                 showShop={false}
               />
+            ))}
+          </div>
+        )}
+        {reviews.length > 0 && (
+          <div className="flex flex-col gap-4 border-t border-border pt-6">
+            <h2 className="font-medium text-foreground">
+              {tReviews("heading", { count: rating.count })}
+            </h2>
+
+            {reviews.map((review) => (
+              <div key={review.id} className="flex flex-col gap-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Stars value={review.rating} label={tReviews("stars", { count: review.rating })} />
+                  <span className="text-sm font-medium text-foreground">
+                    {review.author ?? tReviews("anonymous")}
+                  </span>
+                  <span className="text-xs text-muted">
+                    {format.dateTime(new Date(review.createdAt), { dateStyle: "medium" })}
+                  </span>
+                </div>
+
+                {/* Which item it was about — the shop page lists reviews across
+                    everything, so without this they float free. */}
+                {review.productSlug ? (
+                  <Link
+                    href={{
+                      pathname: "/shop/[shopSlug]/[productSlug]",
+                      params: { shopSlug: shop.slug, productSlug: review.productSlug },
+                    }}
+                    className="w-fit text-xs text-muted no-underline hover:text-foreground"
+                  >
+                    {review.productTitle}
+                  </Link>
+                ) : (
+                  <span className="text-xs text-muted">{review.productTitle}</span>
+                )}
+
+                {review.body && (
+                  <p className="text-sm whitespace-pre-line text-muted">{review.body}</p>
+                )}
+              </div>
             ))}
           </div>
         )}
