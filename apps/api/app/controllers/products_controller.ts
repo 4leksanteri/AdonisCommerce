@@ -207,8 +207,16 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, currency, tracksInventory, shippingProfileId, options, variants } =
-      await request.validateUsing(createProductValidator)
+    const {
+      title,
+      description,
+      currency,
+      tracksInventory,
+      shippingProfileId,
+      categoryId,
+      options,
+      variants,
+    } = await request.validateUsing(createProductValidator)
     const slug = await Product.generateUniqueSlug(seller.id, title)
 
     const product = await db.transaction(async (trx) => {
@@ -223,6 +231,7 @@ export default class ProductsController {
       newProduct.currency = currency ?? seller.currency
       newProduct.tracksInventory = tracksInventory ?? true
       newProduct.shippingProfileId = shippingProfileId ?? null
+      newProduct.categoryId = categoryId
       await newProduct.save()
 
       await this.syncOptionsAndVariants(trx, newProduct, options, variants)
@@ -298,8 +307,17 @@ export default class ProductsController {
       })
     }
 
-    const { title, description, status, currency, tracksInventory, shippingProfileId, options, variants } =
-      await request.validateUsing(createProductValidator)
+    const {
+      title,
+      description,
+      status,
+      currency,
+      tracksInventory,
+      shippingProfileId,
+      categoryId,
+      options,
+      variants,
+    } = await request.validateUsing(createProductValidator)
     // Only re-slug when the title actually moved. Regenerating unconditionally
     // would bump an unchanged title to `-2` (its own row counts as a clash)
     // and churn the product's public URL on every save.
@@ -318,6 +336,7 @@ export default class ProductsController {
       product.tracksInventory = tracksInventory ?? product.tracksInventory
       product.shippingProfileId =
         shippingProfileId === undefined ? product.shippingProfileId : shippingProfileId
+      product.categoryId = categoryId
       await product.save()
 
       await this.syncOptionsAndVariants(trx, product, options, variants)

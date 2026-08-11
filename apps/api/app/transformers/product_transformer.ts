@@ -16,6 +16,7 @@ export default class ProductTransformer extends BaseTransformer<Product> {
         'currency',
         'tracksInventory',
         'shippingProfileId',
+        'categoryId',
         'createdAt',
       ]),
       // `options`, `variants` and `images` must be preloaded before

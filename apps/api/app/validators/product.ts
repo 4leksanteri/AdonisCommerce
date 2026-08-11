@@ -41,6 +41,13 @@ export const createProductValidator = vine.create({
   tracksInventory: vine.boolean().optional(),
   // Null ships this product free; the form preselects one when the shop has any.
   shippingProfileId: vine.string().uuid().nullable().optional(),
+  /**
+   * Required, even though the column is nullable for the products that
+   * predate it. The point of capturing this before browse exists is to have
+   * it when browse arrives, and an optional field on a seller form is a field
+   * that gets skipped.
+   */
+  categoryId: vine.string().uuid(),
   // Only the seller-settable states — `draft` is assigned server-side by
   // `storeDraft` and left behind the moment the product is first saved.
   status: vine.enum(['active', 'archived']).optional(),

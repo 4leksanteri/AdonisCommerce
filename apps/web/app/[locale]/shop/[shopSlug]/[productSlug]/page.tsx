@@ -12,7 +12,7 @@ type Props = PageProps<"/[locale]/shop/[shopSlug]/[productSlug]">;
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { locale, shopSlug, productSlug } = await props.params;
-  const product = await getPublicProduct(shopSlug, productSlug);
+  const product = await getPublicProduct(shopSlug, productSlug, locale);
 
   if (!product) return {};
 
@@ -64,9 +64,9 @@ function productJsonLd(product: PublicProduct) {
 }
 
 export default async function ProductPage(props: Props) {
-  const { shopSlug, productSlug } = await props.params;
+  const { locale, shopSlug, productSlug } = await props.params;
   const [product, displayCurrency, rates, shipToCountry] = await Promise.all([
-    getPublicProduct(shopSlug, productSlug),
+    getPublicProduct(shopSlug, productSlug, locale),
     getDisplayCurrency(),
     getExchangeRates(),
     getShipToCountry(),

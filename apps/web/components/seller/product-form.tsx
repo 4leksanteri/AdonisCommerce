@@ -34,7 +34,7 @@ import {
 import { toMajorUnits, toMinorUnits } from "@/lib/format";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { ApiErrorItem } from "@/lib/api";
-import { MAX_IMAGES, type Product, type ProductImage } from "@/lib/seller/types";
+import { MAX_IMAGES, type Category, type Product, type ProductImage } from "@/lib/seller/types";
 import type { ShippingProfile } from "@/lib/seller/shipping-types";
 
 /** `delta` is what this value adds to the base price when filling prices. */
@@ -111,9 +111,11 @@ const FREE_SHIPPING = "free";
 export function ProductForm({
   product,
   shippingProfiles,
+  categories,
 }: {
   product?: Product;
   shippingProfiles: ShippingProfile[];
+  categories: Category[];
 }) {
   const router = useRouter();
   const t = useTranslations("SellerPanel.productForm");
@@ -137,6 +139,7 @@ export function ProductForm({
   const [tracksInventory, setTracksInventory] = useState(product?.tracksInventory ?? true);
   // Preselect a profile for new products so free shipping is a choice rather
   // than an oversight; an existing product keeps whatever it was saved with.
+  const [categoryId, setCategoryId] = useState<string | null>(product?.categoryId ?? null);
   const [shippingProfileId, setShippingProfileId] = useState<string>(
     product ? (product.shippingProfileId ?? FREE_SHIPPING) : (shippingProfiles[0]?.id ?? FREE_SHIPPING)
   );
@@ -324,6 +327,13 @@ export function ProductForm({
     e.preventDefault();
     setErrorMessages([]);
 
+    // The API requires it too; answering here saves a round trip and points
+    // at the field rather than returning a validation code.
+    if (!categoryId) {
+      setErrorMessages([t("categoryRequired")]);
+      return;
+    }
+
     const payload: CreateProductInput = {
       title,
       description,
@@ -332,6 +342,7 @@ export function ProductForm({
       ...(isEditing && { status: isListed ? ("active" as const) : ("archived" as const) }),
       tracksInventory,
       shippingProfileId: shippingProfileId === FREE_SHIPPING ? null : shippingProfileId,
+      categoryId,
       options: validOptions.map((option) => ({
         name: option.name,
         values: option.values.map((value) => value.value),
@@ -681,6 +692,31 @@ export function ProductForm({
           </Table.ScrollContainer>
         </Table>
       </div>
+
+      <Select
+        isDisabled={isPending}
+        isRequired
+        placeholder={t("categoryPlaceholder")}
+        selectedKey={categoryId}
+        onSelectionChange={(key) => setCategoryId(String(key))}
+        className="max-w-sm"
+      >
+        <Label>{t("categoryLabel")}</Label>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {categories.map((category) => (
+              <ListBox.Item key={category.id} id={category.id} textValue={category.name}>
+                {category.name}
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ))}
+          </ListBox>
+        </Select.Popover>
+      </Select>
 
       <Select
         isDisabled={isPending}

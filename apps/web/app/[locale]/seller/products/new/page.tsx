@@ -1,13 +1,14 @@
 import { getTranslations } from "next-intl/server";
-import { getShippingProfiles, requireSeller } from "@/lib/seller/queries";
+import { getCategories, getShippingProfiles, requireSeller } from "@/lib/seller/queries";
 import { ProductForm } from "@/components/seller/product-form";
 
 export default async function NewSellerProductPage(props: PageProps<"/[locale]/seller/products/new">) {
   const { locale } = await props.params;
   await requireSeller(locale);
 
-  const [shippingProfiles, t] = await Promise.all([
+  const [shippingProfiles, categories, t] = await Promise.all([
     getShippingProfiles(),
+    getCategories(locale),
     getTranslations("SellerPanel.productForm"),
   ]);
 
@@ -18,7 +19,7 @@ export default async function NewSellerProductPage(props: PageProps<"/[locale]/s
         <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
       </div>
 
-      <ProductForm shippingProfiles={shippingProfiles} />
+      <ProductForm shippingProfiles={shippingProfiles} categories={categories} />
     </div>
   );
 }

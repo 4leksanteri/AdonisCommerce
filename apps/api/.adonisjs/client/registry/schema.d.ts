@@ -19,6 +19,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/translations_controller').default['show']>>>
     }
   }
+  'categories.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/categories'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/categories_controller').default['index']>>>
+    }
+  }
   'uploads.show': {
     methods: ["GET","HEAD"]
     pattern: '/uploads/:filename'

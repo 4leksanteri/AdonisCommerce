@@ -16,6 +16,8 @@ router.get('/', () => {
 })
 
 router.get('/api/translations/:locale', [controllers.Translations, 'show'])
+// The curated taxonomy — same list for everyone, so no auth.
+router.get('/api/categories', [controllers.Categories, 'index'])
 router.get('/uploads/:filename', [controllers.Uploads, 'show'])
 
 // Unauthenticated by design — the caller is Stripe, not a signed-in user, and

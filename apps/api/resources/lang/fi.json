@@ -200,7 +200,10 @@
       "shippingHint": "Valitse profiili tai jätä ilmaiseksi toimitukseksi maksaaksesi postikulut itse.",
       "imagesRemaining": "{count, plural, one {Voit lisätä vielä # kuvan} other {Voit lisätä vielä # kuvaa}}",
       "imagesFull": "Enimmäismäärä {max} kuvaa on täynnä.",
-      "imagesTooMany": "Tuotteella voi olla enintään {max} kuvaa."
+      "imagesTooMany": "Tuotteella voi olla enintään {max} kuvaa.",
+      "categoryLabel": "Kategoria",
+      "categoryPlaceholder": "Valitse kategoria",
+      "categoryRequired": "Valitse kategoria."
     },
     "shipping": {
       "heading": "Toimitusprofiilit",
@@ -334,7 +337,8 @@
       "shipTo": "Toimitusmaa",
       "shippingCost": "Toimitus {cost}",
       "shippingFree": "Ilmainen toimitus",
-      "shippingUnavailable": "Myyjä ei toimita tähän maahan"
+      "shippingUnavailable": "Myyjä ei toimita tähän maahan",
+      "categoryLabel": "Kategoria"
     },
     "home": {
       "heading": "Uutta tekijöiltämme",

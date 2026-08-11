@@ -27,11 +27,13 @@ export async function getStorefrontProducts(limit?: number): Promise<PublicProdu
  */
 export async function getPublicProduct(
   shopSlug: string,
-  productSlug: string
+  productSlug: string,
+  /** The category name is data, not UI copy, so the API translates it. */
+  locale: string
 ): Promise<PublicProduct | null> {
   try {
     const res = await apiFetch<{ data: PublicProduct }>(
-      `/api/storefront/shops/${encodeURIComponent(shopSlug)}/products/${encodeURIComponent(productSlug)}`,
+      `/api/storefront/shops/${encodeURIComponent(shopSlug)}/products/${encodeURIComponent(productSlug)}?locale=${encodeURIComponent(locale)}`,
       {},
       null
     );

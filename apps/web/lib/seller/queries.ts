@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
 import type { SellerOrder } from "@/lib/orders/types";
 import type { PayoutDetails } from "@/lib/payments/types";
-import type { Product } from "./types";
+import type { Category, Product } from "./types";
 import type { ShippingProfile } from "./shipping-types";
 
 /**
@@ -77,5 +77,18 @@ export async function getSellerOrder(id: string): Promise<SellerOrder | null> {
  */
 export async function getPayoutDetails(): Promise<PayoutDetails> {
   const res = await apiFetch<{ data: PayoutDetails }>("/api/sellers/me/payouts");
+  return res.data;
+}
+
+/**
+ * The curated taxonomy in the seller's language. Public data, but fetched
+ * here because the product form is the only thing that needs it today.
+ */
+export async function getCategories(locale: string): Promise<Category[]> {
+  const res = await apiFetch<{ data: Category[] }>(
+    `/api/categories?locale=${encodeURIComponent(locale)}`,
+    {},
+    null
+  );
   return res.data;
 }

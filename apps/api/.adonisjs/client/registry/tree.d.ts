@@ -5,6 +5,9 @@ export interface ApiDefinition {
   translations: {
     show: typeof routes['translations.show']
   }
+  categories: {
+    index: typeof routes['categories.index']
+  }
   uploads: {
     show: typeof routes['uploads.show']
   }

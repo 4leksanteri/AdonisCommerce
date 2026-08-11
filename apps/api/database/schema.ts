@@ -32,6 +32,42 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class CategorySchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'isActive', 'parentId', 'position', 'updatedAt'] as const
+  $columns = CategorySchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare isActive: boolean
+  @column()
+  declare parentId: string | null
+  @column()
+  declare position: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class CategoryTranslationSchema extends BaseModel {
+  static $columns = ['categoryId', 'createdAt', 'id', 'locale', 'name', 'slug', 'updatedAt'] as const
+  $columns = CategoryTranslationSchema.$columns
+  @column()
+  declare categoryId: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare locale: string
+  @column()
+  declare name: string
+  @column()
+  declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class DisputeSchema extends BaseModel {
   static $columns = ['createdAt', 'detail', 'id', 'openedByUserId', 'orderId', 'reason', 'resolutionNote', 'resolvedAt', 'resolvedByUserId', 'status', 'updatedAt'] as const
   $columns = DisputeSchema.$columns
@@ -296,8 +332,10 @@ export class ProductVariantSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['createdAt', 'currency', 'description', 'id', 'ratingCount', 'ratingSum', 'sellerId', 'shippingProfileId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
+  static $columns = ['categoryId', 'createdAt', 'currency', 'description', 'id', 'ratingCount', 'ratingSum', 'sellerId', 'shippingProfileId', 'slug', 'status', 'title', 'tracksInventory', 'updatedAt'] as const
   $columns = ProductSchema.$columns
+  @column()
+  declare categoryId: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()

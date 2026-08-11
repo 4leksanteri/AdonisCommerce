@@ -385,6 +385,15 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
           </Button>
         </div>
 
+        {product.category && (
+          <div className="flex gap-2 border-t border-border pt-6 text-sm">
+            {/* Plain text for now: there is nowhere to go until category
+                pages exist. */}
+            <span className="text-muted">{t("categoryLabel")}</span>
+            <span className="text-foreground">{product.category.name}</span>
+          </div>
+        )}
+
         {product.description && (
           <div className="flex flex-col gap-2 border-t border-border pt-6">
             <h2 className="font-medium text-foreground">{t("descriptionHeading")}</h2>

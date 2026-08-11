@@ -44,8 +44,17 @@ export type Product = {
   tracksInventory: boolean;
   /** Null means the seller ships this product free. */
   shippingProfileId: string | null;
+  /** Null only on products that predate the taxonomy. */
+  categoryId: string | null;
   createdAt: string;
   options: ProductOption[];
   variants: ProductVariant[];
   images: ProductImage[];
+};
+
+/** A category in the caller's language — see the API's CategoryTransformer. */
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
 };

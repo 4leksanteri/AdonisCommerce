@@ -7,6 +7,7 @@ import ProductVariant from '#models/product_variant'
 import ProductImage from '#models/product_image'
 import ShippingProfile from '#models/shipping_profile'
 import Review from '#models/review'
+import Category from '#models/category'
 
 export default class Product extends ProductSchema {
   @belongsTo(() => Seller)
@@ -23,6 +24,9 @@ export default class Product extends ProductSchema {
 
   @belongsTo(() => ShippingProfile)
   declare shippingProfile: BelongsTo<typeof ShippingProfile>
+
+  @belongsTo(() => Category)
+  declare category: BelongsTo<typeof Category>
 
   @hasMany(() => Review)
   declare reviews: HasMany<typeof Review>

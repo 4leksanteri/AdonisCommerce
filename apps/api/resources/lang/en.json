@@ -200,7 +200,10 @@
       "shippingHint": "Pick a profile, or leave as free shipping to cover postage yourself.",
       "imagesRemaining": "{count, plural, one {# more photo can be added} other {# more photos can be added}}",
       "imagesFull": "That's the maximum of {max} photos.",
-      "imagesTooMany": "A product can have at most {max} photos."
+      "imagesTooMany": "A product can have at most {max} photos.",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Choose a category",
+      "categoryRequired": "Pick a category."
     },
     "shipping": {
       "heading": "Shipping profiles",
@@ -334,7 +337,8 @@
       "shipTo": "Ship to",
       "shippingCost": "Shipping {cost}",
       "shippingFree": "Free shipping",
-      "shippingUnavailable": "Seller doesn't ship here"
+      "shippingUnavailable": "Seller doesn't ship here",
+      "categoryLabel": "Category"
     },
     "home": {
       "heading": "Fresh from our makers",

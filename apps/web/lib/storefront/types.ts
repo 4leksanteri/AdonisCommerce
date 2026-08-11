@@ -40,6 +40,8 @@ export type PublicProduct = Omit<Product, "status" | "variants" | "shippingProfi
   /** Empty means the seller ships this product free. */
   shippingRates: PublicShippingRate[];
   rating: ProductRating;
+  /** Null only on products that predate the taxonomy. */
+  category: { id: string; name: string; slug: string } | null;
   /** Most recent first, capped by the API — the count comes from `rating`. */
   reviews: Review[];
 };

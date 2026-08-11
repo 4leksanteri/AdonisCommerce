@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
+    'categories.index': { paramsTuple?: []; params?: {} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'stripe_webhook': { paramsTuple?: []; params?: {} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
@@ -60,6 +61,7 @@ export type ScannedRoutes = {
   }
   GET: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
+    'categories.index': { paramsTuple?: []; params?: {} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_orders.index': { paramsTuple?: []; params?: {} }
@@ -82,6 +84,7 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'translations.show': { paramsTuple: [ParamValue]; params: {'locale': ParamValue} }
+    'categories.index': { paramsTuple?: []; params?: {} }
     'uploads.show': { paramsTuple: [ParamValue]; params: {'filename': ParamValue} }
     'storefront.exchange_rates.index': { paramsTuple?: []; params?: {} }
     'storefront.storefront_orders.index': { paramsTuple?: []; params?: {} }

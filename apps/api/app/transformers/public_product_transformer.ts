@@ -5,6 +5,7 @@ import PublicProductVariantTransformer from '#transformers/public_product_varian
 import ProductImageTransformer from '#transformers/product_image_transformer'
 import ShippingRateTransformer from '#transformers/shipping_rate_transformer'
 import ReviewTransformer from '#transformers/review_transformer'
+import CategoryTransformer from '#transformers/category_transformer'
 
 /**
  * Storefront-facing product. Drops `status` (public products are always
@@ -12,6 +13,13 @@ import ReviewTransformer from '#transformers/review_transformer'
  * public transformer so SKUs stay internal.
  */
 export default class PublicProductTransformer extends BaseTransformer<Product> {
+  constructor(
+    product: Product,
+    private locale: string = 'en'
+  ) {
+    super(product)
+  }
+
   toObject() {
     return {
       ...this.pick(this.resource, [
@@ -41,6 +49,11 @@ export default class PublicProductTransformer extends BaseTransformer<Product> {
         average: this.resource.ratingAverage,
         count: this.resource.ratingCount,
       },
+      // Null on products that predate the taxonomy; they pick one up the
+      // next time the seller edits them.
+      category: this.resource.category
+        ? CategoryTransformer.transform(this.resource.category, this.locale)
+        : null,
       // Preloaded newest-first by the storefront controller.
       reviews: ReviewTransformer.transform(this.whenLoaded(this.resource.reviews)),
       options: ProductOptionTransformer.transform(this.resource.options).depth(2),

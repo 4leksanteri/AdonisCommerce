@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Product from '#models/product'
 import PublicProductTransformer from '#transformers/public_product_transformer'
 import PublicProductCardTransformer from '#transformers/public_product_card_transformer'
+import { toLocale } from '#services/translations'
 
 const DEFAULT_LIMIT = 24
 const MAX_LIMIT = 60
@@ -37,7 +38,7 @@ export default class StorefrontProductsController {
    * from a suspended shop all 404 rather than 403 — a shopper has no
    * business learning that they exist.
    */
-  async show({ params, response, serialize }: HttpContext) {
+  async show({ params, request, response, serialize }: HttpContext) {
     const product = await Product.query()
       .where('slug', params.productSlug)
       .where('status', 'active')
@@ -51,6 +52,7 @@ export default class StorefrontProductsController {
       .preload('variants', (query) => query.orderBy('createdAt').preload('optionValues'))
       .preload('images', (query) => query.orderBy('position'))
       .preload('shippingProfile', (profile) => profile.preload('rates'))
+      .preload('category', (category) => category.preload('translations'))
       // Capped: a product page shows recent opinions, not an archive. The
       // count and average come from the product's own totals, so nothing here
       // depends on having loaded them all.
@@ -63,6 +65,8 @@ export default class StorefrontProductsController {
       })
     }
 
-    return serialize(PublicProductTransformer.transform(product))
+    // The category is the one thing on this page that has to be translated
+    // from data rather than from the language files.
+    return serialize(PublicProductTransformer.transform(product, toLocale(request.input('locale'))))
   }
 }

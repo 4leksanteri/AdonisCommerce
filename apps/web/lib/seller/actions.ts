@@ -35,6 +35,7 @@ export type CreateProductInput = {
   tracksInventory?: boolean;
   /** Null ships the product free. */
   shippingProfileId?: string | null;
+  categoryId: string;
   options: { name: string; values: string[] }[];
   variants: { optionValues: string[]; sku: string; priceCents: number; stockQuantity: number }[];
 };

@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/api/translations/:locale","type":0,"val":"api","end":""},{"old":"/api/translations/:locale","type":0,"val":"translations","end":""},{"old":"/api/translations/:locale","type":1,"val":"locale","end":""}],
     types: placeholder as Registry['translations.show']['types'],
   },
+  'categories.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/categories',
+    tokens: [{"old":"/api/categories","type":0,"val":"api","end":""},{"old":"/api/categories","type":0,"val":"categories","end":""}],
+    types: placeholder as Registry['categories.index']['types'],
+  },
   'uploads.show': {
     methods: ["GET","HEAD"],
     pattern: '/uploads/:filename',
