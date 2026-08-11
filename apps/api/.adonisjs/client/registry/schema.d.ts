@@ -427,6 +427,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['cancel']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'orderMessages.order_messages.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/order-messages/:orderId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orderId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/order_messages_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/order_messages_controller').default['index']>>>
+    }
+  }
+  'orderMessages.order_messages.store': {
+    methods: ["POST"]
+    pattern: '/api/order-messages/:orderId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orderId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/order_messages_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/order_messages_controller').default['store']>>>
+    }
+  }
   'shippingProfiles.shipping_profiles.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/shipping-profiles'

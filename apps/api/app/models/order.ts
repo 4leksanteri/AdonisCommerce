@@ -8,6 +8,7 @@ import Seller from '#models/seller'
 import OrderItem from '#models/order_item'
 import Payment from '#models/payment'
 import Dispute from '#models/dispute'
+import OrderMessage from '#models/order_message'
 
 // No vowels, no 0/O or 1/I — a reference gets read down a phone line and
 // typed back in, so ambiguous glyphs cost more than the extra entropy.
@@ -92,6 +93,9 @@ export default class Order extends OrderSchema {
 
   @hasMany(() => Dispute)
   declare disputes: HasMany<typeof Dispute>
+
+  @hasMany(() => OrderMessage)
+  declare messages: HasMany<typeof OrderMessage>
 
   /** Paid for and waiting on the seller to say yes. */
   get canAccept() {

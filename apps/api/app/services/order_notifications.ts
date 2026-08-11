@@ -3,6 +3,8 @@ import logger from '@adonisjs/core/services/logger'
 import OrderNotification from '#mails/order_notification'
 import User from '#models/user'
 import type Order from '#models/order'
+import OrderMessage from '#models/order_message'
+import { DateTime } from 'luxon'
 import { toLocale, type Locale } from '#services/translations'
 import { buyerOrderUrl, sellerOrderUrl } from '#services/frontend_routes'
 import { orderTotalCents } from '#services/payments'
@@ -23,8 +25,12 @@ async function recipients(order: Order) {
   ])
 
   return {
-    buyer: buyer && { email: order.contactEmail, locale: toLocale(buyer.locale) },
-    seller: sellerUser && { email: sellerUser.email, locale: toLocale(sellerUser.locale) },
+    buyer: buyer && { userId: buyer.id, email: order.contactEmail, locale: toLocale(buyer.locale) },
+    seller: sellerUser && {
+      userId: sellerUser.id,
+      email: sellerUser.email,
+      locale: toLocale(sellerUser.locale),
+    },
   }
 }
 
@@ -40,7 +46,7 @@ function money(cents: number, currency: string, locale: Locale) {
  * even that is wrapped because Redis can be down too.
  */
 async function notify(
-  who: { email: string; locale: Locale } | null | undefined,
+  who: { userId?: string; email: string; locale: Locale } | null | undefined,
   template: string,
   params: Record<string, string | number>,
   url: string,
@@ -183,4 +189,67 @@ export async function notifyPayoutReleased(order: Order) {
     sellerOrderUrl(locale, order.id),
     'viewInPanel'
   )
+}
+
+/**
+ * How recently someone must have written for us to assume they are still
+ * reading, and skip emailing them. A back-and-forth would otherwise send a
+ * notification per line.
+ */
+const PRESENT_WITHIN_MINUTES = 15
+
+/**
+ * Tells the other side there is a new message.
+ *
+ * Only the *other* side: the sender obviously knows, and staff are not
+ * notified about ordinary buyer/seller traffic — they get told when a problem
+ * is reported, which is when it becomes theirs. A message from staff goes to
+ * both parties, since that is the platform stepping in.
+ */
+export async function notifyNewMessage(order: Order, message: OrderMessage) {
+  const { buyer, seller } = await recipients(order)
+
+  const audience =
+    message.senderRole === 'buyer'
+      ? [seller]
+      : message.senderRole === 'seller'
+        ? [buyer]
+        : [buyer, seller]
+
+  for (const who of audience) {
+    if (!who) continue
+
+    // Someone who wrote a moment ago is plainly still reading; emailing them
+    // about the reply they are watching arrive is just noise.
+    if (who.userId && (await isPresentInThread(order.id, who.userId))) continue
+
+    const locale = who.locale
+    await notify(
+      who,
+      message.senderRole === 'staff' ? 'messageFromStaff' : 'messageReceived',
+      {
+        ...baseParams(order, locale),
+        // Trimmed rather than sent whole: an email is a nudge to come and
+        // read, and a full copy invites replying to a mailbox nobody reads.
+        excerpt: message.body.length > 140 ? `${message.body.slice(0, 140)}…` : message.body,
+      },
+      buyerOrderUrl(locale, order.reference),
+      'readMessage'
+    )
+  }
+}
+
+/**
+ * True when this person has written in the thread recently enough that they
+ * are plainly still there — no need to email them about a reply they are
+ * about to see.
+ */
+export async function isPresentInThread(orderId: string, userId: string): Promise<boolean> {
+  const recent = await OrderMessage.query()
+    .where('orderId', orderId)
+    .where('senderUserId', userId)
+    .where('createdAt', '>', DateTime.now().minus({ minutes: PRESENT_WITHIN_MINUTES }).toSQL()!)
+    .first()
+
+  return recent !== null
 }

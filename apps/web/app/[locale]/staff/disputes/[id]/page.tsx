@@ -3,6 +3,8 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
 import { DisputeActions } from "@/components/staff/dispute-actions";
+import { OrderConversation } from "@/components/conversations/order-conversation";
+import { getConversation } from "@/lib/conversations/queries";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
 import { getDispute, requireStaff } from "@/lib/staff/queries";
 
@@ -20,6 +22,8 @@ export default async function StaffDisputePage(
   ]);
 
   if (!dispute) notFound();
+
+  const conversation = await getConversation(dispute.order.id);
 
   const { order } = dispute;
   const money = (cents: number) =>
@@ -57,6 +61,10 @@ export default async function StaffDisputePage(
         </div>
 
         <DisputeActions dispute={dispute} />
+
+        {conversation && (
+          <OrderConversation orderId={dispute.order.id} conversation={conversation} />
+        )}
 
         <div className="grid gap-4 md:grid-cols-2 md:items-start">
           <div className="flex flex-col gap-3 rounded-lg border border-border p-4 text-sm">

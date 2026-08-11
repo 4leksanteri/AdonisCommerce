@@ -75,6 +75,12 @@ export interface ApiDefinition {
       cancel: typeof routes['orders.orders.cancel']
     }
   }
+  orderMessages: {
+    orderMessages: {
+      index: typeof routes['orderMessages.order_messages.index']
+      store: typeof routes['orderMessages.order_messages.store']
+    }
+  }
   shippingProfiles: {
     shippingProfiles: {
       index: typeof routes['shippingProfiles.shipping_profiles.index']

@@ -4,6 +4,8 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
 import { OrderActions } from "@/components/seller/order-actions";
+import { OrderConversation } from "@/components/conversations/order-conversation";
+import { getConversation } from "@/lib/conversations/queries";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
 import { orderStatusColor } from "@/lib/orders/status";
 import { getSellerOrder, requireSeller } from "@/lib/seller/queries";
@@ -22,6 +24,8 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
   // Covers another shop's order too — the API scopes the lookup, so it 404s
   // rather than telling one seller that another's order exists.
   if (!order) notFound();
+
+  const conversation = await getConversation(order.id);
 
   const money = (cents: number) =>
     format.number(toMajorUnits(cents), currencyFormat(order.currency));
@@ -52,6 +56,8 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       </div>
 
       <OrderActions order={order} />
+
+      {conversation && <OrderConversation orderId={order.id} conversation={conversation} />}
 
       {openDispute && (
         <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">

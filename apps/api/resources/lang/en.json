@@ -86,7 +86,9 @@
     "TOO_MANY_IMAGES": "A product can have at most 10 photos.",
     "SHOP_NOT_FOUND": "Shop not found.",
     "DISPUTE_NOT_FOUND": "Dispute not found.",
-    "NOT_FOUND": "Not found."
+    "NOT_FOUND": "Not found.",
+    "CONVERSATION_NOT_FOUND": "Conversation not found.",
+    "CONVERSATION_READ_ONLY": "You can't add to this conversation."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -503,6 +505,17 @@
       "subject": "Payout released for order #{orderNumber}",
       "heading": "You've been paid",
       "body": "Order #{orderNumber} is complete and {payout} is on its way to your bank account on Stripe's usual schedule."
+    },
+    "readMessage": "Read and reply",
+    "messageReceived": {
+      "subject": "New message about order {reference}",
+      "heading": "You have a new message",
+      "body": "About order {reference} from {shopName}: \\u201c{excerpt}\\u201d"
+    },
+    "messageFromStaff": {
+      "subject": "{brandName} replied about order {reference}",
+      "heading": "We've replied about your order",
+      "body": "About order {reference}: \\u201c{excerpt}\\u201d"
     }
   },
   "Reviews": {
@@ -575,5 +588,17 @@
     "heldNone": "Nothing held right now.",
     "heldOrders": "{count, plural, one {# order} other {# orders}} in {currency}",
     "goToDisputes": "Go to disputes"
+  },
+  "Conversation": {
+    "heading": "Messages",
+    "hint": "Anything about this order — the shop can see and reply to this.",
+    "readOnlyHint": "You can read this conversation but not add to it.",
+    "empty": "Nothing here yet.",
+    "placeholder": "Write a message",
+    "send": "Send",
+    "fromYou": "You",
+    "fromBuyer": "Buyer",
+    "fromSeller": "Shop",
+    "fromStaff": "Support"
   }
 }

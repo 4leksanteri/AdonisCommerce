@@ -86,7 +86,9 @@
     "TOO_MANY_IMAGES": "Tuotteella voi olla enintään 10 kuvaa.",
     "SHOP_NOT_FOUND": "Kauppaa ei löytynyt.",
     "DISPUTE_NOT_FOUND": "Tapausta ei löytynyt.",
-    "NOT_FOUND": "Ei löytynyt."
+    "NOT_FOUND": "Ei löytynyt.",
+    "CONVERSATION_NOT_FOUND": "Keskustelua ei löytynyt.",
+    "CONVERSATION_READ_ONLY": "Et voi kirjoittaa tähän keskusteluun."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -503,6 +505,17 @@
       "subject": "Tilitys vapautettu tilauksesta #{orderNumber}",
       "heading": "Rahasi ovat matkalla",
       "body": "Tilaus #{orderNumber} on valmis, ja {payout} siirtyy pankkitilillesi Stripen normaalin aikataulun mukaan."
+    },
+    "readMessage": "Lue ja vastaa",
+    "messageReceived": {
+      "subject": "Uusi viesti tilauksesta {reference}",
+      "heading": "Sinulle on uusi viesti",
+      "body": "Tilauksesta {reference}, kauppa {shopName}: \\u201d{excerpt}\\u201d"
+    },
+    "messageFromStaff": {
+      "subject": "Vastasimme tilaukseen {reference}",
+      "heading": "Olemme vastanneet tilaukseesi",
+      "body": "Tilauksesta {reference}: \\u201d{excerpt}\\u201d"
     }
   },
   "Reviews": {
@@ -575,5 +588,17 @@
     "heldNone": "Mitään ei ole juuri nyt pidossa.",
     "heldOrders": "{count, plural, one {# tilaus} other {# tilausta}} valuutassa {currency}",
     "goToDisputes": "Siirry tapauksiin"
+  },
+  "Conversation": {
+    "heading": "Viestit",
+    "hint": "Mitä tahansa tästä tilauksesta — kauppa näkee tämän ja voi vastata.",
+    "readOnlyHint": "Voit lukea keskustelun mutta et kirjoittaa siihen.",
+    "empty": "Ei vielä viestejä.",
+    "placeholder": "Kirjoita viesti",
+    "send": "Lähetä",
+    "fromYou": "Sinä",
+    "fromBuyer": "Ostaja",
+    "fromSeller": "Kauppa",
+    "fromStaff": "Asiakastuki"
   }
 }

@@ -5,6 +5,8 @@ import { Spinner } from "@heroui/react";
 import { Container } from "@/components/ui/container";
 import { BuyerOrderActions } from "@/components/storefront/order-actions";
 import { ReviewForm } from "@/components/storefront/review-form";
+import { OrderConversation } from "@/components/conversations/order-conversation";
+import { getConversation } from "@/lib/conversations/queries";
 import { OrderStatusPoller } from "@/components/storefront/order-status-poller";
 import { Link } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
@@ -23,6 +25,8 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
   // Also covers "not signed in" and "someone else's order" — the API 404s
   // both, and a shopper has no business distinguishing them.
   if (!order) notFound();
+
+  const conversation = await getConversation(order.id);
 
   const money = (cents: number) =>
     format.number(toMajorUnits(cents), currencyFormat(order.currency));
@@ -124,6 +128,8 @@ export default async function OrderPage(props: PageProps<"/[locale]/orders/[refe
         </div>
 
         <BuyerOrderActions order={order} />
+
+        {conversation && <OrderConversation orderId={order.id} conversation={conversation} />}
 
         {/* Only once the order has closed out — the point of a review is an
             opinion of the thing in your hands, and the API refuses earlier. */}

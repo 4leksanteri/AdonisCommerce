@@ -88,6 +88,25 @@ export class OrderItemSchema extends BaseModel {
   declare variantLabel: string
 }
 
+export class OrderMessageSchema extends BaseModel {
+  static $columns = ['body', 'createdAt', 'id', 'orderId', 'senderRole', 'senderUserId', 'updatedAt'] as const
+  $columns = OrderMessageSchema.$columns
+  @column()
+  declare body: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare orderId: string
+  @column()
+  declare senderRole: string
+  @column()
+  declare senderUserId: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class OrderSchema extends BaseModel {
   static $columns = ['acceptedAt', 'cancelReason', 'cancelledAt', 'completedAt', 'contactEmail', 'createdAt', 'currency', 'expiresAt', 'id', 'paymentId', 'payoutReleaseAt', 'platformFeeCents', 'reference', 'refundedCents', 'sellerId', 'sellerOrderNumber', 'shippedAt', 'shippingCents', 'shippingCity', 'shippingCountry', 'shippingLine1', 'shippingLine2', 'shippingName', 'shippingPostalCode', 'shopName', 'status', 'stripeRefundId', 'stripeTransferId', 'stripeTransferReversalId', 'subtotalCents', 'trackingNumber', 'updatedAt', 'userId'] as const
   $columns = OrderSchema.$columns

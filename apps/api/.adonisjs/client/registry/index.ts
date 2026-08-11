@@ -216,6 +216,18 @@ const routes = {
     tokens: [{"old":"/api/orders/:id/cancel","type":0,"val":"api","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"orders","end":""},{"old":"/api/orders/:id/cancel","type":1,"val":"id","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"cancel","end":""}],
     types: placeholder as Registry['orders.orders.cancel']['types'],
   },
+  'orderMessages.order_messages.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/order-messages/:orderId',
+    tokens: [{"old":"/api/order-messages/:orderId","type":0,"val":"api","end":""},{"old":"/api/order-messages/:orderId","type":0,"val":"order-messages","end":""},{"old":"/api/order-messages/:orderId","type":1,"val":"orderId","end":""}],
+    types: placeholder as Registry['orderMessages.order_messages.index']['types'],
+  },
+  'orderMessages.order_messages.store': {
+    methods: ["POST"],
+    pattern: '/api/order-messages/:orderId',
+    tokens: [{"old":"/api/order-messages/:orderId","type":0,"val":"api","end":""},{"old":"/api/order-messages/:orderId","type":0,"val":"order-messages","end":""},{"old":"/api/order-messages/:orderId","type":1,"val":"orderId","end":""}],
+    types: placeholder as Registry['orderMessages.order_messages.store']['types'],
+  },
   'shippingProfiles.shipping_profiles.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/shipping-profiles',

@@ -108,6 +108,21 @@ router
   .where('id', router.matchers.uuid())
   .use(middleware.auth())
 
+/**
+ * The order conversation. Neither a seller nor a storefront resource — all
+ * three roles reach the same thread — so it sits on its own rather than being
+ * duplicated under both prefixes.
+ */
+router
+  .group(() => {
+    router.get('/:orderId', [controllers.OrderMessages, 'index'])
+    router.post('/:orderId', [controllers.OrderMessages, 'store'])
+  })
+  .prefix('/api/order-messages')
+  .as('orderMessages')
+  .where('orderId', router.matchers.uuid())
+  .use(middleware.auth())
+
 router
   .group(() => {
     router.get('/', [controllers.ShippingProfiles, 'index'])
