@@ -33,19 +33,6 @@ export const routing = defineRouting({
       en: "/account/settings",
       fi: "/tili/asetukset",
     },
-    /**
-     * Where buyer orders used to live, kept as redirects. Order emails
-     * already sent out point here, and those are in people's inboxes for
-     * good — the paths can go once no live link can reach them.
-     */
-    "/orders": {
-      en: "/orders",
-      fi: "/tilaukset",
-    },
-    "/orders/[reference]": {
-      en: "/orders/[reference]",
-      fi: "/tilaukset/[reference]",
-    },
     "/shop/[shopSlug]": {
       en: "/shop/[shopSlug]",
       fi: "/kauppa/[shopSlug]",

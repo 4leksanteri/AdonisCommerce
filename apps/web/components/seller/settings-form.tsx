@@ -61,7 +61,12 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
 
   return (
     <Card className="max-w-lg">
-      <Form onSubmit={handleSubmit}>
+      {/* The card lays its own slots out with `gap-3`, but only for its direct
+          children — and the form is the only one, so header, content and
+          footer stacked flush against each other. Restated here rather than
+          hoisting the header and footer out, since the submit button has to
+          stay inside the form. */}
+      <Form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <Card.Content>
           <div className="flex flex-col gap-4">
             {errorMessages.length > 0 && (
@@ -72,14 +77,27 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               </div>
             )}
 
-            <TextField isRequired isDisabled={isPending} name="shopName" defaultValue={seller.shopName} minLength={2}>
+            <TextField
+              isRequired
+              isDisabled={isPending}
+              name="shopName"
+              defaultValue={seller.shopName}
+              minLength={2}
+            >
               <Label>{t("shopNameLabel")}</Label>
               <Input className="border border-border" />
             </TextField>
 
-            <TextField isDisabled={isPending} name="description" defaultValue={seller.description ?? ""}>
+            <TextField
+              isDisabled={isPending}
+              name="description"
+              defaultValue={seller.description ?? ""}
+            >
               <Label>{t("descriptionLabel")}</Label>
-              <TextArea className="h-32 border border-border" placeholder={t("descriptionPlaceholder")} />
+              <TextArea
+                className="h-32 border border-border"
+                placeholder={t("descriptionPlaceholder")}
+              />
             </TextField>
 
             <Select

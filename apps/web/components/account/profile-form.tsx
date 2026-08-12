@@ -63,7 +63,12 @@ export function ProfileForm({ fullName, locale }: { fullName: string | null; loc
 
   return (
     <Card className="max-w-lg">
-      <Form onSubmit={handleSubmit}>
+      {/* The card lays its own slots out with `gap-3`, but only for its direct
+          children — and the form is the only one, so header, content and
+          footer stacked flush against each other. Restated here rather than
+          hoisting the header and footer out, since the submit button has to
+          stay inside the form. */}
+      <Form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <Card.Header>
           <Card.Title>{t("heading")}</Card.Title>
         </Card.Header>
