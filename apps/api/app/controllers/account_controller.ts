@@ -2,11 +2,14 @@ import type { HttpContext } from '@adonisjs/core/http'
 import hash from '@adonisjs/core/services/hash'
 import User from '#models/user'
 import {
+  closeAccountValidator,
   updateEmailValidator,
   updatePasswordValidator,
   updateProfileValidator,
 } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
+import { notifyEmailChanged, notifyPasswordChanged } from '#services/account_notifications'
+import { blockerFor, closeAccount } from '#services/account_closure'
 
 /**
  * What someone can change about their own account.
@@ -38,8 +41,14 @@ export default class AccountController {
       return this.wrongPassword(response)
     }
 
+    // Captured before the write: the warning goes where the account used to
+    // be reachable, which is the only address the rightful owner still has.
+    const previousEmail = user.email
+
     user.email = email
     await user.save()
+
+    await notifyEmailChanged(user, previousEmail)
 
     /**
      * Other sessions are left alone on purpose. Reaching this point already
@@ -74,7 +83,33 @@ export default class AccountController {
         .map((token) => User.accessTokens.delete(user, token.identifier))
     )
 
+    await notifyPasswordChanged(user)
+
     return { code: 'PASSWORD_UPDATED', message: 'Password updated.' }
+  }
+
+  /**
+   * Closing an account. Anonymises rather than deletes — see the service and
+   * the docblock on the User model for why the row has to stay.
+   */
+  async destroy({ request, response, auth }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const { currentPassword } = await request.validateUsing(closeAccountValidator)
+
+    if (!(await this.passwordMatches(user, currentPassword))) {
+      return this.wrongPassword(response)
+    }
+
+    const blocker = await blockerFor(user)
+    if (blocker) {
+      return response.conflict({
+        errors: [{ code: blocker, message: 'This account cannot be closed yet.' }],
+      })
+    }
+
+    await closeAccount(user)
+
+    return { code: 'ACCOUNT_CLOSED', message: 'Account closed.' }
   }
 
   private passwordMatches(user: User, plain: string) {

@@ -6,15 +6,21 @@ import { ProductCard } from "@/components/storefront/product-card";
 import { CountryName } from "@/components/storefront/country-name";
 import { ShopAvatar } from "@/components/storefront/shop-avatar";
 import { Stars } from "@/components/storefront/stars";
+import { ResultsPager } from "@/components/storefront/results-pager";
 import { Link } from "@/i18n/navigation";
 import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 import { getShop } from "@/lib/storefront/queries";
 
 export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlug]">) {
-  const { shopSlug } = await props.params;
+  const [{ shopSlug }, searchParams] = await Promise.all([props.params, props.searchParams]);
+
+  const requested = Number(
+    Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page
+  );
+  const page = Number.isInteger(requested) && requested > 1 ? requested : 1;
 
   const [data, t, tReviews, displayCurrency, rates, format] = await Promise.all([
-    getShop(shopSlug),
+    getShop(shopSlug, page),
     getTranslations("Storefront.shop"),
     getTranslations("Reviews"),
     getDisplayCurrency(),
@@ -26,7 +32,7 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
   // the API 404s both, and a shopper has no business telling them apart.
   if (!data) notFound();
 
-  const { shop, products, total, rating, reviews } = data;
+  const { shop, products, total, lastPage, rating, reviews } = data;
   const ratingText = (value: number) =>
     format.number(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
@@ -110,6 +116,19 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
             ))}
           </div>
         )}
+
+        {/* A shop with more than a page of work was showing only its first
+            24 items, with nothing to say there were more. */}
+        <ResultsPager
+          page={page}
+          lastPage={lastPage}
+          hrefFor={(target) => ({
+            pathname: "/shop/[shopSlug]",
+            params: { shopSlug },
+            query: target > 1 ? { page: String(target) } : {},
+          })}
+        />
+
         {reviews.length > 0 && (
           <div className="flex flex-col gap-4 border-t border-border pt-6">
             <h2 className="font-medium text-foreground">

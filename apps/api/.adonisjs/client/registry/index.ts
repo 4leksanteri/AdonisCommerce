@@ -168,6 +168,12 @@ const routes = {
     tokens: [{"old":"/api/account/password","type":0,"val":"api","end":""},{"old":"/api/account/password","type":0,"val":"account","end":""},{"old":"/api/account/password","type":0,"val":"password","end":""}],
     types: placeholder as Registry['account.account.update_password']['types'],
   },
+  'account.account.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/account',
+    tokens: [{"old":"/api/account","type":0,"val":"api","end":""},{"old":"/api/account","type":0,"val":"account","end":""}],
+    types: placeholder as Registry['account.account.destroy']['types'],
+  },
   'sellers.sellers.store': {
     methods: ["POST"],
     pattern: '/api/sellers',

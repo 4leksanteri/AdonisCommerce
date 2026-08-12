@@ -1,6 +1,7 @@
 "use server";
 
 import { apiFetch, ApiError, type ApiErrorItem } from "@/lib/api";
+import { clearSession } from "@/lib/auth/session";
 import type { User } from "@/lib/auth/types";
 
 const GENERIC_ERROR: ApiErrorItem = { code: "GENERIC_ERROR", message: "Something went wrong." };
@@ -54,6 +55,24 @@ export async function updatePasswordAction(
       password,
       passwordConfirmation,
     });
+    return { code: res.code };
+  } catch (error) {
+    return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };
+  }
+}
+
+/**
+ * Closing the account. The session goes with it — the token has just been
+ * revoked server-side, so leaving the cookie in place would only produce a
+ * signed-in-looking page that 401s on everything.
+ */
+export async function closeAccountAction(currentPassword: string): Promise<MessageActionResult> {
+  try {
+    const res = await apiFetch<{ code: string }>("/api/account", {
+      method: "DELETE",
+      body: JSON.stringify({ currentPassword }),
+    });
+    await clearSession();
     return { code: res.code };
   } catch (error) {
     return { errors: error instanceof ApiError ? error.items : [GENERIC_ERROR] };

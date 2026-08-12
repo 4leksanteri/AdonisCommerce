@@ -331,6 +331,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_controller').default['updatePassword']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'account.account.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/account'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user').closeAccountValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').closeAccountValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/account_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/account_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'sellers.sellers.store': {
     methods: ["POST"]
     pattern: '/api/sellers'

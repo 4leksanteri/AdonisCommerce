@@ -94,7 +94,9 @@
     "CANNOT_DEMOTE_SELF": "Et voi poistaa omia pääkäyttäjän oikeuksiasi.",
     "CATEGORY_NOT_FOUND": "Kategoriaa ei löytynyt.",
     "INVALID_CURRENT_PASSWORD": "Salasana ei täsmää.",
-    "CANNOT_MESSAGE_OWN_SHOP": "Tämä on oma kauppasi."
+    "CANNOT_MESSAGE_OWN_SHOP": "Tämä on oma kauppasi.",
+    "ADMIN_CANNOT_CLOSE_OWN_ACCOUNT": "Pääkäyttäjä ei voi sulkea omaa tiliään. Pyydä toista pääkäyttäjää poistamaan oikeutesi ensin.",
+    "ORDERS_STILL_OPEN": "Sinulla on kesken olevia tilauksia. Tilin voi sulkea, kun ne on saatettu loppuun."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -556,7 +558,22 @@
       "heading": "Uusi viesti: {sender}",
       "body": "”{excerpt}”"
     },
-    "viewMessage": "Lue ja vastaa"
+    "viewMessage": "Lue ja vastaa",
+    "emailChanged": {
+      "subject": "Sähköpostiosoitteesi vaihdettiin",
+      "heading": "Sähköpostiosoitteesi vaihdettiin",
+      "body": "Tilisi osoite on nyt {newEmail}. Jos teit tämän itse, mitään muuta ei tarvita. Jos et, ota meihin heti yhteyttä — et voi enää kirjautua sisään tällä osoitteella."
+    },
+    "passwordChanged": {
+      "subject": "Salasanasi vaihdettiin",
+      "heading": "Salasanasi vaihdettiin",
+      "body": "Kaikki muut laitteet on kirjattu ulos. Jos teit tämän itse, mitään muuta ei tarvita. Jos et, vaihda salasanasi heti ja ota meihin yhteyttä."
+    },
+    "accountClosed": {
+      "subject": "Tilisi on suljettu",
+      "heading": "Tilisi on suljettu",
+      "body": "Nimesi ja sähköpostiosoitteesi on poistettu. Tilaukset ja arviot säilytetään vaatimusten mukaisesti, mutta niissä ei enää näy nimeäsi. Kiitos, että olit mukana."
+    }
   },
   "Reviews": {
     "heading": "{count, plural, =0 {Arviot} one {# arvio} other {# arviota}}",
@@ -726,6 +743,17 @@
       "mismatch": "Salasanat eivät täsmää.",
       "saveButton": "Vaihda salasana",
       "saveSuccess": "Salasana vaihdettu."
+    },
+    "close": {
+      "heading": "Sulje tili",
+      "explainer": "Nimesi ja sähköpostiosoitteesi poistetaan. Tilaukset ja arviot säilytetään — ensin mainitut lain vuoksi, jälkimmäisiin muut ostajat luottavat — mutta niissä ei enää näy nimeäsi. Tätä ei voi perua.",
+      "button": "Sulje tili",
+      "confirmHeading": "Suljetaanko tilisi?",
+      "confirmBody": "Vahvista salasanallasi. Sinut kirjataan ulos kaikkialta etkä voi enää kirjautua sisään.",
+      "passwordLabel": "Nykyinen salasana",
+      "cancel": "Peruuta",
+      "confirmButton": "Sulje tili",
+      "closed": "Tilisi on suljettu."
     }
   },
   "Messages": {

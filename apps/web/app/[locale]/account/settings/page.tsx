@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth/queries";
 import { ProfileForm } from "@/components/account/profile-form";
 import { EmailForm } from "@/components/account/email-form";
 import { PasswordForm } from "@/components/account/password-form";
+import { CloseAccount } from "@/components/account/close-account";
 
 export default async function AccountSettingsPage() {
   const [user, t] = await Promise.all([getCurrentUser(), getTranslations("Account.settings")]);
@@ -20,6 +21,7 @@ export default async function AccountSettingsPage() {
       <ProfileForm fullName={user.fullName} locale={user.locale} />
       <EmailForm email={user.email} />
       <PasswordForm />
+      <CloseAccount />
     </div>
   );
 }

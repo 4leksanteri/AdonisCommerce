@@ -85,6 +85,7 @@ router
     router.patch('profile', [controllers.Account, 'updateProfile'])
     router.patch('email', [controllers.Account, 'updateEmail'])
     router.patch('password', [controllers.Account, 'updatePassword'])
+    router.delete('/', [controllers.Account, 'destroy'])
   })
   .prefix('/api/account')
   .as('account')

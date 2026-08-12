@@ -104,10 +104,12 @@ export async function getPublicProduct(
  * storefront, and null on 404 so the page can hand off to `notFound()` — the
  * API 404s an unapproved shop rather than 403ing it.
  */
-export async function getShop(shopSlug: string): Promise<ShopPage | null> {
+export async function getShop(shopSlug: string, page = 1): Promise<ShopPage | null> {
+  const query = page > 1 ? `?page=${page}` : "";
+
   try {
     const res = await apiFetch<{ data: ShopPage }>(
-      `/api/storefront/shops/${encodeURIComponent(shopSlug)}`,
+      `/api/storefront/shops/${encodeURIComponent(shopSlug)}${query}`,
       {},
       null
     );

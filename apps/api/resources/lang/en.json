@@ -94,7 +94,9 @@
     "CANNOT_DEMOTE_SELF": "You can't remove your own admin access.",
     "CATEGORY_NOT_FOUND": "Category not found.",
     "INVALID_CURRENT_PASSWORD": "That password is not correct.",
-    "CANNOT_MESSAGE_OWN_SHOP": "That's your own shop."
+    "CANNOT_MESSAGE_OWN_SHOP": "That's your own shop.",
+    "ADMIN_CANNOT_CLOSE_OWN_ACCOUNT": "Admins can't close their own account. Ask another admin to remove your access first.",
+    "ORDERS_STILL_OPEN": "You have orders that haven't finished yet. Your account can be closed once they're settled."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -556,7 +558,22 @@
       "heading": "New message from {sender}",
       "body": "“{excerpt}”"
     },
-    "viewMessage": "Read and reply"
+    "viewMessage": "Read and reply",
+    "emailChanged": {
+      "subject": "Your email address was changed",
+      "heading": "Your email address was changed",
+      "body": "The address on your account is now {newEmail}. If you did this, nothing more is needed. If you did not, contact us straight away — you will no longer be able to sign in with this address."
+    },
+    "passwordChanged": {
+      "subject": "Your password was changed",
+      "heading": "Your password was changed",
+      "body": "Every other device has been signed out. If you did this, nothing more is needed. If you did not, reset your password immediately and contact us."
+    },
+    "accountClosed": {
+      "subject": "Your account has been closed",
+      "heading": "Your account has been closed",
+      "body": "Your name and email address have been removed. Orders and reviews are kept as required, but no longer carry your name. Thank you for having been here."
+    }
   },
   "Reviews": {
     "heading": "{count, plural, =0 {Reviews} one {# review} other {# reviews}}",
@@ -726,6 +743,17 @@
       "mismatch": "The two passwords don't match.",
       "saveButton": "Change password",
       "saveSuccess": "Password changed."
+    },
+    "close": {
+      "heading": "Close account",
+      "explainer": "Your name and email address are removed. Orders and reviews are kept — the law requires the first and other shoppers rely on the second — but they no longer carry your name. This can't be undone.",
+      "button": "Close account",
+      "confirmHeading": "Close your account?",
+      "confirmBody": "Enter your password to confirm. You'll be signed out everywhere and won't be able to sign in again.",
+      "passwordLabel": "Current password",
+      "cancel": "Cancel",
+      "confirmButton": "Close account",
+      "closed": "Your account has been closed."
     }
   },
   "Messages": {

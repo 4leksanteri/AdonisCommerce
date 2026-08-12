@@ -31,6 +31,7 @@ export type ScannedRoutes = {
     'account.account.update_profile': { paramsTuple?: []; params?: {} }
     'account.account.update_email': { paramsTuple?: []; params?: {} }
     'account.account.update_password': { paramsTuple?: []; params?: {} }
+    'account.account.destroy': { paramsTuple?: []; params?: {} }
     'sellers.sellers.store': { paramsTuple?: []; params?: {} }
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.sellers.update': { paramsTuple?: []; params?: {} }
@@ -166,6 +167,7 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'storefront.storefront_orders.withdraw_dispute': { paramsTuple: [ParamValue]; params: {'reference': ParamValue} }
+    'account.account.destroy': { paramsTuple?: []; params?: {} }
     'sellers.sellers.remove_avatar': { paramsTuple?: []; params?: {} }
     'shippingProfiles.shipping_profiles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.product_images.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'imageId': ParamValue} }

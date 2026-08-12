@@ -83,3 +83,8 @@ export const updatePasswordValidator = vine.create({
   password: password(),
   passwordConfirmation: password().sameAs('password'),
 })
+
+/** Closing an account is irreversible, so it asks who you are one more time. */
+export const closeAccountValidator = vine.create({
+  currentPassword: vine.string(),
+})

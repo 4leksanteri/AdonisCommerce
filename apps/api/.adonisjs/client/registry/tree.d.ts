@@ -61,6 +61,7 @@ export interface ApiDefinition {
       updateProfile: typeof routes['account.account.update_profile']
       updateEmail: typeof routes['account.account.update_email']
       updatePassword: typeof routes['account.account.update_password']
+      destroy: typeof routes['account.account.destroy']
     }
   }
   sellers: {
