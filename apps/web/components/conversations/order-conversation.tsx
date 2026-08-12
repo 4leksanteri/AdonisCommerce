@@ -62,7 +62,7 @@ export function OrderConversation({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-card border border-border p-4">
+    <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
       <div>
         <h2 className="font-medium text-foreground">{t("heading")}</h2>
         <p className="mt-1 text-sm text-muted">
@@ -71,7 +71,7 @@ export function OrderConversation({
       </div>
 
       {errorMessages.length > 0 && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -88,7 +88,7 @@ export function OrderConversation({
             return (
               <li key={message.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[80%] rounded-card px-3 py-2 ${
+                  className={`max-w-[80%] rounded-lg px-3 py-2 ${
                     isMine
                       ? "bg-foreground text-background"
                       : // Staff are visually distinct from the other party, so

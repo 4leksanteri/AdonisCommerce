@@ -49,7 +49,7 @@ export function Thread({ thread }: { thread: ConversationThread }) {
   return (
     <div className="flex flex-col gap-4">
       {errorMessages.length > 0 && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -63,7 +63,7 @@ export function Thread({ thread }: { thread: ConversationThread }) {
           return (
             <li key={message.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[80%] rounded-card px-3 py-2 ${
+                className={`max-w-[80%] rounded-lg px-3 py-2 ${
                   isMine ? "bg-foreground text-background" : "bg-surface text-foreground"
                 }`}
               >

@@ -10,7 +10,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getCurrentUser } from "@/lib/auth/queries";
 import { getDisplayCurrency, getExchangeRates, getShipToCountry } from "@/lib/storefront/currency";
-import { activeSkin } from "@/themes/registry";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -46,8 +45,6 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const skin = activeSkin();
-
   const [user, displayCurrency, rates, shipToCountry] = await Promise.all([
     getCurrentUser(),
     getDisplayCurrency(),
@@ -56,12 +53,7 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    <html
-      lang={locale}
-      /* Not `data-theme` — HeroUI owns that for light/dark. */
-      data-skin={skin.id}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AuthProvider initialUser={user}>
@@ -71,9 +63,9 @@ export default async function LocaleLayout({
               shipToCountry={shipToCountry}
             >
               <CartProvider>
-                <Header platformName={APP_NAME} />
-                {children}
-                <Footer platformName={APP_NAME} />
+              <Header platformName={APP_NAME} />
+              {children}
+              <Footer platformName={APP_NAME} />
               </CartProvider>
             </StorefrontPreferencesProvider>
           </AuthProvider>

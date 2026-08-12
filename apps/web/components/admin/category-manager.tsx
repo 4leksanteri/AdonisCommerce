@@ -71,7 +71,7 @@ function CategoryEditor({
   return (
     <div className="flex flex-col gap-4">
       {errorMessages.length > 0 && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -228,7 +228,7 @@ export function CategoryManager({ categories }: { categories: AdminCategory[] })
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col divide-y divide-border rounded-card border border-border">
+      <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
         {categories.map((category) => {
           const en = category.translations.find((row) => row.locale === "en");
           const fi = category.translations.find((row) => row.locale === "fi");
@@ -269,7 +269,7 @@ export function CategoryManager({ categories }: { categories: AdminCategory[] })
       </div>
 
       {isCreating ? (
-        <div className="rounded-card border border-border p-4">
+        <div className="rounded-lg border border-border p-4">
           <CategoryEditor {...editorProps} />
         </div>
       ) : (

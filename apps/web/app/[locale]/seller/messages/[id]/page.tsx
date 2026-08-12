@@ -16,7 +16,7 @@ export default async function SellerMessageThreadPage(
   if (!thread) notFound();
 
   return (
-    <div className="flex max-w-reading flex-col gap-6">
+    <div className="flex max-w-2xl flex-col gap-6">
       <div>
         <Link
           href="/seller/messages"

@@ -68,7 +68,7 @@ export function ShopAvatarField({ seller }: { seller: Seller }) {
       <span className="text-sm text-muted">{t("avatarLabel")}</span>
 
       {errorMessages.length > 0 && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -79,7 +79,7 @@ export function ShopAvatarField({ seller }: { seller: Seller }) {
         <ShopAvatar name={current.shopName} url={current.avatarUrl} size="lg" />
 
         <div className="flex flex-wrap items-center gap-2">
-          <label className="cursor-pointer rounded-card border border-border px-3 py-2 text-sm text-foreground hover:bg-surface">
+          <label className="cursor-pointer rounded-lg border border-border px-3 py-2 text-sm text-foreground hover:bg-surface">
             {isPending ? <Spinner size="sm" /> : t(current.avatarUrl ? "avatarChange" : "avatarAdd")}
             <input
               type="file"

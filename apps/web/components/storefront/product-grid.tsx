@@ -27,7 +27,7 @@ export async function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
+      <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
         {emptyMessage ?? t("empty")}
       </div>
     );

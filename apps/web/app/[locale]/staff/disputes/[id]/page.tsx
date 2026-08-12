@@ -44,7 +44,7 @@ export default async function StaffDisputePage(
         </div>
 
         {dispute.status !== "open" && (
-          <div className="rounded-card border border-border p-4 text-sm">
+          <div className="rounded-lg border border-border p-4 text-sm">
             <p className="font-medium text-foreground">{t(`outcome.${dispute.status}`)}</p>
             {dispute.resolvedAt && (
               <p className="mt-1 text-muted">{t("settledOn", { date: when(dispute.resolvedAt) })}</p>
@@ -53,7 +53,7 @@ export default async function StaffDisputePage(
           </div>
         )}
 
-        <div className="rounded-card border border-border p-4">
+        <div className="rounded-lg border border-border p-4">
           <p className="text-sm font-medium text-foreground">{t("buyerSaid")}</p>
           <p className="mt-1 text-sm whitespace-pre-line text-muted">
             {dispute.detail || t("noDetail")}
@@ -67,7 +67,7 @@ export default async function StaffDisputePage(
         )}
 
         <div className="grid gap-4 md:grid-cols-2 md:items-start">
-          <div className="flex flex-col gap-3 rounded-card border border-border p-4 text-sm">
+          <div className="flex flex-col gap-3 rounded-lg border border-border p-4 text-sm">
             <div className="flex items-center justify-between">
               <p className="font-medium text-foreground">
                 {t("orderNumber", { number: order.sellerOrderNumber })}
@@ -102,7 +102,7 @@ export default async function StaffDisputePage(
             <p className="text-xs text-muted">{order.reference}</p>
           </div>
 
-          <div className="flex flex-col gap-3 rounded-card border border-border p-4 text-sm">
+          <div className="flex flex-col gap-3 rounded-lg border border-border p-4 text-sm">
             {/* Both sides' contact details in one place — settling a dispute
                 usually means talking to someone. */}
             <div>

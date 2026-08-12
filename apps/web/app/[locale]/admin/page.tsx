@@ -5,7 +5,7 @@ import { getAdminOverview, requireAdmin } from "@/lib/admin/queries";
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="flex flex-col gap-1 rounded-card border border-border p-4">
+    <div className="flex flex-col gap-1 rounded-lg border border-border p-4">
       <span className="text-sm text-muted">{label}</span>
       <span className="text-2xl font-semibold text-foreground">{value}</span>
       {hint && <span className="text-xs text-muted">{hint}</span>}
@@ -59,7 +59,7 @@ export default async function AdminOverviewPage(props: PageProps<"/[locale]/admi
         />
       </div>
 
-      <div className="flex flex-col gap-3 rounded-card border border-border p-4">
+      <div className="flex flex-col gap-3 rounded-lg border border-border p-4">
         <div>
           <h2 className="font-medium text-foreground">{t("commissionHeading")}</h2>
           <p className="mt-1 text-sm text-muted">{t("commissionSubheading")}</p>
@@ -89,7 +89,7 @@ export default async function AdminOverviewPage(props: PageProps<"/[locale]/admi
       {overview.listings.uncategorised > 0 && (
         <Link
           href="/admin/categories"
-          className="w-fit rounded-card bg-foreground px-4 py-2 text-sm font-medium text-background no-underline"
+          className="w-fit rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background no-underline"
         >
           {t("goToCategories")}
         </Link>

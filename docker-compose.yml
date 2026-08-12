@@ -99,8 +99,6 @@ services:
       - redis
     environment:
       APP_NAME: ${APP_NAME}
-      # Which look this deployment renders — see apps/web/themes/registry.ts.
-      SKIN: ${SKIN:-default}
       WATCHPACK_POLLING: "true"
       API_INTERNAL_URL: http://api:3333
       REDIS_HOST: redis

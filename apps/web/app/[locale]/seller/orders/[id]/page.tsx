@@ -60,7 +60,7 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       {conversation && <OrderConversation orderId={order.id} conversation={conversation} />}
 
       {openDispute && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           <p className="font-medium">{t(`disputeReason.${openDispute.reason}`)}</p>
           {openDispute.detail && <p className="mt-1">{openDispute.detail}</p>}
           <p className="mt-2">{t("disputeHeld")}</p>
@@ -68,7 +68,7 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       )}
 
       {order.isRefunded && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           <p>{t("refunded", { amount: money(order.refundedCents) })}</p>
           {order.cancelReason && <p className="mt-1">{t("reasonGiven", { reason: order.cancelReason })}</p>}
           {/* The buyer has their money back but the shop's share couldn't be
@@ -78,12 +78,12 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       )}
 
       <div className="grid gap-6 md:grid-cols-2 md:items-start">
-        <div className="flex flex-col gap-4 rounded-card border border-border p-4">
+        <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
           <h2 className="font-medium text-foreground">{t("itemsHeading")}</h2>
 
           {order.items.map((item) => (
             <div key={item.id} className="flex items-start gap-3">
-              <div className="size-12 shrink-0 overflow-hidden rounded-card border border-border bg-surface">
+              <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
                 {item.imageUrl && (
                   <Image
                     src={item.imageUrl}
@@ -148,7 +148,7 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="rounded-card border border-border p-4 text-sm">
+          <div className="rounded-lg border border-border p-4 text-sm">
             <p className="font-medium text-foreground">{t("shipTo")}</p>
             <address className="mt-1 not-italic text-muted">
               {order.shipping.name}
@@ -168,7 +168,7 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
             <p className="mt-3 text-muted">{order.buyer.email}</p>
           </div>
 
-          <div className="rounded-card border border-border p-4 text-sm">
+          <div className="rounded-lg border border-border p-4 text-sm">
             <p className="font-medium text-foreground">{t("timelineHeading")}</p>
             <ul className="mt-2 flex flex-col gap-1 text-muted">
               <li>{t("timelinePlaced", { date: when(order.createdAt) })}</li>

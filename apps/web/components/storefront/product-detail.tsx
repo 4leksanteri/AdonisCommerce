@@ -222,7 +222,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
                 aria-label={t("viewImage", { number: index + 1 })}
                 aria-current={index === activeImage ? "true" : undefined}
                 onClick={() => setActiveImage(index)}
-                className={`size-16 shrink-0 overflow-hidden rounded-card border ${
+                className={`size-16 shrink-0 overflow-hidden rounded-lg border ${
                   index === activeImage ? "border-foreground" : "border-border"
                 }`}
               >

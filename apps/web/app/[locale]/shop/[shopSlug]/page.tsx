@@ -73,7 +73,7 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
           </div>
 
           {shop.description && (
-            <p className="max-w-reading text-sm whitespace-pre-line text-muted">{shop.description}</p>
+            <p className="max-w-2xl text-sm whitespace-pre-line text-muted">{shop.description}</p>
           )}
 
           {/* Each fact gets its own label rather than being written into a
@@ -100,7 +100,7 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
         </header>
 
         {products.length === 0 ? (
-          <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
+          <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
             {t("empty")}
           </div>
         ) : (

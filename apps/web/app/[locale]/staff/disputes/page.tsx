@@ -25,11 +25,11 @@ export default async function StaffDisputesPage(props: PageProps<"/[locale]/staf
         </div>
 
         {disputes.length === 0 ? (
-          <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
+          <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
             {t("empty")}
           </div>
         ) : (
-          <div className="flex flex-col divide-y divide-border rounded-card border border-border">
+          <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
             {disputes.map((dispute) => (
               <Link
                 key={dispute.id}

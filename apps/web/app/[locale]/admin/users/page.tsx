@@ -29,22 +29,22 @@ export default async function AdminUsersPage(props: PageProps<"/[locale]/admin/u
           name="search"
           defaultValue={String(search)}
           placeholder={t("searchPlaceholder")}
-          className="min-w-64 rounded-card border border-border bg-transparent px-3 py-2 text-sm text-foreground"
+          className="min-w-64 rounded-lg border border-border bg-transparent px-3 py-2 text-sm text-foreground"
         />
         <button
           type="submit"
-          className="rounded-card border border-border px-3 py-2 text-sm text-foreground"
+          className="rounded-lg border border-border px-3 py-2 text-sm text-foreground"
         >
           {t("search")}
         </button>
       </form>
 
       {users.length === 0 ? (
-        <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
+        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
           {t("usersEmpty")}
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-card border border-border">
+        <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
           {users.map((user) => (
             <div key={user.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
               <div className="min-w-0">

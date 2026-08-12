@@ -24,7 +24,7 @@ export function AdminNav() {
             key={item.href}
             href={item.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-card px-3 py-2 text-sm font-medium whitespace-nowrap no-underline ${
+            className={`rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap no-underline ${
               isActive ? "bg-surface text-foreground" : "text-muted hover:text-foreground"
             }`}
           >

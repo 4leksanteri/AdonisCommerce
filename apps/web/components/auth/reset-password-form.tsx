@@ -43,7 +43,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
   if (successMessage) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="rounded-card bg-success-soft p-3 text-sm text-success-soft-foreground">
+        <div className="rounded-lg bg-success-soft p-3 text-sm text-success-soft-foreground">
           <p>{successMessage}</p>
         </div>
         <Link href="/" className="text-center text-sm font-medium text-foreground underline">
@@ -56,7 +56,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
   return (
     <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {errorMessages.length > 0 && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}

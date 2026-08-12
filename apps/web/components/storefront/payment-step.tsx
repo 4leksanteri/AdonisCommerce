@@ -66,7 +66,7 @@ export function PaymentStep({
 
   if (!stripePromise || !payment.clientSecret) {
     return (
-      <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+      <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
         {t("paymentUnavailable")}
       </div>
     );
@@ -132,7 +132,7 @@ function PaymentForm({ returnUrl, onPaid }: { returnUrl: string; onPaid: () => v
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {errorMessage && (
-        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessage}
         </div>
       )}

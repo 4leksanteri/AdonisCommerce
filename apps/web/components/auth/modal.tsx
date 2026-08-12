@@ -124,7 +124,7 @@ export function AuthModal() {
             <Modal.Body>
               {successMessage ? (
                 <>
-                  <div className="rounded-card bg-success-soft p-3 text-sm text-success-soft-foreground">
+                  <div className="rounded-lg bg-success-soft p-3 text-sm text-success-soft-foreground">
                     <p>{successMessage}</p>
                   </div>
                   <p className="mt-4 text-center text-sm text-muted">
@@ -141,7 +141,7 @@ export function AuthModal() {
                 <>
                   <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     {errorMessages.length > 0 && (
-                      <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+                      <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
                         {errorMessages.map((message) => (
                           <p key={message}>{message}</p>
                         ))}
