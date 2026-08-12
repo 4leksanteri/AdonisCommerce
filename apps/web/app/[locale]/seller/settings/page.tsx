@@ -11,8 +11,10 @@ export default async function SellerSettingsPage(props: PageProps<"/[locale]/sel
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
-        <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-[26px]">
+          {t("heading")}
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">{t("subheading")}</p>
       </div>
 
       <ShopAvatarField seller={seller} />

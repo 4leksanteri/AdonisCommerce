@@ -26,8 +26,10 @@ export default async function EditSellerProductPage(
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">{t("editHeading")}</h1>
-        <p className="mt-1 text-sm text-muted">{t("editSubheading")}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-[26px]">
+          {t("editHeading")}
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">{t("editSubheading")}</p>
       </div>
 
       <ProductForm product={product} shippingProfiles={shippingProfiles} categories={categories} />

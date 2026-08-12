@@ -228,6 +228,12 @@ const routes = {
     tokens: [{"old":"/api/orders","type":0,"val":"api","end":""},{"old":"/api/orders","type":0,"val":"orders","end":""}],
     types: placeholder as Registry['orders.orders.index']['types'],
   },
+  'orders.orders.stats': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/orders/stats',
+    tokens: [{"old":"/api/orders/stats","type":0,"val":"api","end":""},{"old":"/api/orders/stats","type":0,"val":"orders","end":""},{"old":"/api/orders/stats","type":0,"val":"stats","end":""}],
+    types: placeholder as Registry['orders.orders.stats']['types'],
+  },
   'orders.orders.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/orders/:id',

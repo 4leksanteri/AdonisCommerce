@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
 import Order from '#models/order'
 import Seller from '#models/seller'
@@ -27,6 +28,10 @@ import {
  */
 const HIDDEN_STATUSES = ['pending_payment', 'expired'] as const
 
+/** Days on the sparkline. Two of these are queried; the older half is the
+ *  baseline the delta is measured against. */
+const SPARK_DAYS = 14
+
 export default class OrdersController {
   async index({ auth, request, response, serialize }: HttpContext) {
     const seller = await this.sellerFor(auth)
@@ -42,6 +47,80 @@ export default class OrdersController {
       .paginate(page, 25)
 
     return serialize(OrderTransformer.paginate(orders.all(), orders.getMeta()).depth(2))
+  }
+
+  /**
+   * What the panel's summary cards read from.
+   *
+   * A single sales figure is safe here in a way it never is platform-wide:
+   * every order carries the *seller's* currency, so one shop's orders are all
+   * in one currency and adding them up means something.
+   */
+  async stats({ auth, response, serialize }: HttpContext) {
+    const seller = await this.sellerFor(auth)
+    if (!seller) return this.notASeller(response)
+
+    const since = DateTime.now().minus({ days: SPARK_DAYS * 2 - 1 }).startOf('day')
+
+    /**
+     * One row per day, zero-filled. `generate_series` rather than filling the
+     * gaps in JavaScript: a day with no orders still has to occupy its place
+     * on the line, or the sparkline silently compresses quiet weeks and
+     * reads as steadier than the shop actually is.
+     */
+    const daily = await db.rawQuery(
+      `with days as (
+         select generate_series(?::date, current_date, '1 day')::date as day
+       )
+       select days.day,
+              count(o.id)::int as orders,
+              coalesce(sum(o.subtotal_cents + o.shipping_cents), 0)::bigint as cents
+         from days
+         left join orders o
+           on o.seller_id = ?
+          and o.status not in (?, ?)
+          and o.created_at >= days.day
+          and o.created_at < days.day + 1
+        group by days.day
+        order by days.day`,
+      [since.toSQLDate(), seller.id, ...HIDDEN_STATUSES]
+    )
+
+    const rows: { orders: number; cents: number }[] = daily.rows.map(
+      (row: { orders: number; cents: string }) => ({
+        orders: Number(row.orders),
+        cents: Number(row.cents),
+      })
+    )
+
+    // The window is twice as long as the line so the delta has a like-for-like
+    // period behind it to compare against.
+    const previous = rows.slice(0, SPARK_DAYS)
+    const current = rows.slice(SPARK_DAYS)
+    const sum = (list: typeof rows, key: 'orders' | 'cents') =>
+      list.reduce((total, row) => total + row[key], 0)
+
+    const openProblems = await Dispute.query()
+      .where('status', 'open')
+      .whereHas('order', (orders) => orders.where('sellerId', seller.id))
+      .count('* as total')
+      .first()
+
+    return serialize({
+      currency: seller.currency,
+      days: SPARK_DAYS,
+      orders: {
+        total: sum(current, 'orders'),
+        previous: sum(previous, 'orders'),
+        series: current.map((row) => row.orders),
+      },
+      sales: {
+        total: sum(current, 'cents'),
+        previous: sum(previous, 'cents'),
+        series: current.map((row) => row.cents),
+      },
+      openProblems: Number(openProblems?.$extras.total ?? 0),
+    })
   }
 
   async show({ auth, params, response, serialize }: HttpContext) {

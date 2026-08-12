@@ -41,6 +41,15 @@
   --notice-border: #f0ddbe;
   --notice-foreground: #a6641a;
 
+  /* The seller panel's sidebar: a warmer, slightly darker plane than the
+     page, so the shell reads as chrome rather than as more content. */
+  --sidebar: #f5f0e8;
+  --sidebar-selected: #ede5d7;
+  --sidebar-hover: #efe8dc;
+
+  --accent-foreground: #fff8f0;
+  --accent-soft-strong: #8f4720;
+
   --field: #faf7f2;
   --field-border: #e7e0d4;
 }
@@ -57,6 +66,11 @@
   --color-notice: var(--notice);
   --color-notice-border: var(--notice-border);
   --color-notice-foreground: var(--notice-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-selected: var(--sidebar-selected);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft-strong: var(--accent-soft-strong);
   --color-field: var(--field);
   --color-field-border: var(--field-border);
   --font-sans: var(--font-instrument-sans);

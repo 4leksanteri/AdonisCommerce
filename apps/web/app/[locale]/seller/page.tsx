@@ -25,8 +25,10 @@ export default async function SellerDashboardPage(props: PageProps<"/[locale]/se
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">{t("heading", { shopName: seller.shopName })}</h1>
-        <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-[26px]">
+          {t("heading", { shopName: seller.shopName })}
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">{t("subheading")}</p>
       </div>
 
       <div className="flex flex-wrap gap-3">
@@ -38,7 +40,9 @@ export default async function SellerDashboardPage(props: PageProps<"/[locale]/se
         </Chip>
       </div>
 
-      <div className="rounded-lg border border-border p-4 text-sm text-muted">{t("moreComingSoon")}</div>
+      <div className="rounded-lg border border-border p-4 text-sm text-muted">
+        {t("moreComingSoon")}
+      </div>
     </div>
   );
 }

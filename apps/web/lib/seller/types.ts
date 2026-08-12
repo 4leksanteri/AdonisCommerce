@@ -2,7 +2,7 @@
  * Mirrors MAX_IMAGES in the API's product validator, which is the authority —
  * this only avoids offering an upload that would be refused.
  */
-export const MAX_IMAGES = 10
+export const MAX_IMAGES = 10;
 
 export type ProductOptionValue = {
   id: string;
@@ -57,4 +57,13 @@ export type Category = {
   id: string;
   name: string;
   slug: string;
+};
+
+/** What the seller panel's summary cards read. See OrdersController.stats. */
+export type OrderStats = {
+  currency: string;
+  days: number;
+  orders: { total: number; previous: number; series: number[] };
+  sales: { total: number; previous: number; series: number[] };
+  openProblems: number;
 };

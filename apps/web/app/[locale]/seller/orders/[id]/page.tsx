@@ -46,7 +46,7 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
           <h1 className="mt-1 text-xl font-semibold text-foreground">
             {t("orderNumber", { number: order.sellerOrderNumber })}
           </h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1.5 text-sm text-muted">
             {t("placedOn", { date: when(order.createdAt) })} · {order.reference}
           </p>
         </div>
@@ -70,7 +70,9 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
       {order.isRefunded && (
         <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           <p>{t("refunded", { amount: money(order.refundedCents) })}</p>
-          {order.cancelReason && <p className="mt-1">{t("reasonGiven", { reason: order.cancelReason })}</p>}
+          {order.cancelReason && (
+            <p className="mt-1">{t("reasonGiven", { reason: order.cancelReason })}</p>
+          )}
           {/* The buyer has their money back but the shop's share couldn't be
               taken back — the platform is carrying it until someone chases. */}
           {!order.transferReversed && <p className="mt-1">{t("payoutNotReclaimed")}</p>}
@@ -100,7 +102,10 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
                   <p className="truncate text-xs text-muted">{item.variantLabel}</p>
                 )}
                 <p className="text-xs text-muted">
-                  {t("quantityTimes", { quantity: item.quantity, price: money(item.unitPriceCents) })}
+                  {t("quantityTimes", {
+                    quantity: item.quantity,
+                    price: money(item.unitPriceCents),
+                  })}
                 </p>
               </div>
               <span className="shrink-0 text-sm text-foreground">
@@ -172,16 +177,16 @@ export default async function SellerOrderPage(props: PageProps<"/[locale]/seller
             <p className="font-medium text-foreground">{t("timelineHeading")}</p>
             <ul className="mt-2 flex flex-col gap-1 text-muted">
               <li>{t("timelinePlaced", { date: when(order.createdAt) })}</li>
-              {order.acceptedAt && <li>{t("timelineAccepted", { date: when(order.acceptedAt) })}</li>}
+              {order.acceptedAt && (
+                <li>{t("timelineAccepted", { date: when(order.acceptedAt) })}</li>
+              )}
               {order.shippedAt && <li>{t("timelineShipped", { date: when(order.shippedAt) })}</li>}
               {order.cancelledAt && (
                 <li>{t("timelineCancelled", { date: when(order.cancelledAt) })}</li>
               )}
             </ul>
             {order.trackingNumber && (
-              <p className="mt-3 text-muted">
-                {t("tracking", { number: order.trackingNumber })}
-              </p>
+              <p className="mt-3 text-muted">{t("tracking", { number: order.trackingNumber })}</p>
             )}
           </div>
         </div>

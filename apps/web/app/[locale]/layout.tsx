@@ -8,6 +8,7 @@ import { CartProvider } from "@/lib/cart/context";
 import { StorefrontPreferencesProvider } from "@/lib/storefront/preferences-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { ChromeGate } from "@/components/layout/chrome-gate";
 import { getCurrentUser } from "@/lib/auth/queries";
 import { getDisplayCurrency, getExchangeRates, getShipToCountry } from "@/lib/storefront/currency";
 import "../globals.css";
@@ -67,9 +68,13 @@ export default async function LocaleLayout({
               shipToCountry={shipToCountry}
             >
               <CartProvider>
-                <Header platformName={APP_NAME} />
+                <ChromeGate>
+                  <Header platformName={APP_NAME} />
+                </ChromeGate>
                 {children}
-                <Footer platformName={APP_NAME} />
+                <ChromeGate>
+                  <Footer platformName={APP_NAME} />
+                </ChromeGate>
               </CartProvider>
             </StorefrontPreferencesProvider>
           </AuthProvider>

@@ -81,6 +81,7 @@ export interface ApiDefinition {
   orders: {
     orders: {
       index: typeof routes['orders.orders.index']
+      stats: typeof routes['orders.orders.stats']
       show: typeof routes['orders.orders.show']
       accept: typeof routes['orders.orders.accept']
       ship: typeof routes['orders.orders.ship']

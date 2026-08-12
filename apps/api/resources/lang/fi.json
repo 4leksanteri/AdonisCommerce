@@ -314,6 +314,17 @@
       "refundHint": "Tämä sulkee ilmoitetun ongelman ja palauttaa koko summan. Varastosaldoa ei kasvateta, koska paketti on jo lähtenyt.",
       "confirmRefund": "Palauta koko summa",
       "refundedBuyer": "Rahat palautettu. Ongelma on suljettu."
+    },
+    "backToShop": "Takaisin kauppaan",
+    "title": "Myyjäpaneeli",
+    "orderStats": {
+      "totalOrders": "Tilaukset yhteensä",
+      "totalSales": "Myynti yhteensä",
+      "openProblems": "Ilmoitetut ongelmat",
+      "vsPrevious": "edelliseen {days} päivään",
+      "noBaseline": "Ei vertailujaksoa",
+      "needsAction": "Vaatii toimenpiteitä",
+      "allClear": "Ei avoimia"
     }
   },
   "Cart": {

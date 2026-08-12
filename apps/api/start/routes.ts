@@ -114,6 +114,8 @@ router
 router
   .group(() => {
     router.get('/', [controllers.Orders, 'index'])
+    // Above `/:id`, which only matches uuids anyway.
+    router.get('/stats', [controllers.Orders, 'stats'])
     router.get('/:id', [controllers.Orders, 'show'])
     // Verbs rather than a PATCH on `status`: each one is a different piece of
     // work — accepting is a promise, shipping records a dispatch, cancelling

@@ -41,6 +41,7 @@ export type ScannedRoutes = {
     'sellers.stripe_connect.onboarding': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.dashboard': { paramsTuple?: []; params?: {} }
     'orders.orders.index': { paramsTuple?: []; params?: {} }
+    'orders.orders.stats': { paramsTuple?: []; params?: {} }
     'orders.orders.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.accept': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.ship': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -90,6 +91,7 @@ export type ScannedRoutes = {
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.show': { paramsTuple?: []; params?: {} }
     'orders.orders.index': { paramsTuple?: []; params?: {} }
+    'orders.orders.stats': { paramsTuple?: []; params?: {} }
     'orders.orders.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'conversations.conversations.index': { paramsTuple?: []; params?: {} }
     'conversations.conversations.unread': { paramsTuple?: []; params?: {} }
@@ -120,6 +122,7 @@ export type ScannedRoutes = {
     'sellers.sellers.show': { paramsTuple?: []; params?: {} }
     'sellers.stripe_connect.show': { paramsTuple?: []; params?: {} }
     'orders.orders.index': { paramsTuple?: []; params?: {} }
+    'orders.orders.stats': { paramsTuple?: []; params?: {} }
     'orders.orders.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'conversations.conversations.index': { paramsTuple?: []; params?: {} }
     'conversations.conversations.unread': { paramsTuple?: []; params?: {} }

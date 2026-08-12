@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth/queries";
 import type { Seller, User } from "@/lib/auth/types";
 import type { SellerOrder } from "@/lib/orders/types";
 import type { PayoutDetails } from "@/lib/payments/types";
-import type { Category, Product } from "./types";
+import type { Category, Product, OrderStats } from "./types";
 import type { ShippingProfile } from "./shipping-types";
 
 /**
@@ -91,4 +91,17 @@ export async function getCategories(locale: string): Promise<Category[]> {
     null
   );
   return res.data;
+}
+
+/** Summary figures for the orders screen. */
+export async function getOrderStats(): Promise<OrderStats | null> {
+  try {
+    const res = await apiFetch<{ data: OrderStats }>("/api/orders/stats");
+    return res.data;
+  } catch (error) {
+    // The cards are a summary, not the page — a shop with no stats yet
+    // should still get its orders.
+    if (error instanceof ApiError) return null;
+    throw error;
+  }
 }

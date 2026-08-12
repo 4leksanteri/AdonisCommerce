@@ -3,14 +3,16 @@ import { Chip } from "@heroui/react";
 import { Link } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits } from "@/lib/format";
 import { orderStatusColor } from "@/lib/orders/status";
-import { getSellerOrders, requireSeller } from "@/lib/seller/queries";
+import { getOrderStats, getSellerOrders, requireSeller } from "@/lib/seller/queries";
+import { OrderStatCards } from "@/components/seller/order-stats";
 
 export default async function SellerOrdersPage(props: PageProps<"/[locale]/seller/orders">) {
   const { locale } = await props.params;
   await requireSeller(locale);
 
-  const [orders, t, tStatus, format] = await Promise.all([
+  const [orders, stats, t, tStatus, format] = await Promise.all([
     getSellerOrders(),
+    getOrderStats(),
     getTranslations("SellerPanel.orders"),
     getTranslations("Order.status"),
     getFormatter(),
@@ -28,17 +30,26 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
-        <p className="mt-1 text-sm text-muted">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-[26px]">
+          {t("heading")}
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">
           {awaiting > 0 ? t("awaiting", { count: awaiting }) : t("subheading")}
         </p>
+        {/* The mock's amber strip: a reported problem is something to look
+            at, not an error the seller caused. */}
         {disputed > 0 && (
-          <p className="mt-1 text-sm text-danger">{t("disputedCount", { count: disputed })}</p>
+          <p className="mt-2.5 inline-flex items-center gap-2 rounded-lg border border-notice-border bg-notice px-3 py-1.5 text-[13px] text-notice-foreground">
+            <span className="size-1.5 rounded-full bg-notice-foreground" />
+            {t("disputedCount", { count: disputed })}
+          </p>
         )}
       </div>
 
+      {stats && <OrderStatCards stats={stats} />}
+
       {orders.length === 0 ? (
-        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+        <div className="rounded-2xl border border-border bg-surface p-8 text-center text-sm text-muted">
           {t("empty")}
         </div>
       ) : (

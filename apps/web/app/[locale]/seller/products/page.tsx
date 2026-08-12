@@ -26,8 +26,10 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
-          <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-[26px]">
+            {t("heading")}
+          </h1>
+          <p className="mt-1.5 text-sm text-muted">{t("subheading")}</p>
         </div>
         <Link
           href="/seller/products/new"
@@ -38,9 +40,11 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
       </div>
 
       {products.length === 0 ? (
-        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">{t("empty")}</div>
+        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+          {t("empty")}
+        </div>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+        <div className="flex flex-col divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
           {products.map((product) => {
             const prices = product.variants.map((variant) => variant.priceCents);
             const min = Math.min(...prices);
@@ -55,10 +59,10 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
               <Link
                 key={product.id}
                 href={{ pathname: "/seller/products/[id]", params: { id: product.id } }}
-                className="flex items-center justify-between gap-4 p-4 no-underline hover:bg-surface"
+                className="flex items-center justify-between gap-4 p-4 no-underline hover:bg-row-hover"
               >
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-selected">
+                  <div className="size-11 shrink-0 overflow-hidden rounded-[9px] border border-border bg-selected">
                     {thumbnail && (
                       <Image
                         src={thumbnail.url}
@@ -77,7 +81,9 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
                   </div>
                 </div>
                 <Chip color={statusColor(product.status)}>
-                  <Chip.Label>{tStatus(product.status as Parameters<typeof tStatus>[0])}</Chip.Label>
+                  <Chip.Label>
+                    {tStatus(product.status as Parameters<typeof tStatus>[0])}
+                  </Chip.Label>
                 </Chip>
               </Link>
             );

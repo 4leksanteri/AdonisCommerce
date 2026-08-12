@@ -451,6 +451,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['index']>>>
     }
   }
+  'orders.orders.stats': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/orders/stats'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['stats']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/orders_controller').default['stats']>>>
+    }
+  }
   'orders.orders.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/orders/:id'

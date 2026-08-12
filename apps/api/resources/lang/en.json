@@ -314,6 +314,17 @@
       "refundHint": "This settles the reported problem and returns the full amount. Stock isn't added back, since the parcel has already gone.",
       "confirmRefund": "Refund in full",
       "refundedBuyer": "Refunded. The problem is closed."
+    },
+    "backToShop": "Back to shop",
+    "title": "Seller panel",
+    "orderStats": {
+      "totalOrders": "Total orders",
+      "totalSales": "Total sales",
+      "openProblems": "Reported problems",
+      "vsPrevious": "vs previous {days} days",
+      "noBaseline": "No earlier period to compare",
+      "needsAction": "Needs your attention",
+      "allClear": "Nothing outstanding"
     }
   },
   "Cart": {

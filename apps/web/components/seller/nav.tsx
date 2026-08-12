@@ -13,28 +13,30 @@ const ITEMS = [
   { href: "/seller/settings", key: "settings" },
 ] as const;
 
-/** `unreadMessages` badges the Messages item; 0 shows nothing. */
 export function SellerNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
   const t = useTranslations("SellerPanel.nav");
 
   return (
-    <nav className="flex shrink-0 flex-row gap-1 overflow-x-auto md:w-48 md:flex-col md:overflow-visible">
+    <nav className="flex flex-row gap-0.5 overflow-x-auto md:flex-col md:overflow-visible">
       {ITEMS.map((item) => {
         const isActive =
           item.href === "/seller" ? pathname === item.href : pathname.startsWith(item.href);
+
         return (
           <Link
             key={item.href}
             href={item.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap no-underline ${
-              isActive ? "bg-surface text-foreground" : "text-muted hover:text-foreground"
+            className={`flex items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-sm whitespace-nowrap no-underline ${
+              isActive
+                ? "bg-sidebar-selected font-semibold text-foreground"
+                : "font-medium text-muted-strong hover:bg-sidebar-hover hover:text-foreground"
             }`}
           >
             {t(item.key)}
             {item.key === "messages" && unreadMessages > 0 && (
-              <span className="ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-foreground px-1.5 py-0.5 text-xs text-background">
+              <span className="rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-soft-strong">
                 {unreadMessages}
               </span>
             )}
