@@ -709,7 +709,8 @@
     "nav": {
       "orders": "Tilaukset",
       "settings": "Asetukset",
-      "messages": "Viestit"
+      "messages": "Viestit",
+      "sectionLabel": "Oma tili"
     },
     "signInRequired": "Kirjaudu sisään nähdäksesi tilisi.",
     "settings": {
@@ -754,6 +755,12 @@
       "cancel": "Peruuta",
       "confirmButton": "Sulje tili",
       "closed": "Tilisi on suljettu."
+    },
+    "menu": {
+      "ordersSub": "{count, plural, =0 {Ei vielä tilauksia} one {# tilaus} other {# tilausta}}",
+      "messagesUnread": "{count, plural, one {# lukematon} other {# lukematonta}}",
+      "messagesRead": "Ei uusia viestejä",
+      "settingsSub": "Profiili, kieli, salasana"
     }
   },
   "Messages": {

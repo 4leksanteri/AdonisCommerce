@@ -37,16 +37,10 @@ export function ShopAvatar({
 
   return (
     <span
-      className={`${box} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-surface`}
+      className={`${box} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-selected`}
     >
       {url ? (
-        <Image
-          src={url}
-          alt=""
-          width={px}
-          height={px}
-          className="h-full w-full object-cover"
-        />
+        <Image src={url} alt="" width={px} height={px} className="h-full w-full object-cover" />
       ) : (
         <span className={`${text} font-medium text-muted`} aria-hidden>
           {initials(name)}

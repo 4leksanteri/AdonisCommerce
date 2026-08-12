@@ -21,11 +21,11 @@ export default async function AccountMessageThreadPage(
   const shopSlug = thread.conversation.with.slug;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div>
         <Link
           href="/account/messages"
-          className="text-sm text-muted no-underline hover:text-foreground"
+          className="text-sm font-medium text-accent no-underline hover:underline"
         >
           {t("backToInbox")}
         </Link>

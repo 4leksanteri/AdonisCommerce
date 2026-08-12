@@ -64,7 +64,7 @@ export function Thread({ thread }: { thread: ConversationThread }) {
             <li key={message.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
               <div
                 className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                  isMine ? "bg-foreground text-background" : "bg-surface text-foreground"
+                  isMine ? "bg-foreground text-background" : "bg-selected text-foreground"
                 }`}
               >
                 <p className="text-xs opacity-70">

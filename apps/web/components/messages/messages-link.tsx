@@ -55,7 +55,7 @@ export function MessagesLink() {
     <Link
       href={href}
       aria-label={total > 0 ? t("unreadCount", { count: total }) : t("heading")}
-      className="flex size-10 items-center justify-center rounded-full text-foreground no-underline hover:bg-surface"
+      className="flex size-10 items-center justify-center rounded-full text-foreground no-underline hover:bg-selected"
     >
       <Badge.Anchor className="flex size-6 items-center justify-center">
         <Comment className="size-6" />

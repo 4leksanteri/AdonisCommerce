@@ -95,7 +95,7 @@ export function OrderConversation({
                         // nobody mistakes a platform decision for the shop's.
                         message.senderRole === "staff"
                         ? "bg-accent-soft text-accent-soft-foreground"
-                        : "bg-surface text-foreground"
+                        : "bg-selected text-foreground"
                   }`}
                 >
                   <p className="text-xs opacity-70">

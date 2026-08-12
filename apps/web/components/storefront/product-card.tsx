@@ -46,7 +46,7 @@ export async function ProductCard({ product, displayCurrency, rates, showShop = 
       }}
       className="group flex flex-col gap-2 no-underline"
     >
-      <div className="aspect-square overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="aspect-square overflow-hidden rounded-xl border border-border bg-selected">
         {product.imageUrl && (
           <Image
             src={product.imageUrl}

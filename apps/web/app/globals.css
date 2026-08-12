@@ -1,30 +1,73 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+/*
+ * The warm palette.
+ *
+ * Most of these are HeroUI's own variables rather than ours. The library
+ * declares raw values as `--surface`, `--border`, `--muted`, `--accent` and
+ * then maps each onto a Tailwind colour (`--color-muted: var(--muted)`), so
+ * writing to the raw value recolours every component that uses it without
+ * forking anything.
+ *
+ * Paper, not white: the page is #FAF7F2 and cards sit on top of it in white.
+ * That inversion of the usual arrangement is what makes the whole thing read
+ * as warm rather than as a white page with beige accents.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf7f2;
+  --foreground: #2b2620;
+
+  /* Cards, panels and anything that should lift off the page. */
+  --surface: #ffffff;
+  --border: #eae3d7;
+  --muted: #8a8073;
+  /* Two more greys the design leans on: a dimmer one for uppercase labels
+     and meta, and a *darker* one for nav items and secondary headings. */
+  --muted-soft: #9a8f7e;
+  --muted-strong: #6b6154;
+  /* Terracotta. Links, primary actions, focus. */
+  --accent: #b05a2a;
+
+  /* Ours, for the places the design treats differently from a plain card. */
+  --chrome: #ffffff;
+  --chrome-border: #eee8dd;
+  --selected: #f1ebe1;
+  --row-hover: #fbf8f3;
+  --field: #faf7f2;
+  --field-border: #e7e0d4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-chrome: var(--chrome);
+  --color-chrome-border: var(--chrome-border);
+  --color-muted-soft: var(--muted-soft);
+  --color-muted-strong: var(--muted-strong);
+  --color-selected: var(--selected);
+  --color-row-hover: var(--row-hover);
+  --color-field: var(--field);
+  --color-field-border: var(--field-border);
+  --font-sans: var(--font-instrument-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/*
+ * No dark block. There never was working dark mode: these two variables
+ * flipped with the OS while every HeroUI surface stayed light, because
+ * nothing ever sets the `.dark` / `[data-theme=dark]` HeroUI keys off. The
+ * result was a dark page carrying white cards. A warm light palette is the
+ * design; a real dark one is its own piece of work, and pretending is worse
+ * than not offering it.
+ */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Instrument Sans", Helvetica, Arial, sans-serif;
 }
+
 
 /*
  * Browsers force their own background/text color on autofilled inputs,

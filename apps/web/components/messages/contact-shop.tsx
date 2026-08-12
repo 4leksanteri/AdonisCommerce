@@ -74,7 +74,7 @@ export function ContactShop({ shopSlug, shopName }: { shopSlug: string; shopName
                   {/* Signed out, sending is impossible — say so before they
                       type a paragraph and lose it. */}
                   {!user && (
-                    <div className="rounded-lg bg-surface p-3 text-sm text-muted">
+                    <div className="rounded-lg bg-selected p-3 text-sm text-muted">
                       {t("signInToMessage")}
                     </div>
                   )}

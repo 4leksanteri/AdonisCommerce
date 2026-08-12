@@ -129,7 +129,7 @@ export function CartPopover() {
     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger
         aria-label={t("openCart")}
-        className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
+        className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-selected"
       >
         <Badge.Anchor className="flex size-6 items-center justify-center">
           <ShoppingBag className="size-6" />
@@ -166,7 +166,7 @@ export function CartPopover() {
 
                       return (
                         <div key={line.variantId} className="flex items-start gap-3">
-                          <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+                          <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-selected">
                             {line.imageUrl && (
                               <Image
                                 src={line.imageUrl}

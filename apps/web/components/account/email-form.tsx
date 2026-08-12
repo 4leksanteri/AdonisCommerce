@@ -64,7 +64,7 @@ export function EmailForm({ email }: { email: string }) {
   }
 
   return (
-    <Card className="max-w-lg">
+    <Card>
       {/* The card lays its own slots out with `gap-3`, but only for its direct
           children — and the form is the only one, so header, content and
           footer stacked flush against each other. Restated here rather than
@@ -97,7 +97,7 @@ export function EmailForm({ email }: { email: string }) {
           </div>
         </Card.Content>
         <Card.Footer>
-          <Button type="submit" isPending={isPending}>
+          <Button className="w-full md:w-auto" type="submit" isPending={isPending}>
             {({ isPending: pending }) => (
               <>
                 {pending && <Spinner color="current" size="sm" />}

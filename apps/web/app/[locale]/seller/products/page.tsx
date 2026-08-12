@@ -58,7 +58,7 @@ export default async function SellerProductsPage(props: PageProps<"/[locale]/sel
                 className="flex items-center justify-between gap-4 p-4 no-underline hover:bg-surface"
               >
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-selected">
                     {thumbnail && (
                       <Image
                         src={thumbnail.url}

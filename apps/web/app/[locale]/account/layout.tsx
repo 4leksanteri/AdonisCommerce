@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { Container } from "@/components/ui/container";
 import { AccountNav } from "@/components/account/nav";
 import { getCurrentUser } from "@/lib/auth/queries";
 import { getUnreadCounts } from "@/lib/messages/queries";
@@ -19,18 +18,26 @@ export default async function AccountLayout({ children }: LayoutProps<"/[locale]
 
   return (
     <main className="flex-1 py-10">
-      <Container className="flex flex-col gap-8 md:flex-row md:items-start">
+      {/*
+        Sized by its contents, not by the header. The panel is a nav and one
+        reading column; stretching that across the full shell leaves a third
+        of the row empty and reads as bunched to the left rather than as
+        centred. So the pair shrink-wraps and the pair is what gets centred.
+      */}
+      <div className="mx-auto flex w-full max-w-[35rem] flex-col gap-8 px-6 md:w-fit md:max-w-none md:flex-row md:items-start md:gap-12">
         {user ? (
           <>
             <AccountNav unreadMessages={unread?.buyer ?? 0} />
-            <div className="min-w-0 flex-1">{children}</div>
+            {/* A fixed column, so the nav doesn't shift sideways when a
+                page with different content is opened. */}
+            <div className="w-full min-w-0 md:w-[35rem]">{children}</div>
           </>
         ) : (
-          <div className="flex-1 rounded-lg border border-border p-8 text-center text-sm text-muted">
+          <div className="w-full rounded-2xl border border-border bg-surface p-8 text-center text-sm text-muted md:w-[35rem]">
             {t("signInRequired")}
           </div>
         )}
-      </Container>
+      </div>
     </main>
   );
 }

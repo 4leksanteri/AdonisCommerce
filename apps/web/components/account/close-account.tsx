@@ -51,7 +51,7 @@ export function CloseAccount() {
   }
 
   return (
-    <Card className="max-w-lg">
+    <Card>
       <Card.Header>
         <Card.Title>{t("heading")}</Card.Title>
         <Card.Description>{t("explainer")}</Card.Description>
@@ -61,7 +61,7 @@ export function CloseAccount() {
           <FormErrors messages={errorMessages} />
 
           <AlertDialog isOpen={isOpen} onOpenChange={setIsOpen}>
-            <Button className="w-fit" variant="danger" onPress={() => setIsOpen(true)}>
+            <Button className="w-full md:w-fit" variant="danger" onPress={() => setIsOpen(true)}>
               {t("button")}
             </Button>
             <AlertDialog.Backdrop>

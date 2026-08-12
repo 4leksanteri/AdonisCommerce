@@ -196,7 +196,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
           scrolling thumbnail strip widen the whole page instead of scrolling
           inside it. */}
       <div className="flex min-w-0 flex-col gap-3">
-        <div className="aspect-square overflow-hidden rounded-xl border border-border bg-surface">
+        <div className="aspect-square overflow-hidden rounded-xl border border-border bg-selected">
           {images[activeImage] && (
             <Image
               src={images[activeImage].url}

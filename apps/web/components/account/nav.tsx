@@ -15,7 +15,12 @@ export function AccountNav({ unreadMessages = 0 }: { unreadMessages?: number }) 
   const t = useTranslations("Account.nav");
 
   return (
-    <nav className="flex shrink-0 flex-row gap-1 overflow-x-auto md:w-48 md:flex-col md:overflow-visible">
+    <nav className="hidden shrink-0 gap-0.5 md:sticky md:top-6 md:flex md:w-44 md:flex-col">
+      {/* Names the column, so the panel reads as a place rather than three
+          loose links. Hidden on mobile, where the nav is a scrolling row. */}
+      <p className="px-2.5 pb-2 text-xs font-semibold tracking-wider text-muted-soft uppercase">
+        {t("sectionLabel")}
+      </p>
       {ITEMS.map((item) => {
         const isActive = pathname.startsWith(item.href);
 
@@ -24,8 +29,10 @@ export function AccountNav({ unreadMessages = 0 }: { unreadMessages?: number }) 
             key={item.href}
             href={item.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap no-underline ${
-              isActive ? "bg-surface text-foreground" : "text-muted hover:text-foreground"
+            className={`rounded-lg px-2.5 py-2 text-sm whitespace-nowrap no-underline ${
+              isActive
+                ? "bg-selected font-semibold text-foreground"
+                : "font-medium text-muted-strong hover:bg-selected"
             }`}
           >
             {t(item.key)}

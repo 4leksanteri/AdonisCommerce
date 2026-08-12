@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Instrument_Sans } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { AuthProvider } from "@/lib/auth/context";
 import { CartProvider } from "@/lib/cart/context";
@@ -12,9 +12,10 @@ import { getCurrentUser } from "@/lib/auth/queries";
 import { getDisplayCurrency, getExchangeRates, getShipToCountry } from "@/lib/storefront/currency";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -53,7 +54,10 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${instrumentSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AuthProvider initialUser={user}>
@@ -63,9 +67,9 @@ export default async function LocaleLayout({
               shipToCountry={shipToCountry}
             >
               <CartProvider>
-              <Header platformName={APP_NAME} />
-              {children}
-              <Footer platformName={APP_NAME} />
+                <Header platformName={APP_NAME} />
+                {children}
+                <Footer platformName={APP_NAME} />
               </CartProvider>
             </StorefrontPreferencesProvider>
           </AuthProvider>

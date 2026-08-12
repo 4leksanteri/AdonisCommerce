@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { AccountBackLink } from "@/components/account/back-link";
 import { getCurrentUser } from "@/lib/auth/queries";
 import { ProfileForm } from "@/components/account/profile-form";
 import { EmailForm } from "@/components/account/email-form";
@@ -14,7 +15,11 @@ export default async function AccountSettingsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
+        {/* Inside the heading block, not a sibling in the gap-6 stack — a
+            back link belongs to the title it returns from, and 24px of air
+            reads as two unrelated things. */}
+        <AccountBackLink />
+        <h1 className="mt-1.5 text-xl font-semibold text-foreground md:mt-0">{t("heading")}</h1>
         <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
       </div>
 

@@ -240,7 +240,7 @@ export function CategoryManager({ categories }: { categories: AdminCategory[] })
            */
           if (editingId === category.id) {
             return (
-              <div key={category.id} className="bg-surface p-4">
+              <div key={category.id} className="bg-selected p-4">
                 <CategoryEditor {...editorProps} />
               </div>
             );

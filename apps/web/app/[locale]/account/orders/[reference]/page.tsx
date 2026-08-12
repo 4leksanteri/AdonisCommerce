@@ -42,7 +42,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
   const openDispute = order.disputes.find((dispute) => dispute.status === "open");
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-xl font-semibold text-foreground">
           {awaitingPayment ? t("confirmingHeading") : t("heading")}
@@ -53,14 +53,14 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
       </div>
 
       {awaitingPayment && (
-        <div className="flex items-center gap-3 rounded-lg border border-border p-4 text-sm text-muted">
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
           <Spinner size="sm" />
           <span>{t("confirmingHint")}</span>
           <OrderStatusPoller />
         </div>
       )}
 
-      <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+      <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5">
         <div className="flex items-center justify-between">
           {/* Reads the order's snapshot of the name, but links by slug,
               which a rename leaves alone. */}
@@ -83,7 +83,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
 
         {order.items.map((item) => (
           <div key={item.id} className="flex items-start gap-3">
-            <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+            <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-selected">
               {item.imageUrl && (
                 <Image
                   src={item.imageUrl}
@@ -140,7 +140,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
       {/* Only once the order has closed out — the point of a review is an
           opinion of the thing in your hands, and the API refuses earlier. */}
       {order.status === "completed" && (
-        <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+        <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5">
           <h2 className="font-medium text-foreground">{tReviews("orderHeading")}</h2>
           {order.items.map((item) => (
             <div
@@ -159,7 +159,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
       )}
 
       {openDispute && (
-        <div className="rounded-lg border border-border p-4 text-sm">
+        <div className="rounded-2xl border border-border bg-surface p-5 text-sm">
           <p className="font-medium text-foreground">{t("problemOpen")}</p>
           <p className="mt-1 text-muted">{t(`problemReason.${openDispute.reason}`)}</p>
           {openDispute.detail && <p className="mt-1 text-muted">{openDispute.detail}</p>}
@@ -178,7 +178,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
         </div>
       )}
 
-      <div className="rounded-lg border border-border p-4 text-sm">
+      <div className="rounded-2xl border border-border bg-surface p-5 text-sm">
         <p className="font-medium text-foreground">{t("shippingTo")}</p>
         <address className="mt-1 not-italic text-muted">
           {order.shipping.name}
@@ -197,7 +197,7 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
         </address>
       </div>
 
-      <Link href="/" className="text-sm text-muted no-underline hover:text-foreground">
+      <Link href="/" className="text-sm font-medium text-accent no-underline hover:underline">
         {t("continueShopping")}
       </Link>
     </div>

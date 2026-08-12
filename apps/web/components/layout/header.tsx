@@ -22,7 +22,7 @@ export function Header({ platformName }: { platformName: string }) {
   }
 
   return (
-    <header className="border-b border-border">
+    <header className="border-b border-chrome-border bg-chrome">
       <Container className="flex h-16 items-center justify-between">
         <Link href="/" className="text-lg font-semibold text-foreground">
           {platformName}

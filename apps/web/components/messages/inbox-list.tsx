@@ -19,14 +19,14 @@ export async function InboxList({
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+      <div className="rounded-2xl border border-border bg-surface p-8 text-center text-sm text-muted">
         {role === "seller" ? t("emptySeller") : t("emptyBuyer")}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+    <div className="flex flex-col divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
       {conversations.map((conversation) => {
         // An anonymised account leaves the thread standing but takes the name
         // with it, which is the policy working rather than data missing.
@@ -39,7 +39,7 @@ export async function InboxList({
               pathname: role === "seller" ? "/seller/messages/[id]" : "/account/messages/[id]",
               params: { id: conversation.id },
             }}
-            className="flex items-center gap-3 p-4 no-underline hover:bg-surface"
+            className="flex items-center gap-3 p-4 no-underline hover:bg-row-hover"
           >
             {/* The same monogram-or-picture used everywhere else. A
                 shopper has no avatar, so their side is always initials. */}
