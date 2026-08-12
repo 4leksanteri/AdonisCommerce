@@ -44,6 +44,11 @@ export type ScannedRoutes = {
     'orders.orders.accept': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.ship': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'conversations.conversations.index': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.store': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.unread': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'conversations.conversations.store_message': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orderMessages.order_messages.index': { paramsTuple: [ParamValue]; params: {'orderId': ParamValue} }
     'orderMessages.order_messages.store': { paramsTuple: [ParamValue]; params: {'orderId': ParamValue} }
     'shippingProfiles.shipping_profiles.index': { paramsTuple?: []; params?: {} }
@@ -85,6 +90,9 @@ export type ScannedRoutes = {
     'sellers.stripe_connect.show': { paramsTuple?: []; params?: {} }
     'orders.orders.index': { paramsTuple?: []; params?: {} }
     'orders.orders.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'conversations.conversations.index': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.unread': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orderMessages.order_messages.index': { paramsTuple: [ParamValue]; params: {'orderId': ParamValue} }
     'shippingProfiles.shipping_profiles.index': { paramsTuple?: []; params?: {} }
     'products.products.index': { paramsTuple?: []; params?: {} }
@@ -112,6 +120,9 @@ export type ScannedRoutes = {
     'sellers.stripe_connect.show': { paramsTuple?: []; params?: {} }
     'orders.orders.index': { paramsTuple?: []; params?: {} }
     'orders.orders.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'conversations.conversations.index': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.unread': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orderMessages.order_messages.index': { paramsTuple: [ParamValue]; params: {'orderId': ParamValue} }
     'shippingProfiles.shipping_profiles.index': { paramsTuple?: []; params?: {} }
     'products.products.index': { paramsTuple?: []; params?: {} }
@@ -142,6 +153,8 @@ export type ScannedRoutes = {
     'orders.orders.accept': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.ship': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orders.orders.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'conversations.conversations.store': { paramsTuple?: []; params?: {} }
+    'conversations.conversations.store_message': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'orderMessages.order_messages.store': { paramsTuple: [ParamValue]; params: {'orderId': ParamValue} }
     'shippingProfiles.shipping_profiles.store': { paramsTuple?: []; params?: {} }
     'products.products.store': { paramsTuple?: []; params?: {} }

@@ -5,10 +5,12 @@ import { Link, usePathname } from "@/i18n/navigation";
 
 const ITEMS = [
   { href: "/account/orders", key: "orders" },
+  { href: "/account/messages", key: "messages" },
   { href: "/account/settings", key: "settings" },
 ] as const;
 
-export function AccountNav() {
+/** `unreadMessages` badges the Messages item; 0 shows nothing. */
+export function AccountNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
   const t = useTranslations("Account.nav");
 
@@ -27,6 +29,11 @@ export function AccountNav() {
             }`}
           >
             {t(item.key)}
+            {item.key === "messages" && unreadMessages > 0 && (
+              <span className="ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-foreground px-1.5 py-0.5 text-xs text-background">
+                {unreadMessages}
+              </span>
+            )}
           </Link>
         );
       })}

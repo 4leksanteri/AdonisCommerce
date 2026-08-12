@@ -246,6 +246,36 @@ const routes = {
     tokens: [{"old":"/api/orders/:id/cancel","type":0,"val":"api","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"orders","end":""},{"old":"/api/orders/:id/cancel","type":1,"val":"id","end":""},{"old":"/api/orders/:id/cancel","type":0,"val":"cancel","end":""}],
     types: placeholder as Registry['orders.orders.cancel']['types'],
   },
+  'conversations.conversations.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/conversations',
+    tokens: [{"old":"/api/conversations","type":0,"val":"api","end":""},{"old":"/api/conversations","type":0,"val":"conversations","end":""}],
+    types: placeholder as Registry['conversations.conversations.index']['types'],
+  },
+  'conversations.conversations.store': {
+    methods: ["POST"],
+    pattern: '/api/conversations',
+    tokens: [{"old":"/api/conversations","type":0,"val":"api","end":""},{"old":"/api/conversations","type":0,"val":"conversations","end":""}],
+    types: placeholder as Registry['conversations.conversations.store']['types'],
+  },
+  'conversations.conversations.unread': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/conversations/unread',
+    tokens: [{"old":"/api/conversations/unread","type":0,"val":"api","end":""},{"old":"/api/conversations/unread","type":0,"val":"conversations","end":""},{"old":"/api/conversations/unread","type":0,"val":"unread","end":""}],
+    types: placeholder as Registry['conversations.conversations.unread']['types'],
+  },
+  'conversations.conversations.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/conversations/:id',
+    tokens: [{"old":"/api/conversations/:id","type":0,"val":"api","end":""},{"old":"/api/conversations/:id","type":0,"val":"conversations","end":""},{"old":"/api/conversations/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['conversations.conversations.show']['types'],
+  },
+  'conversations.conversations.store_message': {
+    methods: ["POST"],
+    pattern: '/api/conversations/:id/messages',
+    tokens: [{"old":"/api/conversations/:id/messages","type":0,"val":"api","end":""},{"old":"/api/conversations/:id/messages","type":0,"val":"conversations","end":""},{"old":"/api/conversations/:id/messages","type":1,"val":"id","end":""},{"old":"/api/conversations/:id/messages","type":0,"val":"messages","end":""}],
+    types: placeholder as Registry['conversations.conversations.store_message']['types'],
+  },
   'orderMessages.order_messages.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/order-messages/:orderId',

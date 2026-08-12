@@ -8,6 +8,8 @@ import type { InferData, InferVariants } from '@adonisjs/core/types/transformers
 import type AdminCategoryTransformer from '#transformers/admin_category_transformer'
 import type AdminUserTransformer from '#transformers/admin_user_transformer'
 import type CategoryTransformer from '#transformers/category_transformer'
+import type ConversationMessageTransformer from '#transformers/conversation_message_transformer'
+import type ConversationTransformer from '#transformers/conversation_transformer'
 import type DisputeOrderTransformer from '#transformers/dispute_order_transformer'
 import type DisputeTransformer from '#transformers/dispute_transformer'
 import type OrderItemTransformer from '#transformers/order_item_transformer'
@@ -43,6 +45,14 @@ export namespace Data {
   export type Category = InferData<CategoryTransformer>
   export namespace Category {
     export type Variants = InferVariants<CategoryTransformer>
+  }
+  export type ConversationMessage = InferData<ConversationMessageTransformer>
+  export namespace ConversationMessage {
+    export type Variants = InferVariants<ConversationMessageTransformer>
+  }
+  export type Conversation = InferData<ConversationTransformer>
+  export namespace Conversation {
+    export type Variants = InferVariants<ConversationTransformer>
   }
   export type DisputeOrder = InferData<DisputeOrderTransformer>
   export namespace DisputeOrder {

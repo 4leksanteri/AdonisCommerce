@@ -29,6 +29,14 @@ export const routing = defineRouting({
       en: "/account/orders/[reference]",
       fi: "/tili/tilaukset/[reference]",
     },
+    "/account/messages": {
+      en: "/account/messages",
+      fi: "/tili/viestit",
+    },
+    "/account/messages/[id]": {
+      en: "/account/messages/[id]",
+      fi: "/tili/viestit/[id]",
+    },
     "/account/settings": {
       en: "/account/settings",
       fi: "/tili/asetukset",
@@ -102,6 +110,14 @@ export const routing = defineRouting({
     "/seller/orders/[id]": {
       en: "/seller/orders/[id]",
       fi: "/myyja/tilaukset/[id]",
+    },
+    "/seller/messages": {
+      en: "/seller/messages",
+      fi: "/myyja/viestit",
+    },
+    "/seller/messages/[id]": {
+      en: "/seller/messages/[id]",
+      fi: "/myyja/viestit/[id]",
     },
     "/seller/shipping": {
       en: "/seller/shipping",

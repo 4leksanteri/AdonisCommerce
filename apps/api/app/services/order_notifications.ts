@@ -1,6 +1,6 @@
 import mail from '@adonisjs/mail/services/main'
 import logger from '@adonisjs/core/services/logger'
-import OrderNotification from '#mails/order_notification'
+import TransactionalNotification from '#mails/transactional_notification'
 import User from '#models/user'
 import type Order from '#models/order'
 import OrderMessage from '#models/order_message'
@@ -56,7 +56,7 @@ async function notify(
 
   try {
     await mail.sendLater(
-      new OrderNotification({
+      new TransactionalNotification({
         to: who.email,
         locale: who.locale,
         template,

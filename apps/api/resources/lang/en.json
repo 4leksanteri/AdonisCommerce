@@ -93,7 +93,8 @@
     "USER_NOT_FOUND": "User not found.",
     "CANNOT_DEMOTE_SELF": "You can't remove your own admin access.",
     "CATEGORY_NOT_FOUND": "Category not found.",
-    "INVALID_CURRENT_PASSWORD": "That password is not correct."
+    "INVALID_CURRENT_PASSWORD": "That password is not correct.",
+    "CANNOT_MESSAGE_OWN_SHOP": "That's your own shop."
   },
   "Footer": {
     "changeLanguage": "Change language"
@@ -105,7 +106,8 @@
       "settings": "Shop settings",
       "shipping": "Shipping",
       "payouts": "Payouts",
-      "orders": "Orders"
+      "orders": "Orders",
+      "messages": "Messages"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",
@@ -548,7 +550,13 @@
       "subject": "{brandName} replied about order {reference}",
       "heading": "We've replied about your order",
       "body": "About order {reference}: \\u201c{excerpt}\\u201d"
-    }
+    },
+    "directMessage": {
+      "subject": "{sender} sent you a message",
+      "heading": "New message from {sender}",
+      "body": "“{excerpt}”"
+    },
+    "viewMessage": "Read and reply"
   },
   "Reviews": {
     "heading": "{count, plural, =0 {Reviews} one {# review} other {# reviews}}",
@@ -683,7 +691,8 @@
   "Account": {
     "nav": {
       "orders": "Orders",
-      "settings": "Settings"
+      "settings": "Settings",
+      "messages": "Messages"
     },
     "signInRequired": "Sign in to see your account.",
     "settings": {
@@ -718,5 +727,25 @@
       "saveButton": "Change password",
       "saveSuccess": "Password changed."
     }
+  },
+  "Messages": {
+    "heading": "Messages",
+    "buyerSubheading": "Your conversations with shops.",
+    "sellerSubheading": "Questions from shoppers, before and outside of orders.",
+    "emptyBuyer": "No messages yet. Ask a shop a question from their page.",
+    "emptySeller": "No messages yet. Shoppers can write to you from your shop and product pages.",
+    "unknownParty": "Someone",
+    "you": "You",
+    "unread": "Unread",
+    "backToInbox": "Back to messages",
+    "replyLabel": "Your reply",
+    "replyPlaceholder": "Write a reply…",
+    "send": "Send",
+    "cancel": "Cancel",
+    "contactShop": "Message shop",
+    "contactHeading": "Message {shop}",
+    "contactPlaceholder": "Ask about sizes, materials, custom orders, delivery…",
+    "signInToMessage": "Sign in to send a message.",
+    "unreadCount": "{count, plural, one {# unread message} other {# unread messages}}"
   }
 }

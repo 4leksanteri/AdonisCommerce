@@ -93,7 +93,8 @@
     "USER_NOT_FOUND": "Käyttäjää ei löytynyt.",
     "CANNOT_DEMOTE_SELF": "Et voi poistaa omia pääkäyttäjän oikeuksiasi.",
     "CATEGORY_NOT_FOUND": "Kategoriaa ei löytynyt.",
-    "INVALID_CURRENT_PASSWORD": "Salasana ei täsmää."
+    "INVALID_CURRENT_PASSWORD": "Salasana ei täsmää.",
+    "CANNOT_MESSAGE_OWN_SHOP": "Tämä on oma kauppasi."
   },
   "Footer": {
     "changeLanguage": "Vaihda kieltä"
@@ -105,7 +106,8 @@
       "settings": "Kaupan asetukset",
       "shipping": "Toimitus",
       "payouts": "Tilitykset",
-      "orders": "Tilaukset"
+      "orders": "Tilaukset",
+      "messages": "Viestit"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",
@@ -548,7 +550,13 @@
       "subject": "Vastasimme tilaukseen {reference}",
       "heading": "Olemme vastanneet tilaukseesi",
       "body": "Tilauksesta {reference}: \\u201d{excerpt}\\u201d"
-    }
+    },
+    "directMessage": {
+      "subject": "{sender} lähetti sinulle viestin",
+      "heading": "Uusi viesti: {sender}",
+      "body": "”{excerpt}”"
+    },
+    "viewMessage": "Lue ja vastaa"
   },
   "Reviews": {
     "heading": "{count, plural, =0 {Arviot} one {# arvio} other {# arviota}}",
@@ -683,7 +691,8 @@
   "Account": {
     "nav": {
       "orders": "Tilaukset",
-      "settings": "Asetukset"
+      "settings": "Asetukset",
+      "messages": "Viestit"
     },
     "signInRequired": "Kirjaudu sisään nähdäksesi tilisi.",
     "settings": {
@@ -718,5 +727,25 @@
       "saveButton": "Vaihda salasana",
       "saveSuccess": "Salasana vaihdettu."
     }
+  },
+  "Messages": {
+    "heading": "Viestit",
+    "buyerSubheading": "Keskustelusi kauppojen kanssa.",
+    "sellerSubheading": "Ostajien kysymyksiä, ennen tilausta ja tilausten ulkopuolella.",
+    "emptyBuyer": "Ei vielä viestejä. Kysy kaupalta sen omalta sivulta.",
+    "emptySeller": "Ei vielä viestejä. Ostajat voivat kirjoittaa sinulle kauppa- ja tuotesivuiltasi.",
+    "unknownParty": "Joku",
+    "you": "Sinä",
+    "unread": "Lukematon",
+    "backToInbox": "Takaisin viesteihin",
+    "replyLabel": "Vastauksesi",
+    "replyPlaceholder": "Kirjoita vastaus…",
+    "send": "Lähetä",
+    "cancel": "Peruuta",
+    "contactShop": "Lähetä viesti",
+    "contactHeading": "Viesti kaupalle {shop}",
+    "contactPlaceholder": "Kysy koosta, materiaaleista, erikoistilauksista, toimituksesta…",
+    "signInToMessage": "Kirjaudu sisään lähettääksesi viestin.",
+    "unreadCount": "{count, plural, one {# lukematon viesti} other {# lukematonta viestiä}}"
   }
 }

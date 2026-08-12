@@ -127,6 +127,25 @@ router
   .use(middleware.auth())
 
 /**
+ * Private messages between a shopper and a shop, outside any order. Both
+ * inboxes are the same endpoints seen from different ends — see the
+ * controller.
+ */
+router
+  .group(() => {
+    router.get('/', [controllers.Conversations, 'index'])
+    router.post('/', [controllers.Conversations, 'store'])
+    // Above `/:id`, though the uuid matcher would keep them apart anyway.
+    router.get('/unread', [controllers.Conversations, 'unread'])
+    router.get('/:id', [controllers.Conversations, 'show'])
+    router.post('/:id/messages', [controllers.Conversations, 'storeMessage'])
+  })
+  .prefix('/api/conversations')
+  .as('conversations')
+  .where('id', router.matchers.uuid())
+  .use(middleware.auth())
+
+/**
  * The order conversation. Neither a seller nor a storefront resource — all
  * three roles reach the same thread — so it sits on its own rather than being
  * duplicated under both prefixes.

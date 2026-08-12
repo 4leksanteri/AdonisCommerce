@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
+import { ContactShop } from "@/components/messages/contact-shop";
 import { ProductCard } from "@/components/storefront/product-card";
 import { CountryName } from "@/components/storefront/country-name";
 import { ShopAvatar } from "@/components/storefront/shop-avatar";
@@ -57,6 +58,12 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
                 </span>
               )}
             </div>
+
+            {/* Beside the shop's identity, because "ask before you buy" is
+                what this page is for as much as browsing is. */}
+            <div className="ml-auto">
+              <ContactShop shopSlug={shop.slug} shopName={shop.name} />
+            </div>
           </div>
 
           {shop.description && (
@@ -112,7 +119,10 @@ export default async function ShopPage(props: PageProps<"/[locale]/shop/[shopSlu
             {reviews.map((review) => (
               <div key={review.id} className="flex flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Stars value={review.rating} label={tReviews("stars", { count: review.rating })} />
+                  <Stars
+                    value={review.rating}
+                    label={tReviews("stars", { count: review.rating })}
+                  />
                   <span className="text-sm font-medium text-foreground">
                     {review.author ?? tReviews("anonymous")}
                   </span>

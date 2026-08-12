@@ -2,7 +2,7 @@ import { BaseMail } from '@adonisjs/mail'
 import env from '#start/env'
 import { translate, type Locale } from '#services/translations'
 
-export type OrderNotificationOptions = {
+export type TransactionalNotificationOptions = {
   to: string
   locale: Locale
   /** Key under `Emails` in the language files, e.g. `orderShipped`. */
@@ -26,15 +26,18 @@ function escapeHtml(value: string) {
 }
 
 /**
- * One notification class for every order email.
+ * One notification class for every transactional email we send.
  *
- * The alternative — a class per email — would be eight near-identical files
- * differing only in which strings they read. The copy lives in the language
- * files where it can be translated and reviewed; this only decides how it is
- * laid out.
+ * The alternative — a class per email — would be a dozen near-identical
+ * files differing only in which strings they read. The copy lives in the
+ * language files where it can be translated and reviewed; this only decides
+ * how it is laid out.
+ *
+ * Was `OrderNotification` until private messages needed the same envelope
+ * and nothing about it was ever order-specific.
  */
-export default class OrderNotification extends BaseMail {
-  constructor(private options: OrderNotificationOptions) {
+export default class TransactionalNotification extends BaseMail {
+  constructor(private options: TransactionalNotificationOptions) {
     super()
   }
 

@@ -11,6 +11,7 @@ export const controllers = {
   AdminUsers: () => import('#controllers/admin_users_controller'),
   Cart: () => import('#controllers/cart_controller'),
   Categories: () => import('#controllers/categories_controller'),
+  Conversations: () => import('#controllers/conversations_controller'),
   ExchangeRates: () => import('#controllers/exchange_rates_controller'),
   NewPassword: () => import('#controllers/new_password_controller'),
   OrderMessages: () => import('#controllers/order_messages_controller'),

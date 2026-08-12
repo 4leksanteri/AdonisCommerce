@@ -68,6 +68,46 @@ export class CategoryTranslationSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class ConversationMessageSchema extends BaseModel {
+  static $columns = ['body', 'conversationId', 'createdAt', 'id', 'senderRole', 'senderUserId', 'updatedAt'] as const
+  $columns = ConversationMessageSchema.$columns
+  @column()
+  declare body: string
+  @column()
+  declare conversationId: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare senderRole: string
+  @column()
+  declare senderUserId: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class ConversationSchema extends BaseModel {
+  static $columns = ['buyerReadAt', 'buyerUserId', 'createdAt', 'id', 'lastMessageAt', 'sellerId', 'sellerReadAt', 'updatedAt'] as const
+  $columns = ConversationSchema.$columns
+  @column.dateTime()
+  declare buyerReadAt: DateTime | null
+  @column()
+  declare buyerUserId: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column.dateTime()
+  declare lastMessageAt: DateTime | null
+  @column()
+  declare sellerId: string
+  @column.dateTime()
+  declare sellerReadAt: DateTime | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class DisputeSchema extends BaseModel {
   static $columns = ['createdAt', 'detail', 'id', 'openedByUserId', 'orderId', 'reason', 'resolutionNote', 'resolvedAt', 'resolvedByUserId', 'status', 'updatedAt'] as const
   $columns = DisputeSchema.$columns

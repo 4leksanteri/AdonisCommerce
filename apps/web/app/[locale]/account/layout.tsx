@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { AccountNav } from "@/components/account/nav";
 import { getCurrentUser } from "@/lib/auth/queries";
+import { getUnreadCounts } from "@/lib/messages/queries";
 
 /**
  * The one panel that asks rather than redirects.
@@ -13,13 +14,15 @@ import { getCurrentUser } from "@/lib/auth/queries";
  */
 export default async function AccountLayout({ children }: LayoutProps<"/[locale]/account">) {
   const [user, t] = await Promise.all([getCurrentUser(), getTranslations("Account")]);
+  // Only worth asking for once we know there is someone to count for.
+  const unread = user ? await getUnreadCounts() : null;
 
   return (
     <main className="flex-1 py-10">
       <Container className="flex flex-col gap-8 md:flex-row md:items-start">
         {user ? (
           <>
-            <AccountNav />
+            <AccountNav unreadMessages={unread?.buyer ?? 0} />
             <div className="min-w-0 flex-1">{children}</div>
           </>
         ) : (

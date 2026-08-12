@@ -6,13 +6,15 @@ import { Link, usePathname } from "@/i18n/navigation";
 const ITEMS = [
   { href: "/seller", key: "dashboard" },
   { href: "/seller/orders", key: "orders" },
+  { href: "/seller/messages", key: "messages" },
   { href: "/seller/products", key: "products" },
   { href: "/seller/shipping", key: "shipping" },
   { href: "/seller/payouts", key: "payouts" },
   { href: "/seller/settings", key: "settings" },
 ] as const;
 
-export function SellerNav() {
+/** `unreadMessages` badges the Messages item; 0 shows nothing. */
+export function SellerNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
   const t = useTranslations("SellerPanel.nav");
 
@@ -31,6 +33,11 @@ export function SellerNav() {
             }`}
           >
             {t(item.key)}
+            {item.key === "messages" && unreadMessages > 0 && (
+              <span className="ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-foreground px-1.5 py-0.5 text-xs text-background">
+                {unreadMessages}
+              </span>
+            )}
           </Link>
         );
       })}

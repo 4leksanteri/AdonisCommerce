@@ -8,6 +8,7 @@ import { AuthModal } from "@/components/auth/modal";
 import { logoutAction } from "@/lib/auth/actions";
 import { Container } from "@/components/ui/container";
 import { CartPopover } from "@/components/cart/popover";
+import { MessagesLink } from "@/components/messages/messages-link";
 import { SearchField } from "@/components/storefront/search-field";
 
 export function Header({ platformName }: { platformName: string }) {
@@ -29,6 +30,7 @@ export function Header({ platformName }: { platformName: string }) {
 
         <div className="flex items-center gap-2">
           <SearchField />
+          <MessagesLink />
           <CartPopover />
 
           {user ? (

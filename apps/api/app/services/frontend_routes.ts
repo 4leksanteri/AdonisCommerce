@@ -44,3 +44,23 @@ export function buyerOrderUrl(locale: 'en' | 'fi', reference: string) {
 export function sellerOrderUrl(locale: 'en' | 'fi', orderId: string) {
   return `${env.get('FRONTEND_URL')}${SELLER_ORDER_PATH[locale]}/${orderId}`
 }
+
+const BUYER_MESSAGES_PATH = {
+  en: '/en/account/messages',
+  fi: '/fi/tili/viestit',
+} as const
+
+const SELLER_MESSAGES_PATH = {
+  en: '/en/seller/messages',
+  fi: '/fi/myyja/viestit',
+} as const
+
+/** A private conversation, from whichever inbox the reader owns. */
+export function conversationUrl(
+  locale: 'en' | 'fi',
+  role: 'buyer' | 'seller',
+  conversationId: string
+) {
+  const path = role === 'buyer' ? BUYER_MESSAGES_PATH[locale] : SELLER_MESSAGES_PATH[locale]
+  return `${env.get('FRONTEND_URL')}${path}/${conversationId}`
+}

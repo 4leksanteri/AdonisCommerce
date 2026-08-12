@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { ShopAvatar } from "@/components/storefront/shop-avatar";
+import { ContactShop } from "@/components/messages/contact-shop";
 import { Stars } from "@/components/storefront/stars";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
@@ -15,12 +16,7 @@ import {
   ToggleButtonGroup,
   toast,
 } from "@heroui/react";
-import {
-  convertCents,
-  currencyFormat,
-  toMajorUnits,
-  type ExchangeRates,
-} from "@/lib/format";
+import { convertCents, currencyFormat, toMajorUnits, type ExchangeRates } from "@/lib/format";
 import { useCart } from "@/lib/cart/context";
 import { shippingCentsFor } from "@/lib/storefront/shipping";
 import { ShipToSelect } from "./ship-to-select";
@@ -168,8 +164,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
   const images = product.images;
   const tracksInventory = product.tracksInventory;
   const isUnavailable = selectedVariant === undefined;
-  const isSoldOut =
-    selectedVariant !== undefined && !isAvailable(selectedVariant, tracksInventory);
+  const isSoldOut = selectedVariant !== undefined && !isAvailable(selectedVariant, tracksInventory);
 
   const maxQuantity = !tracksInventory
     ? UNTRACKED_MAX_PER_ORDER
@@ -253,6 +248,11 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             <ShopAvatar name={product.shop.name} url={product.shop.avatarUrl} size="sm" />
             {product.shop.name}
           </Link>
+          {/* The question that decides a commission — "can you make this in
+              blue?" — is asked here, before anything is in a basket. */}
+          <div className="w-fit">
+            <ContactShop shopSlug={product.shop.slug} shopName={product.shop.name} />
+          </div>
           <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
           {product.rating.average !== null && (
             <span className="flex items-center gap-2">
@@ -412,7 +412,10 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             product.reviews.map((review) => (
               <div key={review.id} className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <Stars value={review.rating} label={tReviews("stars", { count: review.rating })} />
+                  <Stars
+                    value={review.rating}
+                    label={tReviews("stars", { count: review.rating })}
+                  />
                   <span className="text-sm font-medium text-foreground">
                     {review.author ?? tReviews("anonymous")}
                   </span>
