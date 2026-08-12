@@ -18,6 +18,12 @@ const routes = {
     tokens: [{"old":"/api/categories","type":0,"val":"api","end":""},{"old":"/api/categories","type":0,"val":"categories","end":""}],
     types: placeholder as Registry['categories.index']['types'],
   },
+  'categories.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/categories/:slug',
+    tokens: [{"old":"/api/categories/:slug","type":0,"val":"api","end":""},{"old":"/api/categories/:slug","type":0,"val":"categories","end":""},{"old":"/api/categories/:slug","type":1,"val":"slug","end":""}],
+    types: placeholder as Registry['categories.show']['types'],
+  },
   'uploads.show': {
     methods: ["GET","HEAD"],
     pattern: '/uploads/:filename',

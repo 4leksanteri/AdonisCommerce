@@ -1,15 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
-import { ProductCard } from "@/components/storefront/product-card";
+import { Link } from "@/i18n/navigation";
+import { ProductGrid } from "@/components/storefront/product-grid";
+import { CategoryLinks } from "@/components/storefront/category-links";
 import { getStorefrontProducts } from "@/lib/storefront/queries";
-import { getDisplayCurrency, getExchangeRates } from "@/lib/storefront/currency";
 
 export default async function Home() {
-  const [products, t, displayCurrency, rates] = await Promise.all([
+  const [products, t, tBrowse] = await Promise.all([
     getStorefrontProducts(),
     getTranslations("Storefront.home"),
-    getDisplayCurrency(),
-    getExchangeRates(),
+    getTranslations("Storefront.browse"),
   ]);
 
   return (
@@ -20,21 +20,16 @@ export default async function Home() {
           <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
         </div>
 
-        {products.length === 0 ? (
-          <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
-            {t("empty")}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                displayCurrency={displayCurrency}
-                rates={rates}
-              />
-            ))}
-          </div>
+        <CategoryLinks />
+
+        <ProductGrid products={products} emptyMessage={t("empty")} />
+
+        {/* The grid is one page of the newest listings, so there has to be a
+            way through to the rest of the catalogue. */}
+        {products.length > 0 && (
+          <Link href="/products" className="self-center text-sm text-muted hover:text-foreground">
+            {tBrowse("seeAll")}
+          </Link>
         )}
       </Container>
     </main>

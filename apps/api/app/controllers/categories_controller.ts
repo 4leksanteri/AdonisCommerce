@@ -20,4 +20,33 @@ export default class CategoriesController {
 
     return serialize(CategoryTransformer.transform(categories, locale))
   }
+
+  /**
+   * One category, found by its slug in **any** language and answered in the
+   * caller's.
+   *
+   * Both halves of that matter. Category slugs are translated, so switching
+   * language on `/fi/kategoria/koti-ja-sisustus` hands the English route a
+   * Finnish slug — next-intl translates the path pattern, not the values in
+   * it. Matching across locales lets that resolve; answering with this
+   * locale's slug is what lets the page redirect to the canonical one rather
+   * than serving the same listing at two URLs.
+   */
+  async show({ params, request, response, serialize }: HttpContext) {
+    const locale = toLocale(request.input('locale'))
+
+    const category = await Category.query()
+      .where('isActive', true)
+      .whereHas('translations', (translations) => translations.where('slug', params.slug))
+      .preload('translations')
+      .first()
+
+    if (!category) {
+      return response.notFound({
+        errors: [{ code: 'CATEGORY_NOT_FOUND', message: 'Category not found.' }],
+      })
+    }
+
+    return serialize(CategoryTransformer.transform(category, locale))
+  }
 }

@@ -360,6 +360,29 @@
       "openedLabel": "Avattu",
       "itemsLabel": "Tuotteita",
       "empty": "Tällä kaupalla ei ole juuri nyt tuotteita myynnissä."
+    },
+    "browse": {
+      "heading": "Kaikki tuotteet",
+      "seeAll": "Katso kaikki",
+      "searchLabel": "Haku",
+      "searchPlaceholder": "Hae tuotteita ja kauppoja",
+      "categoriesLabel": "Kategoriat",
+      "resultsFor": "Hakutulokset: ”{query}”",
+      "resultCount": "{count, plural, =0 {Ei tuloksia} one {# tuote} other {# tuotetta}}",
+      "empty": "Täällä ei ole vielä mitään.",
+      "noResults": "Haulla ”{query}” ei löytynyt mitään. Kokeile lyhyempää sanaa tai selaa kategorioita.",
+      "emptyCategory": "Kategoriassa {category} ei ole vielä tuotteita.",
+      "sortLabel": "Järjestys",
+      "sort": {
+        "newest": "Uusimmat",
+        "price_asc": "Hinta: halvin ensin",
+        "price_desc": "Hinta: kallein ensin",
+        "rating": "Parhaiten arvioidut"
+      },
+      "pagination": "Sivut",
+      "pageOf": "Sivu {page} / {lastPage}",
+      "previous": "Edellinen",
+      "next": "Seuraava"
     }
   },
   "Checkout": {

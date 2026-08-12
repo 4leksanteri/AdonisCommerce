@@ -8,6 +8,7 @@ import { AuthModal } from "@/components/auth/modal";
 import { logoutAction } from "@/lib/auth/actions";
 import { Container } from "@/components/ui/container";
 import { CartPopover } from "@/components/cart/popover";
+import { SearchField } from "@/components/storefront/search-field";
 
 export function Header({ platformName }: { platformName: string }) {
   const { user, setUser } = useAuth();
@@ -27,6 +28,7 @@ export function Header({ platformName }: { platformName: string }) {
         </Link>
 
         <div className="flex items-center gap-2">
+          <SearchField />
           <CartPopover />
 
           {user ? (

@@ -91,3 +91,18 @@ export type ShopPage = {
   page: number;
   lastPage: number;
 };
+
+/** A category as the storefront shows it, already in the reader's language. */
+export type StorefrontCategory = { id: string; name: string; slug: string };
+
+/** One page of listings, plus what a pager needs. Mirrors the shop page. */
+export type ProductSearchResults = {
+  products: PublicProductCard[];
+  total: number;
+  page: number;
+  lastPage: number;
+};
+
+/** Kept in step with PRODUCT_SORTS on the API. */
+export const PRODUCT_SORTS = ["newest", "price_asc", "price_desc", "rating"] as const;
+export type ProductSort = (typeof PRODUCT_SORTS)[number];

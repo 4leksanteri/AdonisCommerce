@@ -360,6 +360,29 @@
       "openedLabel": "Open since",
       "itemsLabel": "Items",
       "empty": "This shop has nothing listed right now."
+    },
+    "browse": {
+      "heading": "All products",
+      "seeAll": "See everything",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search products and shops",
+      "categoriesLabel": "Categories",
+      "resultsFor": "Results for “{query}”",
+      "resultCount": "{count, plural, =0 {Nothing here} one {# item} other {# items}}",
+      "empty": "Nothing here yet.",
+      "noResults": "Nothing matches “{query}”. Try a shorter word, or browse a category.",
+      "emptyCategory": "No {category} listings yet.",
+      "sortLabel": "Sort by",
+      "sort": {
+        "newest": "Newest",
+        "price_asc": "Price: low to high",
+        "price_desc": "Price: high to low",
+        "rating": "Best rated"
+      },
+      "pagination": "Pages",
+      "pageOf": "Page {page} of {lastPage}",
+      "previous": "Previous",
+      "next": "Next"
     }
   },
   "Checkout": {

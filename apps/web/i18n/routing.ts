@@ -33,6 +33,21 @@ export const routing = defineRouting({
       en: "/account/settings",
       fi: "/tili/asetukset",
     },
+    /** Browse and search are one page; searching just sets `?q=`. */
+    "/products": {
+      en: "/products",
+      fi: "/tuotteet",
+    },
+    /**
+     * Category landing pages. The slug in the URL is translated too, which
+     * nothing else here does — `/kategoria/keittio-ja-ruokailu` is worth
+     * considerably more in Finnish search results than `/kategoria/kitchen`.
+     * The page redirects to the right one when handed the other language's.
+     */
+    "/category/[categorySlug]": {
+      en: "/category/[categorySlug]",
+      fi: "/kategoria/[categorySlug]",
+    },
     "/shop/[shopSlug]": {
       en: "/shop/[shopSlug]",
       fi: "/kauppa/[shopSlug]",

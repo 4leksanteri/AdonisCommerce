@@ -7,6 +7,7 @@ export interface ApiDefinition {
   }
   categories: {
     index: typeof routes['categories.index']
+    show: typeof routes['categories.show']
   }
   uploads: {
     show: typeof routes['uploads.show']
