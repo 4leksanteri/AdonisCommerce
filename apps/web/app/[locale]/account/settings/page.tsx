@@ -19,8 +19,10 @@ export default async function AccountSettingsPage() {
             back link belongs to the title it returns from, and 24px of air
             reads as two unrelated things. */}
         <AccountBackLink />
-        <h1 className="mt-1.5 text-xl font-semibold text-foreground md:mt-0">{t("heading")}</h1>
-        <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
+        <h1 className="mt-1.5 text-[22px] font-bold tracking-tight text-foreground md:mt-0 md:text-2xl">
+          {t("heading")}
+        </h1>
+        <p className="mt-1 text-[13px] text-muted md:text-sm">{t("subheading")}</p>
       </div>
 
       <ProfileForm fullName={user.fullName} locale={user.locale} />

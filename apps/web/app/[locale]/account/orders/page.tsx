@@ -28,8 +28,10 @@ export default async function OrdersPage() {
             back link belongs to the title it returns from, and 24px of air
             reads as two unrelated things. */}
         <AccountBackLink />
-        <h1 className="mt-1.5 text-xl font-semibold text-foreground md:mt-0">{t("heading")}</h1>
-        <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
+        <h1 className="mt-1.5 text-[22px] font-bold tracking-tight text-foreground md:mt-0 md:text-2xl">
+          {t("heading")}
+        </h1>
+        <p className="mt-1 text-[13px] text-muted md:text-sm">{t("subheading")}</p>
       </div>
 
       {orders.length === 0 ? (
@@ -53,32 +55,33 @@ export default async function OrdersPage() {
                   pathname: "/account/orders/[reference]",
                   params: { reference: order.reference },
                 }}
-                className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-3.5 no-underline hover:bg-row-hover md:flex-row md:items-center md:justify-between md:gap-4 md:rounded-none md:border-0 md:p-4"
+                /*
+                 * A grid, so the same four elements can be placed differently
+                 * at each width without rendering any of them twice. On a
+                 * phone: shop beside the status, meta beside the total. On a
+                 * desktop row: shop over meta on the left, with the total and
+                 * the status each spanning both rows on the right.
+                 */
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5 rounded-xl border border-border bg-surface p-3.5 no-underline hover:bg-row-hover md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-x-5 md:gap-y-0.5 md:rounded-none md:border-0 md:p-4"
               >
-                <div className="flex items-center justify-between gap-3 md:min-w-0 md:flex-col md:items-start md:gap-0">
-                  <p className="font-medium text-foreground">{order.shop.name}</p>
-                  {/* Beside the shop on a phone, over on the right on a
-                      desktop row — same chip, different place in the flow. */}
-                  <span className="shrink-0 md:hidden">
-                    <Chip color={orderStatusColor(order.status)}>
-                      <Chip.Label>{tStatus(order.status)}</Chip.Label>
-                    </Chip>
-                  </span>
-                </div>
-                <div className="flex items-baseline justify-between gap-3 md:shrink-0 md:items-center">
-                  <p className="truncate text-sm text-muted">
-                    {t("itemCount", { count: units })} ·{" "}
-                    {format.dateTime(new Date(order.createdAt), { dateStyle: "medium" })}
-                  </p>
-                  <span className="shrink-0 font-semibold text-foreground md:text-sm md:font-normal">
-                    {order.isRefunded ? money(order.refundedCents) : money(order.totalCents)}
-                  </span>
-                  <span className="hidden md:inline-flex">
-                    <Chip color={orderStatusColor(order.status)}>
-                      <Chip.Label>{tStatus(order.status)}</Chip.Label>
-                    </Chip>
-                  </span>
-                </div>
+                <p className="col-start-1 row-start-1 truncate text-sm font-semibold text-foreground">
+                  {order.shop.name}
+                </p>
+
+                <p className="col-start-1 row-start-2 truncate text-xs text-muted-soft md:text-[12.5px] md:text-muted">
+                  {t("itemCount", { count: units })} ·{" "}
+                  {format.dateTime(new Date(order.createdAt), { dateStyle: "medium" })}
+                </p>
+
+                <span className="col-start-2 row-start-2 shrink-0 justify-self-end text-[14.5px] font-bold text-foreground md:row-span-2 md:row-start-1 md:self-center md:text-sm md:font-semibold">
+                  {order.isRefunded ? money(order.refundedCents) : money(order.totalCents)}
+                </span>
+
+                <span className="col-start-2 row-start-1 shrink-0 justify-self-end md:col-start-3 md:row-span-2 md:self-center">
+                  <Chip color={orderStatusColor(order.status)}>
+                    <Chip.Label>{tStatus(order.status)}</Chip.Label>
+                  </Chip>
+                </span>
               </Link>
             );
           })}
