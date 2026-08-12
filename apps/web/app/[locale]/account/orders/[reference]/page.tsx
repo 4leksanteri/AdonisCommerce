@@ -20,10 +20,11 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
   // link out of their inbox gets asked to sign in, not a bare 404.
   if (!(await getCurrentUser())) return null;
 
-  const [order, t, tReviews, format] = await Promise.all([
+  const [order, t, tReviews, tOrders, format] = await Promise.all([
     getOrder(reference),
     getTranslations("Order"),
     getTranslations("Reviews"),
+    getTranslations("Orders"),
     getFormatter(),
   ]);
 
@@ -42,37 +43,54 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
   const openDispute = order.disputes.find((dispute) => dispute.status === "open");
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">
+        <Link
+          href="/account/orders"
+          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-accent no-underline hover:underline"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            aria-hidden
+          >
+            <polyline points="15,5 8,12 15,19" />
+          </svg>
+          {tOrders("heading")}
+        </Link>
+        <h1 className="mt-1.5 text-[22px] font-bold tracking-tight text-foreground md:text-2xl">
           {awaitingPayment ? t("confirmingHeading") : t("heading")}
         </h1>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-[13px] leading-relaxed text-muted md:text-sm">
           {t("subheading", { reference: order.reference, email: order.contactEmail })}
         </p>
       </div>
 
       {awaitingPayment && (
-        <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
+        <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3.5 text-sm text-muted md:rounded-2xl md:p-5">
           <Spinner size="sm" />
           <span>{t("confirmingHint")}</span>
           <OrderStatusPoller />
         </div>
       )}
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-3.5 md:gap-4 md:rounded-2xl md:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Reads the order's snapshot of the name, but links by slug,
               which a rename leaves alone. */}
           <Link
             href={{ pathname: "/shop/[shopSlug]", params: { shopSlug: order.shop.slug } }}
-            className="text-xs font-medium tracking-wide text-muted uppercase no-underline hover:text-foreground"
+            className="text-[11.5px] font-semibold tracking-wide text-muted-soft uppercase no-underline hover:text-foreground"
           >
             {order.shop.name}
           </Link>
           <div className="flex items-center gap-3">
             {/* The seller's own numbering — what they'll quote back to you. */}
-            <span className="text-xs text-muted">
+            <span className="text-xs text-muted-soft">
               {t("sellerOrderNumber", { number: order.sellerOrderNumber })}
             </span>
             <span className="text-xs text-muted">
@@ -133,33 +151,25 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
         )}
       </div>
 
-      <BuyerOrderActions order={order} />
-
-      {conversation && <OrderConversation orderId={order.id} conversation={conversation} />}
-
-      {/* Only once the order has closed out — the point of a review is an
-          opinion of the thing in your hands, and the API refuses earlier. */}
-      {order.status === "completed" && (
-        <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5">
-          <h2 className="font-medium text-foreground">{tReviews("orderHeading")}</h2>
-          {order.items.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-2 border-b border-border pb-4 last:border-b-0 last:pb-0"
-            >
-              <p className="text-sm font-medium text-foreground">{item.productTitle}</p>
-              <ReviewForm
-                orderItemId={item.id}
-                productTitle={item.productTitle}
-                existing={item.review ?? null}
-              />
-            </div>
-          ))}
+      {/*
+        Order matters here. Everything above the conversation is a fixed-height
+        fact about this order — what was bought, what it cost, what happened to
+        the money, where it is going. The thread below grows without limit, and
+        a dozen messages would otherwise push the delivery address several
+        screens down on a phone, which is the wrong way round for the thing
+        people open this page to double-check.
+      */}
+      {order.isRefunded && (
+        <div className="rounded-xl border border-notice-border bg-notice p-3.5 text-[12.5px] leading-relaxed text-notice-foreground md:rounded-2xl">
+          <p>{t("refundedNotice", { amount: money(order.refundedCents) })}</p>
+          {order.cancelReason && (
+            <p className="mt-1">{t("cancelReason", { reason: order.cancelReason })}</p>
+          )}
         </div>
       )}
 
       {openDispute && (
-        <div className="rounded-2xl border border-border bg-surface p-5 text-sm">
+        <div className="rounded-xl border border-border bg-surface p-3.5 text-sm md:rounded-2xl md:p-5">
           <p className="font-medium text-foreground">{t("problemOpen")}</p>
           <p className="mt-1 text-muted">{t(`problemReason.${openDispute.reason}`)}</p>
           {openDispute.detail && <p className="mt-1 text-muted">{openDispute.detail}</p>}
@@ -169,16 +179,8 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
         </div>
       )}
 
-      {order.isRefunded && (
-        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
-          <p>{t("refundedNotice", { amount: money(order.refundedCents) })}</p>
-          {order.cancelReason && (
-            <p className="mt-1">{t("cancelReason", { reason: order.cancelReason })}</p>
-          )}
-        </div>
-      )}
-
-      <div className="rounded-2xl border border-border bg-surface p-5 text-sm">
+      <BuyerOrderActions order={order} />
+      <div className="rounded-xl border border-border bg-surface p-3.5 text-sm md:rounded-2xl md:p-5">
         <p className="font-medium text-foreground">{t("shippingTo")}</p>
         <address className="mt-1 not-italic text-muted">
           {order.shipping.name}
@@ -196,6 +198,27 @@ export default async function OrderPage(props: PageProps<"/[locale]/account/orde
           {order.shipping.country}
         </address>
       </div>
+      {conversation && <OrderConversation orderId={order.id} conversation={conversation} />}
+      {/* Only once the order has closed out — the point of a review is an
+          opinion of the thing in your hands, and the API refuses earlier. */}
+      {order.status === "completed" && (
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-3.5 md:gap-4 md:rounded-2xl md:p-5">
+          <h2 className="font-medium text-foreground">{tReviews("orderHeading")}</h2>
+          {order.items.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col gap-2 border-b border-border pb-4 last:border-b-0 last:pb-0"
+            >
+              <p className="text-sm font-medium text-foreground">{item.productTitle}</p>
+              <ReviewForm
+                orderItemId={item.id}
+                productTitle={item.productTitle}
+                existing={item.review ?? null}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       <Link href="/" className="text-sm font-medium text-accent no-underline hover:underline">
         {t("continueShopping")}

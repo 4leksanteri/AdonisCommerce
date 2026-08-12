@@ -62,7 +62,7 @@ export function OrderConversation({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-3.5 md:rounded-2xl md:p-5">
       <div>
         <h2 className="font-medium text-foreground">{t("heading")}</h2>
         <p className="mt-1 text-sm text-muted">
@@ -125,7 +125,7 @@ export function OrderConversation({
           </TextField>
 
           <Button
-            className="self-start"
+            className="w-full md:w-auto md:self-start"
             isPending={isPending}
             isDisabled={body.trim().length === 0}
             onPress={send}

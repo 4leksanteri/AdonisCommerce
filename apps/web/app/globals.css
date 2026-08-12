@@ -34,6 +34,13 @@
   --chrome-border: #eee8dd;
   --selected: #f1ebe1;
   --row-hover: #fbf8f3;
+  /* The amber "here is what happened to your money" panel. Not danger red:
+     a refund arriving is not an error, and colouring it as one reads as
+     something having gone wrong at the moment it was put right. */
+  --notice: #fbf0df;
+  --notice-border: #f0ddbe;
+  --notice-foreground: #a6641a;
+
   --field: #faf7f2;
   --field-border: #e7e0d4;
 }
@@ -47,6 +54,9 @@
   --color-muted-strong: var(--muted-strong);
   --color-selected: var(--selected);
   --color-row-hover: var(--row-hover);
+  --color-notice: var(--notice);
+  --color-notice-border: var(--notice-border);
+  --color-notice-foreground: var(--notice-foreground);
   --color-field: var(--field);
   --color-field-border: var(--field-border);
   --font-sans: var(--font-instrument-sans);
