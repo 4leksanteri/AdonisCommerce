@@ -1,0 +1,21 @@
+/*
+ * The house look. These are today's values, written down — the point of the
+ * default skin is that naming a value must not change it.
+ *
+ * Colour is deliberately absent: HeroUI's palette is the default palette, and
+ * restating its light and dark oklch values here would be a copy to keep in
+ * step for no gain. See the minimal skin for how a skin overrides colour.
+ */
+[data-skin="default"] {
+  /* Was `rounded-lg`, hardcoded in 94 places. */
+  --skin-radius-card: 0.5rem;
+  /* Was `max-w-7xl` on the page shell and `max-w-2xl` on reading columns. */
+  --skin-container-page: 80rem;
+  --skin-container-reading: 42rem;
+  /*
+   * Geist, which the app already downloads and then threw away: the font
+   * variable was set on <html> while `body` overrode it with Arial. The one
+   * intentional visual change in this commit.
+   */
+  --skin-font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}

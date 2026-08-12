@@ -377,7 +377,7 @@ export function ProductForm({
   return (
     <Form className="flex flex-col gap-8" onSubmit={handleSubmit}>
       {errorMessages.length > 0 && (
-        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -405,7 +405,7 @@ export function ProductForm({
 
         <div className="flex flex-wrap gap-3">
           {images.map((image) => (
-            <div key={image.id} className="relative h-24 w-24 overflow-hidden rounded-lg border border-border">
+            <div key={image.id} className="relative h-24 w-24 overflow-hidden rounded-card border border-border">
               <Image src={image.url} alt="" width={96} height={96} className="h-full w-full object-cover" />
               {removingImageId === image.id ? (
                 <div className="absolute inset-0 grid place-items-center bg-background/60">
@@ -425,7 +425,7 @@ export function ProductForm({
           {/* The API enforces the cap; hiding the picker just avoids offering
               an upload that is going to be refused. */}
           {images.length < MAX_IMAGES && (
-            <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border text-center text-xs text-muted hover:text-foreground">
+            <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-card border border-dashed border-border text-center text-xs text-muted hover:text-foreground">
               {isUploadingImages ? <Spinner size="sm" /> : <span>{t("addImage")}</span>}
               <input
                 type="file"
@@ -453,7 +453,7 @@ export function ProductForm({
         </div>
 
         {options.map((option, index) => (
-          <div key={index} className="flex flex-col gap-3 rounded-lg border border-border p-4">
+          <div key={index} className="flex flex-col gap-3 rounded-card border border-border p-4">
             <div className="flex items-end gap-2">
               <TextField
                 className="flex-1"
@@ -565,12 +565,12 @@ export function ProductForm({
         </Switch>
 
         {includedCount > MAX_VARIANTS && (
-          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+          <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
             {t("tooManyVariants", { count: MAX_VARIANTS })}
           </div>
         )}
 
-        <div className="flex flex-wrap items-end gap-2 rounded-lg border border-border p-4">
+        <div className="flex flex-wrap items-end gap-2 rounded-card border border-border p-4">
           <NumberField
             minValue={0}
             step={0.01}

@@ -163,7 +163,7 @@ export function CheckoutForm() {
 
   if (!user) {
     return (
-      <div className="flex flex-col items-start gap-3 rounded-lg border border-border p-6">
+      <div className="flex flex-col items-start gap-3 rounded-card border border-border p-6">
         <p className="text-sm text-muted">{t("signInRequired")}</p>
         <AuthModal />
       </div>
@@ -180,7 +180,7 @@ export function CheckoutForm() {
 
   if (lines.length === 0 && !checkout) {
     return (
-      <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+      <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
         {t("empty")}
       </div>
     );
@@ -193,7 +193,7 @@ export function CheckoutForm() {
    */
   function summaryPanel(action: ReactNode) {
     return (
-      <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+      <div className="flex flex-col gap-4 rounded-card border border-border p-4">
         <h2 className="font-medium text-foreground">{t("summaryHeading")}</h2>
 
         {shops.map((shop) => {
@@ -210,7 +210,7 @@ export function CheckoutForm() {
 
               {shop.lines.map((line) => (
                 <div key={line.variantId} className="flex items-start gap-3">
-                  <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+                  <div className="size-12 shrink-0 overflow-hidden rounded-card border border-border bg-surface">
                     {line.imageUrl && (
                       <Image
                         src={line.imageUrl}
@@ -326,7 +326,7 @@ export function CheckoutForm() {
         <h2 className="font-medium text-foreground">{t("addressHeading")}</h2>
 
         {errorMessages.length > 0 && (
-          <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+          <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
             {errorMessages.map((message) => (
               <p key={message}>{message}</p>
             ))}

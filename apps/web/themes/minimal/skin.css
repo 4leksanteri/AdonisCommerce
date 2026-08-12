@@ -1,0 +1,33 @@
+/*
+ * Square, narrow and quiet — a deliberately different look, kept honest.
+ *
+ * Colour overrides target HeroUI's *unprefixed* variables (`--surface`, not
+ * `--color-surface`). The library maps one to the other itself
+ * (`--color-surface: var(--surface)`), so writing to the raw value is how a
+ * skin recolours without forking anything.
+ *
+ * The dark block is not optional. A skin and a colour scheme are independent
+ * axes: someone reading in dark mode picks up the light values otherwise, and
+ * the result is unreadable rather than merely wrong.
+ */
+[data-skin="minimal"] {
+  --skin-radius-card: 0rem;
+  --skin-container-page: 64rem;
+  --skin-container-reading: 38rem;
+  --skin-font-sans: ui-sans-serif, system-ui, sans-serif;
+
+  --background: oklch(99% 0.002 286);
+  --foreground: oklch(20% 0.004 286);
+  --surface: oklch(96.5% 0.002 286);
+  --border: oklch(85% 0.004 286);
+  --muted: oklch(48% 0.008 286);
+}
+
+[data-skin="minimal"].dark,
+[data-skin="minimal"][data-theme="dark"] {
+  --background: oklch(16% 0.004 286);
+  --foreground: oklch(96% 0.002 286);
+  --surface: oklch(22% 0.005 286);
+  --border: oklch(32% 0.006 286);
+  --muted: oklch(68% 0.012 286);
+}

@@ -21,21 +21,21 @@ export default async function OrdersPage() {
   const orders = await getMyOrders();
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
+    <div className="flex max-w-reading flex-col gap-6">
       <div>
         <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
         <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
       </div>
 
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-border p-8 text-center text-sm text-muted">
+        <div className="flex flex-col items-center gap-3 rounded-card border border-border p-8 text-center text-sm text-muted">
           <p>{t("empty")}</p>
           <Link href="/" className="text-foreground">
             {t("startShopping")}
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+        <div className="flex flex-col divide-y divide-border rounded-card border border-border">
           {orders.map((order) => {
             const money = (cents: number) =>
               format.number(toMajorUnits(cents), currencyFormat(order.currency));

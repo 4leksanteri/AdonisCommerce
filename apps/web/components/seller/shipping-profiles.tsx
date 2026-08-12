@@ -141,7 +141,7 @@ export function ShippingProfiles({
   return (
     <div className="flex flex-col gap-6">
       {errorMessages.length > 0 && (
-        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
@@ -149,11 +149,11 @@ export function ShippingProfiles({
       )}
 
       {profiles.length === 0 && !isEditing ? (
-        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+        <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
           {t("empty")}
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+        <div className="flex flex-col divide-y divide-border rounded-card border border-border">
           {profiles.map((profile) => (
             <div key={profile.id} className="flex items-start justify-between gap-4 p-4">
               <div>
@@ -191,7 +191,7 @@ export function ShippingProfiles({
       )}
 
       {isEditing ? (
-        <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+        <div className="flex flex-col gap-4 rounded-card border border-border p-4">
           <TextField isDisabled={isPending} value={name} onChange={setName}>
             <Label>{t("nameLabel")}</Label>
             <Input placeholder={t("namePlaceholder")} className="border border-border" />

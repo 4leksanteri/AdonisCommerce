@@ -19,14 +19,14 @@ export async function InboxList({
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+      <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
         {role === "seller" ? t("emptySeller") : t("emptyBuyer")}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+    <div className="flex flex-col divide-y divide-border rounded-card border border-border">
       {conversations.map((conversation) => {
         // An anonymised account leaves the thread standing but takes the name
         // with it, which is the policy working rather than data missing.

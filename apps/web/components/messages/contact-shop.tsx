@@ -74,13 +74,13 @@ export function ContactShop({ shopSlug, shopName }: { shopSlug: string; shopName
                   {/* Signed out, sending is impossible — say so before they
                       type a paragraph and lose it. */}
                   {!user && (
-                    <div className="rounded-lg bg-surface p-3 text-sm text-muted">
+                    <div className="rounded-card bg-surface p-3 text-sm text-muted">
                       {t("signInToMessage")}
                     </div>
                   )}
 
                   {errorMessages.length > 0 && (
-                    <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+                    <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
                       {errorMessages.map((message) => (
                         <p key={message}>{message}</p>
                       ))}

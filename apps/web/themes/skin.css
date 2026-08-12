@@ -1,0 +1,19 @@
+/*
+ * The bridge between skins and Tailwind utilities.
+ *
+ * `@theme inline` is what makes this work: it generates utilities that
+ * *reference* the variable rather than baking in its value, so a skin can
+ * change `--skin-radius-card` under its own selector and every `rounded-card`
+ * on the page follows. Without `inline`, Tailwind would inline the default
+ * value at build time and the override would do nothing.
+ *
+ * Each entry here is a promise: this is a thing a skin may change. Anything
+ * hardcoded in a component is a thing it may not, so when a design needs a
+ * new axis, it gets a token here first.
+ */
+@theme inline {
+  --radius-card: var(--skin-radius-card);
+  --container-page: var(--skin-container-page);
+  --container-reading: var(--skin-container-reading);
+  --font-sans: var(--skin-font-sans);
+}

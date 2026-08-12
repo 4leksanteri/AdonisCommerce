@@ -21,7 +21,7 @@ export default async function AccountMessageThreadPage(
   const shopSlug = thread.conversation.with.slug;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
+    <div className="flex max-w-reading flex-col gap-6">
       <div>
         <Link
           href="/account/messages"

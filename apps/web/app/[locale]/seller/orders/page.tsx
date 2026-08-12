@@ -38,11 +38,11 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
       </div>
 
       {orders.length === 0 ? (
-        <div className="rounded-lg border border-border p-8 text-center text-sm text-muted">
+        <div className="rounded-card border border-border p-8 text-center text-sm text-muted">
           {t("empty")}
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+        <div className="flex flex-col divide-y divide-border rounded-card border border-border">
           {orders.map((order) => {
             const money = (cents: number) =>
               format.number(toMajorUnits(cents), currencyFormat(order.currency));

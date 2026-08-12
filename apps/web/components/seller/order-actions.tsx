@@ -68,7 +68,7 @@ export function OrderActions({ order }: { order: SellerOrder }) {
   return (
     <div className="flex flex-col gap-3">
       {errorMessages.length > 0 && (
-        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}

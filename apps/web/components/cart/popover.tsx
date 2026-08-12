@@ -166,7 +166,7 @@ export function CartPopover() {
 
                       return (
                         <div key={line.variantId} className="flex items-start gap-3">
-                          <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
+                          <div className="size-12 shrink-0 overflow-hidden rounded-card border border-border bg-surface">
                             {line.imageUrl && (
                               <Image
                                 src={line.imageUrl}

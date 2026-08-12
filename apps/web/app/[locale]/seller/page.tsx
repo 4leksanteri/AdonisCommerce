@@ -38,7 +38,7 @@ export default async function SellerDashboardPage(props: PageProps<"/[locale]/se
         </Chip>
       </div>
 
-      <div className="rounded-lg border border-border p-4 text-sm text-muted">{t("moreComingSoon")}</div>
+      <div className="rounded-card border border-border p-4 text-sm text-muted">{t("moreComingSoon")}</div>
     </div>
   );
 }

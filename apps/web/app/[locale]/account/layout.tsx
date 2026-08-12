@@ -26,7 +26,7 @@ export default async function AccountLayout({ children }: LayoutProps<"/[locale]
             <div className="min-w-0 flex-1">{children}</div>
           </>
         ) : (
-          <div className="flex-1 rounded-lg border border-border p-8 text-center text-sm text-muted">
+          <div className="flex-1 rounded-card border border-border p-8 text-center text-sm text-muted">
             {t("signInRequired")}
           </div>
         )}

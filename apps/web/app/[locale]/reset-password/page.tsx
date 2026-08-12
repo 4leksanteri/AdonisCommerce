@@ -18,7 +18,7 @@ export default async function ResetPasswordPage(props: PageProps<"/[locale]/rese
           <ResetPasswordForm email={email} token={token} />
         ) : (
           <div className="flex flex-col gap-4">
-            <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+            <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
               <p>{t("invalidLink")}</p>
             </div>
             <Link href="/" className="text-center text-sm font-medium text-foreground underline">

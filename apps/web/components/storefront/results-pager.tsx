@@ -23,7 +23,7 @@ export async function ResultsPager({ page, lastPage, hrefFor }: Props) {
   if (lastPage <= 1) return null;
 
   const linkClass =
-    "rounded-lg border border-border px-3 py-2 text-sm text-foreground no-underline hover:bg-surface";
+    "rounded-card border border-border px-3 py-2 text-sm text-foreground no-underline hover:bg-surface";
 
   return (
     <nav className="flex items-center justify-between gap-4" aria-label={t("pagination")}>

@@ -74,14 +74,14 @@ export function PayoutsPanel({ details }: { details: PayoutDetails }) {
   return (
     <div className="flex flex-col gap-6">
       {errorMessages.length > 0 && (
-        <div className="rounded-lg bg-danger-soft p-3 text-sm text-danger-soft-foreground">
+        <div className="rounded-card bg-danger-soft p-3 text-sm text-danger-soft-foreground">
           {errorMessages.map((message) => (
             <p key={message}>{message}</p>
           ))}
         </div>
       )}
 
-      <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+      <div className="flex flex-col gap-4 rounded-card border border-border p-4">
         <div className="flex items-center justify-between gap-3">
           <Chip color={STATUS_COLOR[details.payoutStatus]}>
             <Chip.Label>{tPayout(details.payoutStatus)}</Chip.Label>

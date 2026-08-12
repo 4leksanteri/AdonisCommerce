@@ -16,7 +16,7 @@ function Stat({
   tone?: "attention";
 }) {
   return (
-    <div className="flex flex-col gap-1 rounded-lg border border-border p-4">
+    <div className="flex flex-col gap-1 rounded-card border border-border p-4">
       <span className="text-sm text-muted">{label}</span>
       <span
         className={`text-2xl font-semibold ${tone === "attention" ? "text-danger" : "text-foreground"}`}
@@ -71,7 +71,7 @@ export default async function StaffOverviewPage(props: PageProps<"/[locale]/staf
         />
       </div>
 
-      <div className="flex flex-col gap-3 rounded-lg border border-border p-4">
+      <div className="flex flex-col gap-3 rounded-card border border-border p-4">
         <div>
           <h2 className="font-medium text-foreground">{t("heldHeading")}</h2>
           <p className="mt-1 text-sm text-muted">{t("heldSubheading")}</p>
@@ -98,7 +98,7 @@ export default async function StaffOverviewPage(props: PageProps<"/[locale]/staf
       {overview.openDisputes > 0 && (
         <Link
           href="/staff/disputes"
-          className="w-fit rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background no-underline"
+          className="w-fit rounded-card bg-foreground px-4 py-2 text-sm font-medium text-background no-underline"
         >
           {t("goToDisputes")}
         </Link>
