@@ -25,11 +25,19 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
   // Orders waiting on the seller come first as a count, because that is the
   // only number on this page anyone acts on.
   const awaiting = orders.filter((order) => order.actions.canAccept).length;
-  // Counted separately and worded differently: there is nothing for the seller
-  // to press yet on a dispute, so calling it "needs your answer" would be a lie.
-  const disputed = orders.filter((order) =>
-    order.disputes.some((dispute) => dispute.status === "open")
-  ).length;
+  /**
+   * Shop-wide, from the API — not counted off the rows on screen.
+   *
+   * Counting the loaded page meant the warning vanished the moment you
+   * filtered to any other status, which both under-reported it and made the
+   * tabs jump as it appeared and disappeared. An open dispute is a fact about
+   * the shop, not about the view you happen to be looking at.
+   *
+   * Worded differently from the awaiting count on purpose: there is nothing
+   * for the seller to press yet on a dispute, so "needs your answer" would be
+   * a lie.
+   */
+  const disputed = stats?.openProblems ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -43,10 +51,15 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
         {/* The mock's amber strip: a reported problem is something to look
             at, not an error the seller caused. */}
         {disputed > 0 && (
-          <p className="mt-2.5 inline-flex items-center gap-2 rounded-lg border border-notice-border bg-notice px-3 py-1.5 text-[13px] text-notice-foreground">
-            <span className="size-1.5 rounded-full bg-notice-foreground" />
+          // A link, because the only sensible response to reading it is to go
+          // and look at them.
+          <Link
+            href={{ pathname: "/seller/orders", query: { status: "disputed" } }}
+            className="mt-2.5 inline-flex items-center gap-2 rounded-lg border border-notice-border bg-notice px-3 py-1.5 text-[13px] text-notice-foreground no-underline hover:border-notice-foreground/40"
+          >
+            <span className="size-1.5 shrink-0 rounded-full bg-notice-foreground" />
             {t("disputedCount", { count: disputed })}
-          </p>
+          </Link>
         )}
       </div>
 
@@ -67,13 +80,11 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
             widths would lose the scanning it exists for. The mobile design
             has its own answer to this.
           */}
-          <div className="flex flex-col gap-2.5 md:block md:min-w-[820px] md:gap-0">
-            <div className="hidden grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] items-center gap-x-2 border-b border-chrome-border bg-background px-4 py-2.5 text-xs font-semibold tracking-wider text-muted-soft uppercase md:grid">
+          <div className="flex flex-col gap-2.5 md:block md:min-w-[560px] md:gap-0">
+            <div className="hidden grid-cols-[90px_minmax(140px,1.6fr)_100px_150px] items-center gap-x-2 border-b border-chrome-border bg-background px-4 py-2.5 text-xs font-semibold tracking-wider text-muted-soft uppercase md:grid">
               <div>{t("columnOrder")}</div>
               <div>{t("columnCustomer")}</div>
               <div className="text-right">{t("columnTotal")}</div>
-              <div className="text-right">{t("columnItems")}</div>
-              <div className="pl-6">{t("columnDate")}</div>
               <div className="pl-3">{t("columnStatus")}</div>
             </div>
 
@@ -93,31 +104,34 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
                 <Link
                   key={order.id}
                   href={{ pathname: "/seller/orders/[id]", params: { id: order.id } }}
-                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 rounded-xl border border-border bg-surface p-3.5 text-[13.5px] no-underline hover:bg-row-hover md:grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] md:gap-y-0 md:rounded-none md:border-x-0 md:border-t-0 md:p-0 md:px-4 md:py-3 md:last:border-b-0"
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 rounded-xl border border-border bg-surface p-3.5 text-[13.5px] no-underline hover:bg-row-hover md:grid-cols-[90px_minmax(140px,1.6fr)_100px_150px] md:gap-y-0 md:rounded-none md:border-x-0 md:border-t-0 md:p-0 md:px-4 md:py-3 md:last:border-b-0"
                 >
                   {/* The reference is the link's subject, so it carries the
                       accent rather than the whole row turning terracotta. */}
                   <span className="col-start-1 row-start-1 font-bold text-accent md:col-start-1 md:row-start-1 md:font-semibold">
                     {t("orderNumber", { number: order.sellerOrderNumber })}
                   </span>
-
                   <span className="col-start-1 row-start-2 flex min-w-0 items-center gap-2.5 md:col-start-2 md:row-start-1">
                     <span className="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-selected text-[10.5px] font-bold text-muted-strong">
                       {initials}
                     </span>
-                    <span className="truncate text-foreground">{order.buyer.name}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-foreground">{order.buyer.name}</span>
+                      {/* Was two columns of its own. Folded under the name so
+                          the table needs 560px rather than 820 and survives a
+                          tablet without scrolling — and a long customer name
+                          truncates instead of forcing the row wider. */}
+                      <span className="block truncate text-xs text-muted-soft">
+                        {t("itemCount", { count: units })} ·{" "}
+                        {format.dateTime(new Date(order.createdAt), { dateStyle: "short" })}
+                      </span>
+                    </span>
                   </span>
 
                   <span className="col-start-2 row-start-2 text-right text-[15px] font-bold whitespace-nowrap text-foreground md:col-start-3 md:row-start-1 md:text-[13.5px] md:font-semibold">
                     {money(order.totalCents)}
                   </span>
-                  <span className="hidden text-right text-muted md:col-start-4 md:row-start-1 md:inline">
-                    {t("itemCount", { count: units })}
-                  </span>
-                  <span className="hidden pl-6 text-muted md:col-start-5 md:row-start-1 md:inline">
-                    {format.dateTime(new Date(order.createdAt), { dateStyle: "short" })}
-                  </span>
-                  <span className="col-start-2 row-start-1 justify-self-end md:col-start-6 md:row-start-1 md:justify-self-auto md:pl-3">
+                  <span className="col-start-2 row-start-1 justify-self-end md:col-start-4 md:row-start-1 md:justify-self-auto md:pl-3">
                     <Chip color={orderStatusColor(order.status)}>
                       <Chip.Label>{tStatus(order.status)}</Chip.Label>
                     </Chip>

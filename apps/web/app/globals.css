@@ -88,7 +88,9 @@
 
 /* The lifted look of a selected segment in a control. */
 @theme inline {
-  --shadow-tab: 0 1px 2px rgba(60, 45, 20, 0.1);
+  /* How wide panel content is allowed to get. Beyond this a table row is
+     long enough that the eye loses its place crossing it. */
+  --container-panel: 1200px;
 }
 
 body {

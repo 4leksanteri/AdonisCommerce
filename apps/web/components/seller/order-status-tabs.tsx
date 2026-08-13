@@ -2,6 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 /**
+ * One set of chips at every width. They were a segmented control on desktop
+ * and pills on a phone, which was two things to keep in step for no gain —
+ * pills read perfectly well at any width.
+ *
+ * Wrapped, never scrolled. A horizontal scroller hides whichever statuses
+ * fall off the edge and gives no sign they are there, and the one a seller
+ * wants is as likely to be last as first.
+ *
  * Stable ordering. The counts decide *which* tabs exist — a shop with no
  * disputes is not shown an empty "Problems" tab inviting it to look for
  * trouble — but not what order they come in, or they would reshuffle
@@ -41,7 +49,7 @@ export async function OrderStatusTabs({
   if (tabs.length < 2) return null;
 
   return (
-    <div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:w-fit md:max-w-full md:gap-1 md:rounded-[10px] md:border md:border-field-border md:bg-selected md:px-[3px] md:py-[3px]">
+    <div className="flex flex-wrap gap-1.5">
       {tabs.map((tab) => {
         const isActive = tab.key === active;
 
@@ -54,16 +62,14 @@ export async function OrderStatusTabs({
                 : "/seller/orders"
             }
             aria-current={isActive ? "page" : undefined}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap no-underline md:rounded-lg md:border-0 md:py-1.5 ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap no-underline ${
               isActive
-                ? "border-accent bg-accent-soft text-accent-soft-strong md:border-transparent md:bg-surface md:text-foreground md:shadow-tab"
-                : "border-field-border bg-surface text-muted-strong hover:text-foreground md:border-transparent md:bg-transparent md:text-muted"
+                ? "border-accent bg-accent-soft text-accent-soft-strong"
+                : "border-field-border bg-surface text-muted-strong hover:border-muted-soft hover:text-foreground"
             }`}
           >
             {tab.label}
-            <span className="text-[11px] font-semibold opacity-55 md:text-muted-soft md:opacity-100">
-              {tab.count}
-            </span>
+            <span className="text-[11px] font-semibold opacity-55">{tab.count}</span>
           </Link>
         );
       })}

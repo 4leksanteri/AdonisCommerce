@@ -83,25 +83,34 @@ export default async function SellerLayout({ children }: LayoutProps<"/[locale]/
       <main className="flex min-w-0 flex-1 flex-col">
         {/* On a phone this is the only chrome: the sidebar is gone and the
             bottom bar carries navigation, so the brand has to live here. */}
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-chrome-border bg-chrome px-4 py-3 md:static md:px-7 md:py-3.5">
-          <span className="flex items-center gap-2 md:hidden">
-            <span className="flex size-6.5 shrink-0 items-center justify-center rounded-[7px] bg-accent text-[13px] font-bold text-accent-foreground">
-              {APP_NAME.slice(0, 1).toUpperCase()}
+        <div className="sticky top-0 z-10 border-b border-chrome-border bg-chrome md:static">
+          <div className="mx-auto flex w-full max-w-panel items-center justify-between gap-4 px-4 py-3 md:px-7 md:py-3.5">
+            <span className="flex items-center gap-2 md:hidden">
+              <span className="flex size-6.5 shrink-0 items-center justify-center rounded-[7px] bg-accent text-[13px] font-bold text-accent-foreground">
+                {APP_NAME.slice(0, 1).toUpperCase()}
+              </span>
+              <span className="text-sm font-bold tracking-tight text-foreground">{t("title")}</span>
             </span>
-            <span className="text-sm font-bold tracking-tight text-foreground">{t("title")}</span>
-          </span>
-          <p className="hidden text-[13px] text-muted-soft md:block">{t("title")}</p>
-          {user && (
-            <Link
-              href="/account"
-              aria-label={user.fullName ?? user.email}
-              className="flex size-7.5 items-center justify-center rounded-full bg-selected text-[11px] font-bold text-muted-strong no-underline md:hidden"
-            >
-              {user.initials}
-            </Link>
-          )}
+            <p className="hidden text-[13px] text-muted-soft md:block">{t("title")}</p>
+            {user && (
+              <Link
+                href="/account"
+                aria-label={user.fullName ?? user.email}
+                className="flex size-7.5 items-center justify-center rounded-full bg-selected text-[11px] font-bold text-muted-strong no-underline md:hidden"
+              >
+                {user.initials}
+              </Link>
+            )}
+          </div>
         </div>
-        <div className="flex flex-1 flex-col gap-4 px-4 py-[18px] pb-24 md:gap-[22px] md:px-7 md:pt-[26px] md:pb-10">
+
+        {/*
+          A ceiling on the content, not on the shell. Backgrounds and borders
+          still run edge to edge — a panel that stops mid-screen looks broken
+          — but the table inside stops widening at a point where a row is
+          still scannable from its number across to its status.
+        */}
+        <div className="mx-auto flex w-full max-w-panel flex-1 flex-col gap-4 px-4 py-[18px] pb-24 md:gap-[22px] md:px-7 md:pt-[26px] md:pb-10">
           {children}
         </div>
       </main>
