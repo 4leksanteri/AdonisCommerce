@@ -111,6 +111,10 @@ export const routing = defineRouting({
       en: "/seller/orders/[id]",
       fi: "/myyja/tilaukset/[id]",
     },
+    "/seller/more": {
+      en: "/seller/more",
+      fi: "/myyja/lisaa",
+    },
     "/seller/messages": {
       en: "/seller/messages",
       fi: "/myyja/viestit",

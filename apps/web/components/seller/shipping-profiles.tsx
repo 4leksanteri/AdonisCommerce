@@ -14,10 +14,7 @@ import {
 } from "@heroui/react";
 import { useRouter } from "@/i18n/navigation";
 import { currencyFormat, toMajorUnits, toMinorUnits } from "@/lib/format";
-import {
-  deleteShippingProfileAction,
-  saveShippingProfileAction,
-} from "@/lib/seller/actions";
+import { deleteShippingProfileAction, saveShippingProfileAction } from "@/lib/seller/actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import { ANY_DESTINATION, type ShippingProfile } from "@/lib/seller/shipping-types";
 import type { ApiErrorItem } from "@/lib/api";
@@ -28,7 +25,9 @@ type RateDraft = { destination: string; first: string; additional: string };
  * A new profile starts with a catch-all so it can ship somewhere immediately —
  * a profile with no matching rate refuses the order rather than shipping free.
  */
-const NEW_PROFILE_RATES: RateDraft[] = [{ destination: ANY_DESTINATION, first: "", additional: "" }];
+const NEW_PROFILE_RATES: RateDraft[] = [
+  { destination: ANY_DESTINATION, first: "", additional: "" },
+];
 
 function toDrafts(profile: ShippingProfile): RateDraft[] {
   return profile.rates.map((rate) => ({

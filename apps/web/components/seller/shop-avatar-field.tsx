@@ -28,7 +28,9 @@ export function ShopAvatarField({ seller }: { seller: Seller }) {
 
   const current = user?.seller ?? seller;
 
-  async function run(action: () => Promise<{ seller?: Seller; errors?: Parameters<typeof translateApiErrors>[0] }>) {
+  async function run(
+    action: () => Promise<{ seller?: Seller; errors?: Parameters<typeof translateApiErrors>[0] }>
+  ) {
     setErrorMessages([]);
     setIsPending(true);
 
@@ -80,7 +82,11 @@ export function ShopAvatarField({ seller }: { seller: Seller }) {
 
         <div className="flex flex-wrap items-center gap-2">
           <label className="cursor-pointer rounded-lg border border-border px-3 py-2 text-sm text-foreground hover:bg-surface">
-            {isPending ? <Spinner size="sm" /> : t(current.avatarUrl ? "avatarChange" : "avatarAdd")}
+            {isPending ? (
+              <Spinner size="sm" />
+            ) : (
+              t(current.avatarUrl ? "avatarChange" : "avatarAdd")
+            )}
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"

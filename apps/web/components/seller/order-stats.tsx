@@ -55,24 +55,54 @@ export async function OrderStatCards({ stats }: { stats: OrderStats }) {
   ];
 
   return (
-    <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-      {cards.map((card) => (
-        <div
-          key={card.label}
-          className="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5"
-        >
-          <p className="text-[13px] text-muted">{card.label}</p>
-          <div className="flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[26px] font-bold tracking-tight whitespace-nowrap text-foreground">
+    <>
+      {/*
+        Three headline cards do not survive a 320px screen — they become three
+        tall boxes you scroll past to reach the orders. On a phone the same
+        figures collapse into one panel, a row each, with the trend shrunk to
+        a glance and the delta dropped: the number is what is being asked for
+        there, not the analysis.
+      */}
+      <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface md:hidden">
+        {cards.map((card) => (
+          <div key={card.label} className="flex items-center justify-between gap-2.5 px-3.5 py-2.5">
+            <span className="text-[13px] text-muted">{card.label}</span>
+            <span className="flex items-center gap-2.5">
+              {card.series.length > 1 && (
+                <Sparkline
+                  series={card.series}
+                  className={`${card.line} !w-14 !max-w-none`}
+                  height={20}
+                  width={3}
+                />
+              )}
+              <span className="text-[15px] font-bold whitespace-nowrap text-foreground">
                 {card.value}
-              </p>
-              <p className={`mt-1 text-xs font-semibold ${card.tone}`}>{card.text}</p>
-            </div>
-            {card.series.length > 1 && <Sparkline series={card.series} className={card.line} />}
+              </span>
+            </span>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      <div className="hidden gap-3.5 sm:grid-cols-2 md:grid lg:grid-cols-3">
+        {cards.map((card) => (
+          <div
+            key={card.label}
+            className="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5"
+          >
+            <p className="text-[13px] text-muted">{card.label}</p>
+            <div className="flex items-end justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[26px] font-bold tracking-tight whitespace-nowrap text-foreground">
+                  {card.value}
+                </p>
+                <p className={`mt-1 text-xs font-semibold ${card.tone}`}>{card.text}</p>
+              </div>
+              {card.series.length > 1 && <Sparkline series={card.series} className={card.line} />}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

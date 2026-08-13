@@ -41,7 +41,7 @@ export async function OrderStatusTabs({
   if (tabs.length < 2) return null;
 
   return (
-    <div className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-[10px] border border-field-border bg-selected p-[3px]">
+    <div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:w-fit md:max-w-full md:gap-1 md:rounded-[10px] md:border md:border-field-border md:bg-selected md:px-[3px] md:py-[3px]">
       {tabs.map((tab) => {
         const isActive = tab.key === active;
 
@@ -54,14 +54,16 @@ export async function OrderStatusTabs({
                 : "/seller/orders"
             }
             aria-current={isActive ? "page" : undefined}
-            className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-semibold whitespace-nowrap no-underline ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap no-underline md:rounded-lg md:border-0 md:py-1.5 ${
               isActive
-                ? "bg-surface text-foreground shadow-tab"
-                : "text-muted hover:text-foreground"
+                ? "border-accent bg-accent-soft text-accent-soft-strong md:border-transparent md:bg-surface md:text-foreground md:shadow-tab"
+                : "border-field-border bg-surface text-muted-strong hover:text-foreground md:border-transparent md:bg-transparent md:text-muted"
             }`}
           >
             {tab.label}
-            <span className="text-[11px] font-semibold text-muted-soft">{tab.count}</span>
+            <span className="text-[11px] font-semibold opacity-55 md:text-muted-soft md:opacity-100">
+              {tab.count}
+            </span>
           </Link>
         );
       })}

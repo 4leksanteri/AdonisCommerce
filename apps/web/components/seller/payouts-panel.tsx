@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Button, Chip, Spinner } from "@heroui/react";
-import {
-  openPayoutDashboardAction,
-  startPayoutOnboardingAction,
-} from "@/lib/seller/actions";
+import { openPayoutDashboardAction, startPayoutOnboardingAction } from "@/lib/seller/actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { PayoutDetails } from "@/lib/payments/types";
 
@@ -48,7 +45,9 @@ export function PayoutsPanel({ details }: { details: PayoutDetails }) {
             ? t("explainActionNeeded")
             : t("explainIncomplete");
 
-  async function go(action: () => Promise<{ url?: string; errors?: Parameters<typeof translateApiErrors>[0] }>) {
+  async function go(
+    action: () => Promise<{ url?: string; errors?: Parameters<typeof translateApiErrors>[0] }>
+  ) {
     setErrorMessages([]);
     setIsPending(true);
 
@@ -102,7 +101,9 @@ export function PayoutsPanel({ details }: { details: PayoutDetails }) {
           <Button
             isPending={isPending}
             onPress={() =>
-              go(isConnected ? openPayoutDashboardAction : () => startPayoutOnboardingAction(locale))
+              go(
+                isConnected ? openPayoutDashboardAction : () => startPayoutOnboardingAction(locale)
+              )
             }
           >
             {({ isPending: pending }) => (

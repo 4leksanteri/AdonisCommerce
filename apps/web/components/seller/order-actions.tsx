@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Input, Label, Modal, Spinner, TextField, toast } from "@heroui/react";
 import { useRouter } from "@/i18n/navigation";
-import {
-  acceptOrderAction,
-  cancelOrderAction,
-  shipOrderAction,
-} from "@/lib/seller/actions";
+import { acceptOrderAction, cancelOrderAction, shipOrderAction } from "@/lib/seller/actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
 import type { SellerOrder } from "@/lib/orders/types";
 import type { ApiErrorItem } from "@/lib/api";
@@ -147,9 +143,7 @@ export function OrderActions({ order }: { order: SellerOrder }) {
             <Modal.Body className="flex flex-col gap-3">
               {/* Says plainly that this moves money — cancelling and refunding
                   are the same button, and nobody should discover that after. */}
-              <p className="text-sm text-muted">
-                {settling ? t("refundHint") : t("cancelHint")}
-              </p>
+              <p className="text-sm text-muted">{settling ? t("refundHint") : t("cancelHint")}</p>
               <TextField isDisabled={isPending} value={reason} onChange={setReason}>
                 <Label>{t("reasonLabel")}</Label>
                 <Input className="border border-border" placeholder={t("reasonPlaceholder")} />

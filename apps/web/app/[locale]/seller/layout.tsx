@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SellerNav } from "@/components/seller/nav";
+import { SellerMobileTabBar } from "@/components/seller/mobile-tab-bar";
 import { getUnreadCounts } from "@/lib/messages/queries";
 import { getCurrentUser } from "@/lib/auth/queries";
 import { getDisplayCurrency } from "@/lib/storefront/currency";
@@ -26,7 +27,7 @@ export default async function SellerLayout({ children }: LayoutProps<"/[locale]/
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <aside className="flex shrink-0 flex-col gap-5 border-b border-field-border bg-sidebar p-3.5 md:min-h-screen md:w-58 md:border-r md:border-b-0 md:p-5">
+      <aside className="hidden shrink-0 flex-col gap-5 bg-sidebar p-5 md:flex md:min-h-screen md:w-58 md:border-r md:border-field-border">
         <Link href="/seller" className="flex items-center gap-2.5 px-2 no-underline">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-bold text-accent-foreground">
             {APP_NAME.slice(0, 1).toUpperCase()}
@@ -80,13 +81,32 @@ export default async function SellerLayout({ children }: LayoutProps<"/[locale]/
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-center justify-between gap-4 border-b border-chrome-border bg-chrome px-5 py-3.5 md:px-7">
-          <p className="text-[13px] text-muted-soft">{t("title")}</p>
+        {/* On a phone this is the only chrome: the sidebar is gone and the
+            bottom bar carries navigation, so the brand has to live here. */}
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-chrome-border bg-chrome px-4 py-3 md:static md:px-7 md:py-3.5">
+          <span className="flex items-center gap-2 md:hidden">
+            <span className="flex size-6.5 shrink-0 items-center justify-center rounded-[7px] bg-accent text-[13px] font-bold text-accent-foreground">
+              {APP_NAME.slice(0, 1).toUpperCase()}
+            </span>
+            <span className="text-sm font-bold tracking-tight text-foreground">{t("title")}</span>
+          </span>
+          <p className="hidden text-[13px] text-muted-soft md:block">{t("title")}</p>
+          {user && (
+            <Link
+              href="/account"
+              aria-label={user.fullName ?? user.email}
+              className="flex size-7.5 items-center justify-center rounded-full bg-selected text-[11px] font-bold text-muted-strong no-underline md:hidden"
+            >
+              {user.initials}
+            </Link>
+          )}
         </div>
-        <div className="flex flex-1 flex-col gap-5 px-5 py-6 pb-10 md:gap-[22px] md:px-7 md:pt-[26px]">
+        <div className="flex flex-1 flex-col gap-4 px-4 py-[18px] pb-24 md:gap-[22px] md:px-7 md:pt-[26px] md:pb-10">
           {children}
         </div>
       </main>
+
+      <SellerMobileTabBar />
     </div>
   );
 }

@@ -5,7 +5,19 @@
  * Flat series are drawn along the middle rather than the floor: a shop with
  * no orders all fortnight should read as level, not as having crashed.
  */
-export function Sparkline({ series, className = "" }: { series: number[]; className?: string }) {
+export function Sparkline({
+  series,
+  className = "",
+  height = 34,
+  width = 2,
+}: {
+  series: number[];
+  className?: string;
+  /** Shorter on a phone, where it sits inline beside the number. */
+  height?: number;
+  /** Thicker when smaller, or the line disappears. */
+  width?: number;
+}) {
   if (series.length < 2) return null;
 
   const max = Math.max(...series);
@@ -22,7 +34,7 @@ export function Sparkline({ series, className = "" }: { series: number[]; classN
 
   return (
     <svg
-      height="34"
+      height={height}
       viewBox="0 0 96 34"
       preserveAspectRatio="none"
       className={`w-24 max-w-[40%] min-w-0 ${className}`}
@@ -32,7 +44,7 @@ export function Sparkline({ series, className = "" }: { series: number[]; classN
         points={points}
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth={width}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

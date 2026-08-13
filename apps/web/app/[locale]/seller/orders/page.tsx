@@ -59,7 +59,7 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
           {t("empty")}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+        <div className="md:overflow-x-auto md:rounded-2xl md:border md:border-border md:bg-surface">
           {/*
             A real table shape, scrolled horizontally rather than reflowed.
             Six columns of figures that line up down the page is the whole
@@ -67,8 +67,8 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
             widths would lose the scanning it exists for. The mobile design
             has its own answer to this.
           */}
-          <div className="min-w-[820px]">
-            <div className="grid grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] items-center gap-x-2 border-b border-chrome-border bg-background px-4 py-2.5 text-xs font-semibold tracking-wider text-muted-soft uppercase">
+          <div className="flex flex-col gap-2.5 md:block md:min-w-[820px] md:gap-0">
+            <div className="hidden grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] items-center gap-x-2 border-b border-chrome-border bg-background px-4 py-2.5 text-xs font-semibold tracking-wider text-muted-soft uppercase md:grid">
               <div>{t("columnOrder")}</div>
               <div>{t("columnCustomer")}</div>
               <div className="text-right">{t("columnTotal")}</div>
@@ -93,29 +93,31 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
                 <Link
                   key={order.id}
                   href={{ pathname: "/seller/orders/[id]", params: { id: order.id } }}
-                  className="grid grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] items-center gap-x-2 border-b border-border px-4 py-3 text-[13.5px] no-underline last:border-b-0 hover:bg-row-hover"
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-2 rounded-xl border border-border bg-surface p-3.5 text-[13.5px] no-underline hover:bg-row-hover md:grid-cols-[90px_minmax(160px,1.4fr)_100px_92px_120px_150px] md:gap-y-0 md:rounded-none md:border-x-0 md:border-t-0 md:p-0 md:px-4 md:py-3 md:last:border-b-0"
                 >
                   {/* The reference is the link's subject, so it carries the
                       accent rather than the whole row turning terracotta. */}
-                  <span className="font-semibold text-accent">
+                  <span className="col-start-1 row-start-1 font-bold text-accent md:col-start-1 md:row-start-1 md:font-semibold">
                     {t("orderNumber", { number: order.sellerOrderNumber })}
                   </span>
 
-                  <span className="flex min-w-0 items-center gap-2.5">
+                  <span className="col-start-1 row-start-2 flex min-w-0 items-center gap-2.5 md:col-start-2 md:row-start-1">
                     <span className="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-selected text-[10.5px] font-bold text-muted-strong">
                       {initials}
                     </span>
                     <span className="truncate text-foreground">{order.buyer.name}</span>
                   </span>
 
-                  <span className="text-right font-semibold text-foreground">
+                  <span className="col-start-2 row-start-2 text-right text-[15px] font-bold whitespace-nowrap text-foreground md:col-start-3 md:row-start-1 md:text-[13.5px] md:font-semibold">
                     {money(order.totalCents)}
                   </span>
-                  <span className="text-right text-muted">{t("itemCount", { count: units })}</span>
-                  <span className="pl-6 text-muted">
+                  <span className="hidden text-right text-muted md:col-start-4 md:row-start-1 md:inline">
+                    {t("itemCount", { count: units })}
+                  </span>
+                  <span className="hidden pl-6 text-muted md:col-start-5 md:row-start-1 md:inline">
                     {format.dateTime(new Date(order.createdAt), { dateStyle: "short" })}
                   </span>
-                  <span className="pl-3">
+                  <span className="col-start-2 row-start-1 justify-self-end md:col-start-6 md:row-start-1 md:justify-self-auto md:pl-3">
                     <Chip color={orderStatusColor(order.status)}>
                       <Chip.Label>{tStatus(order.status)}</Chip.Label>
                     </Chip>
@@ -125,7 +127,7 @@ export default async function SellerOrdersPage(props: PageProps<"/[locale]/selle
             })}
           </div>
 
-          <div className="px-4 py-3 text-[12.5px] text-muted-soft">
+          <div className="pt-3 text-center text-[12.5px] text-muted-soft md:px-4 md:py-3 md:text-left">
             {t("showingCount", { count: orders.length })}
           </div>
         </div>

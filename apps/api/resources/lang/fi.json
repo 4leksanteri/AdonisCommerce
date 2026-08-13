@@ -109,7 +109,8 @@
       "shipping": "Toimitus",
       "payouts": "Tilitykset",
       "orders": "Tilaukset",
-      "messages": "Viestit"
+      "messages": "Viestit",
+      "more": "Lisää"
     },
     "dashboard": {
       "heading": "Tervetuloa takaisin, {shopName}",

@@ -109,7 +109,8 @@
       "shipping": "Shipping",
       "payouts": "Payouts",
       "orders": "Orders",
-      "messages": "Messages"
+      "messages": "Messages",
+      "more": "More"
     },
     "dashboard": {
       "heading": "Welcome back, {shopName}",

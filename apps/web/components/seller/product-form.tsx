@@ -73,7 +73,10 @@ function toOptionDrafts(product?: Product): OptionDraft[] {
  * A variant's `optionValues` come back without that ordering attached, so
  * they're sorted by the option each one belongs to before the key is built.
  */
-function toVariantDrafts(product: Product | undefined, options: OptionDraft[]): Map<string, VariantDraft> {
+function toVariantDrafts(
+  product: Product | undefined,
+  options: OptionDraft[]
+): Map<string, VariantDraft> {
   const drafts = new Map<string, VariantDraft>();
   if (!product) return drafts;
 
@@ -141,7 +144,9 @@ export function ProductForm({
   // than an oversight; an existing product keeps whatever it was saved with.
   const [categoryId, setCategoryId] = useState<string | null>(product?.categoryId ?? null);
   const [shippingProfileId, setShippingProfileId] = useState<string>(
-    product ? (product.shippingProfileId ?? FREE_SHIPPING) : (shippingProfiles[0]?.id ?? FREE_SHIPPING)
+    product
+      ? (product.shippingProfileId ?? FREE_SHIPPING)
+      : (shippingProfiles[0]?.id ?? FREE_SHIPPING)
   );
   const [isPending, setIsPending] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -226,7 +231,11 @@ export function ProductForm({
     );
   }
 
-  function updateVariant<K extends keyof VariantDraft>(key: string, field: K, value: VariantDraft[K]) {
+  function updateVariant<K extends keyof VariantDraft>(
+    key: string,
+    field: K,
+    value: VariantDraft[K]
+  ) {
     setVariantValues((prev) => {
       const next = new Map(prev);
       next.set(key, { ...(next.get(key) ?? EMPTY_VARIANT), [field]: value });
@@ -236,10 +245,13 @@ export function ProductForm({
 
   /** Base price plus every selected value's adjustment, e.g. 1999 + 200 + 600. */
   function computedPrice(combo: string[]) {
-    return combo.reduce((total, value, optionIndex) => {
-      const delta = validOptions[optionIndex]?.values.find((v) => v.value === value)?.delta;
-      return total + (Number(delta) || 0);
-    }, Number(basePrice) || 0);
+    return combo.reduce(
+      (total, value, optionIndex) => {
+        const delta = validOptions[optionIndex]?.values.find((v) => v.value === value)?.delta;
+        return total + (Number(delta) || 0);
+      },
+      Number(basePrice) || 0
+    );
   }
 
   /**
@@ -350,7 +362,10 @@ export function ProductForm({
       // Excluded combinations are simply absent — the storefront already
       // handles a missing variant as "that combination isn't available".
       variants: combinations
-        .map((combo) => ({ combo, draft: variantValues.get(JSON.stringify(combo)) ?? EMPTY_VARIANT }))
+        .map((combo) => ({
+          combo,
+          draft: variantValues.get(JSON.stringify(combo)) ?? EMPTY_VARIANT,
+        }))
         .filter(({ draft }) => !draft.isExcluded)
         .map(({ combo, draft }) => ({
           optionValues: combo,
@@ -362,7 +377,10 @@ export function ProductForm({
     };
 
     setIsPending(true);
-    const result = productId === null ? await createProductAction(payload) : await updateProductAction(productId, payload);
+    const result =
+      productId === null
+        ? await createProductAction(payload)
+        : await updateProductAction(productId, payload);
     setIsPending(false);
 
     if (result.errors) {
@@ -385,15 +403,30 @@ export function ProductForm({
       )}
 
       <div className="flex flex-col gap-4">
-        <TextField isRequired isDisabled={isPending} minLength={2} name="title" value={title} onChange={setTitle}>
+        <TextField
+          isRequired
+          isDisabled={isPending}
+          minLength={2}
+          name="title"
+          value={title}
+          onChange={setTitle}
+        >
           <Label>{t("titleLabel")}</Label>
           <Input placeholder={t("titlePlaceholder")} className="border border-border" />
           <FieldError />
         </TextField>
 
-        <TextField isDisabled={isPending} name="description" value={description} onChange={setDescription}>
+        <TextField
+          isDisabled={isPending}
+          name="description"
+          value={description}
+          onChange={setDescription}
+        >
           <Label>{t("descriptionLabel")}</Label>
-          <TextArea className="h-24 border border-border" placeholder={t("descriptionPlaceholder")} />
+          <TextArea
+            className="h-24 border border-border"
+            placeholder={t("descriptionPlaceholder")}
+          />
         </TextField>
       </div>
 
@@ -405,8 +438,17 @@ export function ProductForm({
 
         <div className="flex flex-wrap gap-3">
           {images.map((image) => (
-            <div key={image.id} className="relative h-24 w-24 overflow-hidden rounded-lg border border-border">
-              <Image src={image.url} alt="" width={96} height={96} className="h-full w-full object-cover" />
+            <div
+              key={image.id}
+              className="relative h-24 w-24 overflow-hidden rounded-lg border border-border"
+            >
+              <Image
+                src={image.url}
+                alt=""
+                width={96}
+                height={96}
+                className="h-full w-full object-cover"
+              />
               {removingImageId === image.id ? (
                 <div className="absolute inset-0 grid place-items-center bg-background/60">
                   <Spinner size="sm" />
@@ -486,7 +528,11 @@ export function ProductForm({
                       isDisabled={isPending}
                       value={value.delta === "" ? undefined : Number(value.delta)}
                       onChange={(delta) =>
-                        updateValueDelta(index, value.value, Number.isNaN(delta) ? "" : String(delta))
+                        updateValueDelta(
+                          index,
+                          value.value,
+                          Number.isNaN(delta) ? "" : String(delta)
+                        )
                       }
                     >
                       <NumberField.Group>
@@ -509,7 +555,9 @@ export function ProductForm({
                 className="flex-1"
                 isDisabled={isPending}
                 value={valueDrafts[index] ?? ""}
-                onChange={(value) => setValueDrafts((prev) => prev.map((draft, i) => (i === index ? value : draft)))}
+                onChange={(value) =>
+                  setValueDrafts((prev) => prev.map((draft, i) => (i === index ? value : draft)))
+                }
               >
                 <Input
                   placeholder={t("valuePlaceholder")}
@@ -522,7 +570,11 @@ export function ProductForm({
                   }}
                 />
               </TextField>
-              <Button variant="outline" isDisabled={isPending} onPress={() => addOptionValue(index)}>
+              <Button
+                variant="outline"
+                isDisabled={isPending}
+                onPress={() => addOptionValue(index)}
+              >
                 {t("addValue")}
               </Button>
             </div>
@@ -550,11 +602,7 @@ export function ProductForm({
           </p>
         </div>
 
-        <Switch
-          isSelected={tracksInventory}
-          isDisabled={isPending}
-          onChange={setTracksInventory}
-        >
+        <Switch isSelected={tracksInventory} isDisabled={isPending} onChange={setTracksInventory}>
           <Switch.Content>
             <Switch.Control>
               <Switch.Thumb />
@@ -614,7 +662,9 @@ export function ProductForm({
                     {option.name}
                   </Table.Column>
                 ))}
-                <Table.Column isRowHeader={validOptions.length === 0}>{t("priceLabel")}</Table.Column>
+                <Table.Column isRowHeader={validOptions.length === 0}>
+                  {t("priceLabel")}
+                </Table.Column>
                 <Table.Column>{t("stockLabel")}</Table.Column>
                 <Table.Column>{t("skuLabel")}</Table.Column>
               </Table.Header>
@@ -666,7 +716,11 @@ export function ProductForm({
                           isDisabled={isPending || draft.isExcluded || !tracksInventory}
                           value={Number(draft.stockQuantity) || 0}
                           onChange={(value) =>
-                            updateVariant(key, "stockQuantity", Number.isNaN(value) ? "0" : String(value))
+                            updateVariant(
+                              key,
+                              "stockQuantity",
+                              Number.isNaN(value) ? "0" : String(value)
+                            )
                           }
                         >
                           <NumberField.Group>
