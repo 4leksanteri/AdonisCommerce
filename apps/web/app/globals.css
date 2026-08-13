@@ -86,6 +86,11 @@
  * than not offering it.
  */
 
+/* The lifted look of a selected segment in a control. */
+@theme inline {
+  --shadow-tab: 0 1px 2px rgba(60, 45, 20, 0.1);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

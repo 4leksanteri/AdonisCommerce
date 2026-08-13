@@ -313,7 +313,15 @@
       "refundHeading": "Palauta rahat ostajalle",
       "refundHint": "Tämä sulkee ilmoitetun ongelman ja palauttaa koko summan. Varastosaldoa ei kasvateta, koska paketti on jo lähtenyt.",
       "confirmRefund": "Palauta koko summa",
-      "refundedBuyer": "Rahat palautettu. Ongelma on suljettu."
+      "refundedBuyer": "Rahat palautettu. Ongelma on suljettu.",
+      "columnOrder": "Tilaus",
+      "columnCustomer": "Asiakas",
+      "columnTotal": "Summa",
+      "columnItems": "Tuotteet",
+      "columnDate": "Päivämäärä",
+      "columnStatus": "Tila",
+      "showingCount": "{count, plural, one {Näytetään # tilaus} other {Näytetään # tilausta}}",
+      "tabAll": "Kaikki"
     },
     "backToShop": "Takaisin kauppaan",
     "title": "Myyjäpaneeli",

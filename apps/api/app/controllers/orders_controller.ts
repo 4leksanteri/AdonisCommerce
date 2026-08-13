@@ -100,6 +100,19 @@ export default class OrdersController {
     const sum = (list: typeof rows, key: 'orders' | 'cents') =>
       list.reduce((total, row) => total + row[key], 0)
 
+    /**
+     * Counts for the status tabs. Every visible status a shop actually has,
+     * rather than a fixed list — a shop with no disputes should not be shown
+     * an empty "Problems" tab inviting it to look for trouble.
+     */
+    const byStatus = await db
+      .from('orders')
+      .where('seller_id', seller.id)
+      .whereNotIn('status', [...HIDDEN_STATUSES])
+      .groupBy('status')
+      .select('status')
+      .count('* as total')
+
     const openProblems = await Dispute.query()
       .where('status', 'open')
       .whereHas('order', (orders) => orders.where('sellerId', seller.id))
@@ -120,6 +133,9 @@ export default class OrdersController {
         series: current.map((row) => row.cents),
       },
       openProblems: Number(openProblems?.$extras.total ?? 0),
+      statusCounts: Object.fromEntries(
+        byStatus.map((row: { status: string; total: string }) => [row.status, Number(row.total)])
+      ),
     })
   }
 

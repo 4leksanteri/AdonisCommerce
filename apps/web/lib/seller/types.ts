@@ -66,4 +66,6 @@ export type OrderStats = {
   orders: { total: number; previous: number; series: number[] };
   sales: { total: number; previous: number; series: number[] };
   openProblems: number;
+  /** Visible statuses this shop actually has, keyed by status. */
+  statusCounts: Record<string, number>;
 };
