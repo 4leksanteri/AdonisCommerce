@@ -262,7 +262,7 @@
       "empty": "No orders yet.",
       "orderNumber": "Order #{number}",
       "itemCount": "{count, plural, one {# item} other {# items}}",
-      "backToOrders": "← All orders",
+      "backToOrders": "All orders",
       "placedOn": "Placed {date}",
       "itemsHeading": "Items",
       "quantityTimes": "{quantity} × {price}",
@@ -322,7 +322,14 @@
       "columnDate": "Date",
       "columnStatus": "Status",
       "showingCount": "{count, plural, one {Showing # order} other {Showing # orders}}",
-      "tabAll": "All"
+      "tabAll": "All",
+      "buyerHeading": "Buyer",
+      "timelineLabel": {
+        "placed": "Placed",
+        "accepted": "Accepted",
+        "shipped": "Shipped",
+        "cancelled": "Cancelled"
+      }
     },
     "backToShop": "Back to shop",
     "title": "Seller panel",

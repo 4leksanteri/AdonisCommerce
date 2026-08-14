@@ -93,7 +93,12 @@ export function OrderActions({ order }: { order: SellerOrder }) {
         )}
 
         {canCancel && (
-          <Button variant="outline" isDisabled={isPending} onPress={() => setIsCancelOpen(true)}>
+          <Button
+            variant="outline"
+            className="border-field-border bg-surface text-muted-strong hover:bg-selected"
+            isDisabled={isPending}
+            onPress={() => setIsCancelOpen(true)}
+          >
             {settling ? t("refundBuyer") : t("cancel")}
           </Button>
         )}

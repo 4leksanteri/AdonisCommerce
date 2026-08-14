@@ -262,7 +262,7 @@
       "empty": "Ei vielä tilauksia.",
       "orderNumber": "Tilaus #{number}",
       "itemCount": "{count, plural, one {# tuote} other {# tuotetta}}",
-      "backToOrders": "← Kaikki tilaukset",
+      "backToOrders": "Kaikki tilaukset",
       "placedOn": "Tilattu {date}",
       "itemsHeading": "Tuotteet",
       "quantityTimes": "{quantity} × {price}",
@@ -322,7 +322,14 @@
       "columnDate": "Päivämäärä",
       "columnStatus": "Tila",
       "showingCount": "{count, plural, one {Näytetään # tilaus} other {Näytetään # tilausta}}",
-      "tabAll": "Kaikki"
+      "tabAll": "Kaikki",
+      "buyerHeading": "Ostaja",
+      "timelineLabel": {
+        "placed": "Tilattu",
+        "accepted": "Hyväksytty",
+        "shipped": "Lähetetty",
+        "cancelled": "Peruttu"
+      }
     },
     "backToShop": "Takaisin kauppaan",
     "title": "Myyjäpaneeli",
