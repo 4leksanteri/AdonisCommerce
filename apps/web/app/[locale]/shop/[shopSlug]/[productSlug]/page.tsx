@@ -75,7 +75,7 @@ export default async function ProductPage(props: Props) {
   if (!product) notFound();
 
   return (
-    <main className="flex-1 py-10">
+    <main className="flex-1 pt-9 pb-16">
       <script
         type="application/ld+json"
         // Serialised server-side from our own data; `<` is escaped so a
@@ -84,7 +84,10 @@ export default async function ProductPage(props: Props) {
           __html: JSON.stringify(productJsonLd(product)).replace(/</g, "\\u003c"),
         }}
       />
-      <Container>
+      {/* Narrower than the storefront's grid pages. Two columns of prose and
+          one photo don't need 1280px, and the buy button drifting a hand's
+          width from the price is a worse read than a little empty margin. */}
+      <Container width="panel">
         <ProductDetail
           product={product}
           displayCurrency={displayCurrency}

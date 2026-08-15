@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 const SIZES = {
+  /** Inline with a line of text — a byline mark, not a portrait. */
+  xs: { box: "size-5.5", text: "text-[9px]", px: 22 },
   sm: { box: "size-8", text: "text-xs", px: 32 },
   md: { box: "size-12", text: "text-sm", px: 48 },
   lg: { box: "size-20", text: "text-xl", px: 80 },

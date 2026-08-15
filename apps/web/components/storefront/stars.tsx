@@ -16,15 +16,19 @@ export function Stars({
   size?: "sm" | "lg";
 }) {
   const percent = Math.max(0, Math.min(100, (value / 5) * 100));
-  const text = size === "lg" ? "text-xl" : "text-sm";
+  const text = size === "lg" ? "text-xl" : "text-[13px]";
 
   return (
-    <span className={`relative inline-block leading-none ${text}`} role="img" aria-label={label}>
-      <span className="text-border" aria-hidden>
+    <span
+      className={`relative inline-block leading-none tracking-[1px] ${text}`}
+      role="img"
+      aria-label={label}
+    >
+      <span className="text-star-empty" aria-hidden>
         ★★★★★
       </span>
       <span
-        className="absolute inset-0 overflow-hidden text-warning"
+        className="absolute inset-0 overflow-hidden text-star"
         style={{ width: `${percent}%` }}
         aria-hidden
       >

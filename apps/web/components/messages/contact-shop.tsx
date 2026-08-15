@@ -15,7 +15,16 @@ import { translateApiErrors } from "@/lib/translate-api-error";
  * API rejects it either way, but offering someone a button that can only
  * fail is worse than not offering it.
  */
-export function ContactShop({ shopSlug, shopName }: { shopSlug: string; shopName: string }) {
+export function ContactShop({
+  shopSlug,
+  shopName,
+  className,
+}: {
+  shopSlug: string;
+  shopName: string;
+  /** For the trigger only — the modal is the same wherever it is opened from. */
+  className?: string;
+}) {
   const t = useTranslations("Messages");
   const tValidation = useTranslations("Validation");
   const tApiMessages = useTranslations("ApiMessages");
@@ -58,7 +67,7 @@ export function ContactShop({ shopSlug, shopName }: { shopSlug: string; shopName
 
   return (
     <>
-      <Button variant="outline" onPress={() => setIsOpen(true)}>
+      <Button className={className} variant="outline" onPress={() => setIsOpen(true)}>
         {t("contactShop")}
       </Button>
 

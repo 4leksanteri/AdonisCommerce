@@ -1,18 +1,16 @@
-import { getTranslations } from "next-intl/server";
 import { Container } from "@/components/ui/container";
 import { CheckoutForm } from "@/components/storefront/checkout-form";
 
-export default async function CheckoutPage() {
-  const t = await getTranslations("Checkout");
-
+/**
+ * Deliberately thin. The heading, the back link and the step indicator all
+ * belong to the form's own state — which step you are on is the same fact as
+ * whether the orders have been placed — so they are rendered there rather
+ * than split across a server shell that would have to be told.
+ */
+export default function CheckoutPage() {
   return (
-    <main className="flex-1 py-10">
-      <Container className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-xl font-semibold text-foreground">{t("heading")}</h1>
-          <p className="mt-1 text-sm text-muted">{t("subheading")}</p>
-        </div>
-
+    <main className="flex-1 pt-9 pb-16">
+      <Container width="checkout">
         <CheckoutForm />
       </Container>
     </main>

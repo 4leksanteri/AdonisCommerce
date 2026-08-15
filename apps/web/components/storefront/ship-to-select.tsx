@@ -17,7 +17,14 @@ import { SHIP_TO_COUNTRIES } from "@/lib/storefront/shipping";
  * name standalone means `Intl.DisplayNames`' nominative is always the right
  * form. Amazon and Etsy both separate the two for the same reason.
  */
-export function ShipToSelect({ label }: { label?: string }) {
+export function ShipToSelect({
+  label,
+  triggerClassName = "min-w-40",
+}: {
+  label?: string;
+  /** The trigger only — the popover is the same list wherever it opens. */
+  triggerClassName?: string;
+}) {
   const t = useTranslations("Storefront.product");
   const locale = useLocale();
   const router = useRouter();
@@ -44,7 +51,7 @@ export function ShipToSelect({ label }: { label?: string }) {
       }
     >
       {label !== undefined && <Label>{label}</Label>}
-      <Select.Trigger className="min-w-40">
+      <Select.Trigger className={triggerClassName}>
         <Select.Value />
         <Select.Indicator />
       </Select.Trigger>

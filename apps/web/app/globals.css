@@ -21,13 +21,31 @@
   /* Cards, panels and anything that should lift off the page. */
   --surface: #ffffff;
   --border: #eae3d7;
+  /* For an edge that has to hold its own without a fill behind it — the ring
+     around a step number that hasn't been reached. At `--border` it reads as
+     a smudge rather than a circle. */
+  --border-strong: #d8cfc0;
   --muted: #8a8073;
   /* Two more greys the design leans on: a dimmer one for uppercase labels
      and meta, and a *darker* one for nav items and secondary headings. */
   --muted-soft: #9a8f7e;
   --muted-strong: #6b6154;
+  /* Paragraphs that are meant to be read through — a product description, a
+     review — rather than glanced at. Darker than any of the muted greys,
+     because `--muted` is a labelling colour and a paragraph set in it asks
+     the reader to work. */
+  --foreground-soft: #524b41;
   /* Terracotta. Links, primary actions, focus. */
   --accent: #b05a2a;
+  /* HeroUI derives its own hover by mixing the accent *towards* its
+     foreground, which on a cream foreground means terracotta gets paler when
+     you point at it. On a warm page that reads as the button going out
+     rather than lighting up, so the hover is set here and darkens instead. */
+  --accent-hover: #9c4e23;
+  /* The wash behind a chosen option pill. `accent-soft` (15% of the accent)
+     is a good deal heavier than this and turns a row of size buttons into a
+     row of terracotta blocks; selection only needs to be legible, not loud. */
+  --accent-tint: #f8efe5;
 
   /* Ours, for the places the design treats differently from a plain card. */
   --chrome: #ffffff;
@@ -52,6 +70,18 @@
 
   --field: #faf7f2;
   --field-border: #e7e0d4;
+
+  /* Ratings have their own pair rather than borrowing `warning`: a filled
+     star is gilt, and HeroUI's warning yellow is a caution sign. The empty
+     one is warmer than `--border` so the unfilled half of a rating still
+     reads as part of the star and not as a hairline. */
+  --star: #d08a2e;
+  --star-empty: #e3dacb;
+
+  /* "This is encrypted." A muted forest green rather than HeroUI's `success`,
+     which is a brighter signal-green tuned for confirmations — a padlock is
+     a standing fact about the page, not an event that just happened. */
+  --secure: #3d7a47;
 }
 
 @theme inline {
@@ -71,6 +101,12 @@
   --color-sidebar-hover: var(--sidebar-hover);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft-strong: var(--accent-soft-strong);
+  --color-accent-tint: var(--accent-tint);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-star: var(--star);
+  --color-star-empty: var(--star-empty);
+  --color-border-strong: var(--border-strong);
+  --color-secure: var(--secure);
   --color-field: var(--field);
   --color-field-border: var(--field-border);
   --font-sans: var(--font-instrument-sans);
@@ -91,6 +127,17 @@
   /* How wide panel content is allowed to get. Beyond this a table row is
      long enough that the eye loses its place crossing it. */
   --container-panel: 1200px;
+}
+
+/*
+ * The required marker on a field label. HeroUI sets it in `--danger`, which
+ * reads as "you got this wrong" on a field nobody has typed into yet.
+ * Required is a fact about the form, not a mistake, so it takes the accent.
+ * Unlayered, so it beats the library's own rule without matching its
+ * selector.
+ */
+.label::after {
+  color: var(--accent);
 }
 
 body {

@@ -9,6 +9,8 @@ import type { ReactNode } from "react";
 const WIDTHS = {
   wide: "max-w-7xl",
   panel: "max-w-[1160px]",
+  /** Narrower again: checkout is a form and a receipt, and nothing else. */
+  checkout: "max-w-[1000px]",
 } as const;
 
 export function Container({
@@ -20,7 +22,5 @@ export function Container({
   className?: string;
   width?: keyof typeof WIDTHS;
 }) {
-  return (
-    <div className={`mx-auto w-full ${WIDTHS[width]} px-6 ${className}`}>{children}</div>
-  );
+  return <div className={`mx-auto w-full ${WIDTHS[width]} px-6 ${className}`}>{children}</div>;
 }

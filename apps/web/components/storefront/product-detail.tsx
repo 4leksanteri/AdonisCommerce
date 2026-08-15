@@ -18,7 +18,7 @@ import {
 } from "@heroui/react";
 import { convertCents, currencyFormat, toMajorUnits, type ExchangeRates } from "@/lib/format";
 import { useCart } from "@/lib/cart/context";
-import { shippingCentsFor } from "@/lib/storefront/shipping";
+import { rateFor, shippingCentsFor } from "@/lib/storefront/shipping";
 import { ShipToSelect } from "./ship-to-select";
 import type { PublicProduct, PublicProductVariant } from "@/lib/storefront/types";
 
@@ -51,6 +51,36 @@ function findVariant(
  * unbounded field is a soft target for card-testing.
  */
 const UNTRACKED_MAX_PER_ORDER = 999;
+
+/** At or below this, the count is worth showing as a nudge rather than data. */
+const LOW_STOCK_THRESHOLD = 5;
+
+/**
+ * Pills rather than HeroUI's default segmented look. A product's options are
+ * a handful of independent choices — Natural, Indigo — not a toolbar, and the
+ * attached-segment treatment implies they are modes of one control.
+ */
+const OPTION_PILL = [
+  "rounded-full border-[1.5px] border-field-border bg-surface px-4.5 text-[13.5px] font-semibold text-muted-strong",
+  "hover:bg-row-hover",
+  "data-[selected=true]:border-accent data-[selected=true]:bg-accent-tint data-[selected=true]:text-accent-soft-strong",
+].join(" ");
+
+/**
+ * How to sign a review: a monogram, a name, or both.
+ *
+ * The API never publishes more than "Ale K.", and a reviewer whose display
+ * name is a single letter would otherwise get that letter printed twice —
+ * once in the mark, once beside it. Where the mark already says everything
+ * the name would, the name goes. An erased account has no monogram at all,
+ * because a "?" avatar next to "Someone" is two ways of saying nothing.
+ */
+function reviewerMark(author: string | null, anonymous: string) {
+  const name = author?.trim();
+  if (!name) return { initial: null, name: anonymous };
+
+  return { initial: name.slice(0, 1).toUpperCase(), name: name.length > 1 ? name : null };
+}
 
 /**
  * The single place stock is interpreted. A product that doesn't track
@@ -189,14 +219,33 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
   const shipping = shippingCentsFor(product.shippingRates, shipToCountry, quantity);
   const isFreeShipping = product.shippingRates.length === 0;
 
+  /**
+   * The per-extra-item rate, or null when there isn't a distinct one. A
+   * seller who charges the same for the second item as the first has already
+   * said everything through the total, and repeating it as "· 5,90 € each
+   * additional" reads as a surcharge that isn't there.
+   */
+  const rate = rateFor(product.shippingRates, shipToCountry);
+  const additionalItemCents =
+    rate && rate.additionalItemCents !== rate.firstItemCents ? rate.additionalItemCents : null;
+
+  /** The remaining count, only when it is low enough to be worth saying. */
+  const lowStock =
+    selectedVariant && tracksInventory && selectedVariant.stockQuantity <= LOW_STOCK_THRESHOLD
+      ? selectedVariant.stockQuantity
+      : null;
+
   return (
-    <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+    // The photo column is given the wider share. A square image next to a
+    // column of short lines wants slightly more room than the text does, and
+    // an even split leaves the picture looking cropped by the layout.
+    <div className="grid gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-12">
       {/* `min-w-0` is load-bearing: a grid item defaults to `min-width: auto`
           and so refuses to shrink below its content, which would let the
           scrolling thumbnail strip widen the whole page instead of scrolling
           inside it. */}
       <div className="flex min-w-0 flex-col gap-3">
-        <div className="aspect-square overflow-hidden rounded-xl border border-border bg-selected">
+        <div className="aspect-square overflow-hidden rounded-[14px] border border-border bg-selected">
           {images[activeImage] && (
             <Image
               src={images[activeImage].url}
@@ -214,7 +263,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             phone, wrapped thumbnails sit between the photo and the price and
             push the buy button off the screen entirely. */}
         {images.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-2.5 overflow-x-auto pb-1">
             {images.map((image, index) => (
               <button
                 key={image.id}
@@ -222,8 +271,10 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
                 aria-label={t("viewImage", { number: index + 1 })}
                 aria-current={index === activeImage ? "true" : undefined}
                 onClick={() => setActiveImage(index)}
-                className={`size-16 shrink-0 overflow-hidden rounded-lg border ${
-                  index === activeImage ? "border-foreground" : "border-border"
+                className={`size-16 shrink-0 overflow-hidden rounded-[9px] ${
+                  index === activeImage
+                    ? "border-[1.5px] border-accent"
+                    : "border border-border opacity-70 hover:opacity-100"
                 }`}
               >
                 <Image
@@ -239,65 +290,74 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
         )}
       </div>
 
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <Link
-            href={{ pathname: "/shop/[shopSlug]", params: { shopSlug: product.shop.slug } }}
-            className="flex w-fit items-center gap-2 text-sm text-muted no-underline hover:text-foreground"
-          >
-            <ShopAvatar name={product.shop.name} url={product.shop.avatarUrl} size="sm" />
-            {product.shop.name}
-          </Link>
-          {/* The question that decides a commission — "can you make this in
-              blue?" — is asked here, before anything is in a basket. */}
-          <div className="w-fit">
-            <ContactShop shopSlug={product.shop.slug} shopName={product.shop.name} />
-          </div>
-          <h1 className="text-2xl font-semibold text-foreground">{product.title}</h1>
-          {product.rating.average !== null && (
-            <span className="flex items-center gap-2">
-              <Stars
-                value={product.rating.average}
-                size="lg"
-                label={tReviews("ratingLabel", {
-                  rating: ratingText(product.rating.average),
-                  count: product.rating.count,
-                })}
-              />
-              <span className="text-sm text-muted">
-                {tReviews("countSummary", {
-                  rating: ratingText(product.rating.average),
-                  count: product.rating.count,
-                })}
-              </span>
-            </span>
-          )}
-          <p className="text-xl text-foreground">
-            {isConverted && "≈ "}
-            {selectedVariant
-              ? formatPrice(selectedVariant.priceCents)
-              : priceRange.min === priceRange.max
-                ? formatPrice(priceRange.min)
-                : `${formatPrice(priceRange.min)}–${formatPrice(priceRange.max)}`}
-          </p>
-          {/* The seller prices and is paid in their own currency, so the
-              converted figure above is only ever an estimate. Say so, and
-              show the real number rather than burying it. */}
-          {isConverted && (
-            <p className="text-sm text-muted">
-              {t("approximateFrom", {
-                price: selectedVariant
-                  ? formatIn(selectedVariant.priceCents, native)
-                  : formatIn(priceRange.min, native),
+      {/*
+        Spaced by margins on each block rather than one `gap`. The rhythm here
+        isn't even: shop → title → rating → price is one tightening group that
+        reads as a single heading, and the sections below it are further
+        apart. A uniform gap flattens that into an undifferentiated list.
+      */}
+      <div className="flex min-w-0 flex-col">
+        <Link
+          href={{ pathname: "/shop/[shopSlug]", params: { shopSlug: product.shop.slug } }}
+          className="flex w-fit items-center gap-2 text-[13px] font-medium text-muted-strong no-underline hover:text-foreground"
+        >
+          <ShopAvatar name={product.shop.name} url={product.shop.avatarUrl} size="xs" />
+          {product.shop.name}
+        </Link>
+
+        <h1 className="mt-3.5 text-[30px] leading-[1.15] font-bold tracking-[-0.02em] text-foreground">
+          {product.title}
+        </h1>
+
+        {product.rating.average !== null && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
+            <Stars
+              value={product.rating.average}
+              label={tReviews("ratingLabel", {
+                rating: ratingText(product.rating.average),
+                count: product.rating.count,
               })}
-            </p>
-          )}
-        </div>
+            />
+            <span>
+              {ratingText(product.rating.average)}
+              {" · "}
+              {/* The count is the link, not the score — someone clicking here
+                  wants to read the reviews, and they are further down the
+                  same page. */}
+              <a href="#reviews" className="text-accent hover:text-accent-soft-strong">
+                {tReviews("heading", { count: product.rating.count })}
+              </a>
+            </span>
+          </div>
+        )}
+
+        <p className="mt-4 text-[26px] font-bold tracking-[-0.02em] text-foreground">
+          {isConverted && "≈ "}
+          {selectedVariant
+            ? formatPrice(selectedVariant.priceCents)
+            : priceRange.min === priceRange.max
+              ? formatPrice(priceRange.min)
+              : `${formatPrice(priceRange.min)}–${formatPrice(priceRange.max)}`}
+        </p>
+        {/* The seller prices and is paid in their own currency, so the
+            converted figure above is only ever an estimate. Say so, and
+            show the real number rather than burying it. */}
+        {isConverted && (
+          <p className="mt-1.5 text-[13px] text-muted">
+            {t("approximateFrom", {
+              price: selectedVariant
+                ? formatIn(selectedVariant.priceCents, native)
+                : formatIn(priceRange.min, native),
+            })}
+          </p>
+        )}
 
         {product.options.map((option, optionIndex) => (
-          <div key={option.id} className="flex flex-col gap-2">
-            <p className="text-sm font-medium text-foreground">{option.name}</p>
+          <div key={option.id} className="mt-5.5">
+            <p className="mb-2 text-[13px] font-semibold text-foreground">{option.name}</p>
             <ToggleButtonGroup
+              isDetached
+              className="flex-wrap gap-2"
               selectionMode="single"
               disallowEmptySelection
               aria-label={option.name}
@@ -308,7 +368,12 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
               }}
             >
               {option.values.map((value) => (
-                <ToggleButton key={value.id} id={value.id} isDisabled={!isValueOffered(value.id)}>
+                <ToggleButton
+                  key={value.id}
+                  id={value.id}
+                  isDisabled={!isValueOffered(value.id)}
+                  className={OPTION_PILL}
+                >
                   {value.value}
                 </ToggleButton>
               ))}
@@ -318,6 +383,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
 
         {showQuantity && (
           <NumberField
+            className="mt-4.5 items-start gap-2"
             minValue={1}
             // React Aria clamps typing and stepping against this; the derived
             // `quantity` above covers the case it can't see — the shopper
@@ -327,51 +393,86 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             value={quantity}
             onChange={(value) => setDesiredQuantity(Number.isNaN(value) ? 1 : value)}
           >
-            <Label>{t("quantityLabel")}</Label>
-            <NumberField.Group className="w-32">
-              <NumberField.DecrementButton />
-              <NumberField.Input className="min-w-0 flex-1 px-1 text-center" />
-              <NumberField.IncrementButton />
+            <Label className="text-[13px] font-semibold text-foreground">
+              {t("quantityLabel")}
+            </Label>
+            {/* Sized in fixed pixels rather than by content: the box must not
+                change width between 1 and 10, or the button below it steps
+                sideways as you count up. */}
+            <NumberField.Group className="h-9.5 grid-cols-[38px_40px_38px] rounded-[9px] border-field-border bg-surface shadow-none">
+              {/* The dividers either side of the number are the buttons' own
+                  borders — recoloured, not added to. Giving the input its own
+                  `border-x` puts a second line flush against each of these
+                  and the hairline comes out 2px. */}
+              <NumberField.DecrementButton className="border-e-chrome-border text-muted-strong hover:bg-selected" />
+              <NumberField.Input className="min-w-0 px-0 text-center font-semibold" />
+              <NumberField.IncrementButton className="border-s-chrome-border text-muted-strong hover:bg-selected" />
             </NumberField.Group>
           </NumberField>
         )}
 
-        <div className="flex flex-col gap-2 border-t border-border pt-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted">{t("shipTo")}</span>
-            <ShipToSelect />
+        {/* Boxed, because the quote is only true for the destination named
+            directly above it. Loose on the page the two read as unrelated
+            facts and the price looks unconditional. */}
+        <div className="mt-5.5 flex flex-col gap-2.5 rounded-xl border border-border bg-surface p-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[13px] text-muted">{t("shipTo")}</span>
+            {/* Sized down against the card it sits in — at the default height
+                the picker outweighs the quote it qualifies. Only the *start*
+                padding is set: HeroUI reserves the end padding for the
+                chevron, and a plain `px-` takes that space back and drops the
+                arrow on top of the country name. */}
+            <ShipToSelect triggerClassName="min-h-8 rounded-lg border-field-border bg-field ps-2.5 py-1.5 text-[13.5px] shadow-none" />
           </div>
 
-          <p className="text-sm text-foreground">
-            {isFreeShipping
-              ? t("shippingFree")
-              : !shipping.deliverable
-                ? t("shippingUnavailable")
-                : t("shippingCost", { cost: formatPrice(shipping.cents) })}
+          <p className="text-[13.5px] text-foreground">
+            {isFreeShipping ? (
+              t("shippingFree")
+            ) : !shipping.deliverable ? (
+              t("shippingUnavailable")
+            ) : (
+              <>
+                {t.rich("shippingCost", {
+                  cost: formatPrice(shipping.cents),
+                  amount: (chunks) => <span className="font-bold">{chunks}</span>,
+                })}
+                {/* Only worth saying when a second one costs less than the
+                    first — otherwise the total above already tells the whole
+                    story. */}
+                {additionalItemCents !== null && (
+                  <span className="text-muted-soft">
+                    {" · "}
+                    {t("shippingAdditional", { cost: formatPrice(additionalItemCents) })}
+                  </span>
+                )}
+              </>
+            )}
           </p>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {isUnavailable ? (
-            <Chip color="danger">
-              <Chip.Label>{t("combinationUnavailable")}</Chip.Label>
-            </Chip>
-          ) : isSoldOut ? (
-            <Chip color="danger">
-              <Chip.Label>{t("soldOut")}</Chip.Label>
-            </Chip>
-          ) : (
-            // Nothing to run low on when inventory isn't tracked.
-            tracksInventory &&
-            selectedVariant.stockQuantity <= 5 && (
-              <Chip>
-                <Chip.Label>{t("lowStock", { count: selectedVariant.stockQuantity })}</Chip.Label>
+        {(isUnavailable || isSoldOut || (tracksInventory && lowStock !== null)) && (
+          <div className="mt-4">
+            {isUnavailable ? (
+              <Chip color="danger">
+                <Chip.Label>{t("combinationUnavailable")}</Chip.Label>
               </Chip>
-            )
-          )}
+            ) : isSoldOut ? (
+              <Chip color="danger">
+                <Chip.Label>{t("soldOut")}</Chip.Label>
+              </Chip>
+            ) : (
+              <Chip>
+                <Chip.Label>{t("lowStock", { count: lowStock! })}</Chip.Label>
+              </Chip>
+            )}
+          </div>
+        )}
 
+        <div className="mt-4.5 flex flex-wrap items-center gap-2.5">
           <Button
-            className="self-start"
+            // Height rather than padding: HeroUI's button sets a fixed
+            // `height`, so vertical padding alone just overflows the box.
+            className="h-11 rounded-full px-8 text-[14.5px] font-semibold"
             isDisabled={isUnavailable || isSoldOut || !shipping.deliverable}
             onPress={() => {
               if (!selectedVariant) return;
@@ -383,51 +484,89 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
           >
             {t("addToCart")}
           </Button>
+
+          {/* The question that decides a commission — "can you make this in
+              blue?" — sits beside the buy button rather than under the shop
+              name: it is the other thing you might do with this product, and
+              a shopper who can't quite commit is looking here, not upwards. */}
+          <ContactShop
+            shopSlug={product.shop.slug}
+            shopName={product.shop.name}
+            className="h-11 rounded-full border-field-border bg-surface px-6 text-[14.5px] font-semibold text-muted-strong hover:bg-selected"
+          />
         </div>
 
         {product.category && (
-          <div className="flex gap-2 border-t border-border pt-6 text-sm">
-            {/* Plain text for now: there is nowhere to go until category
-                pages exist. */}
+          <div className="mt-6.5 flex gap-2.5 border-t border-chrome-border pt-4 text-[13.5px]">
             <span className="text-muted">{t("categoryLabel")}</span>
-            <span className="text-foreground">{product.category.name}</span>
+            <Link
+              href={{
+                pathname: "/category/[categorySlug]",
+                params: { categorySlug: product.category.slug },
+              }}
+              className="text-accent no-underline hover:text-accent-soft-strong hover:underline"
+            >
+              {product.category.name}
+            </Link>
           </div>
         )}
 
         {product.description && (
-          <div className="flex flex-col gap-2 border-t border-border pt-6">
-            <h2 className="font-medium text-foreground">{t("descriptionHeading")}</h2>
-            <p className="text-sm whitespace-pre-line text-muted">{product.description}</p>
+          <div className="mt-5 border-t border-chrome-border pt-5">
+            <h2 className="text-[15px] font-bold text-foreground">{t("descriptionHeading")}</h2>
+            <p className="mt-2 text-sm leading-[1.6] whitespace-pre-line text-foreground-soft">
+              {product.description}
+            </p>
           </div>
         )}
 
-        <div className="flex flex-col gap-4 border-t border-border pt-6">
-          <h2 className="font-medium text-foreground">
+        {/* `scroll-mt` keeps the heading clear of the sticky header when the
+            rating's link jumps here. */}
+        <div id="reviews" className="mt-5 scroll-mt-20 border-t border-chrome-border pt-5">
+          <h2 className="text-[15px] font-bold text-foreground">
             {tReviews("heading", { count: product.rating.count })}
           </h2>
 
           {product.reviews.length === 0 ? (
-            <p className="text-sm text-muted">{tReviews("none")}</p>
+            <p className="mt-3 text-[13.5px] text-muted">{tReviews("none")}</p>
           ) : (
-            product.reviews.map((review) => (
-              <div key={review.id} className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <Stars
-                    value={review.rating}
-                    label={tReviews("stars", { count: review.rating })}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    {review.author ?? tReviews("anonymous")}
-                  </span>
-                  <span className="text-xs text-muted">
-                    {format.dateTime(new Date(review.createdAt), { dateStyle: "medium" })}
-                  </span>
-                </div>
-                {review.body && (
-                  <p className="text-sm whitespace-pre-line text-muted">{review.body}</p>
-                )}
-              </div>
-            ))
+            <div className="mt-3 flex flex-col gap-4">
+              {product.reviews.map((review) => {
+                const reviewer = reviewerMark(review.author, tReviews("anonymous"));
+
+                return (
+                  <div key={review.id} className="flex flex-col gap-1.5">
+                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12.5px]">
+                      <Stars
+                        value={review.rating}
+                        label={tReviews("stars", { count: review.rating })}
+                      />
+                      <span className="flex items-center gap-1.5">
+                        {reviewer.initial && (
+                          <span
+                            aria-hidden
+                            className="flex size-5.5 items-center justify-center rounded-full bg-selected text-[10px] font-bold text-muted-strong"
+                          >
+                            {reviewer.initial}
+                          </span>
+                        )}
+                        {reviewer.name && (
+                          <span className="font-semibold text-foreground">{reviewer.name}</span>
+                        )}
+                      </span>
+                      <span className="text-muted-soft">
+                        {format.dateTime(new Date(review.createdAt), { dateStyle: "short" })}
+                      </span>
+                    </div>
+                    {review.body && (
+                      <p className="text-[13.5px] leading-[1.55] whitespace-pre-line text-foreground-soft">
+                        {review.body}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
