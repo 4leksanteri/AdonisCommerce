@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Input, Label, Spinner, TextField, ToggleButton, ToggleButtonGroup, toast } from "@heroui/react";
+import {
+  Button,
+  Input,
+  Label,
+  Spinner,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  toast,
+} from "@heroui/react";
 import { useRouter } from "@/i18n/navigation";
 import { updateReviewAction, writeReviewAction } from "@/lib/storefront/review-actions";
 import { translateApiErrors } from "@/lib/translate-api-error";
@@ -106,7 +115,7 @@ export function ReviewForm({
 
       <TextField isDisabled={isPending} value={body} onChange={setBody}>
         <Label>{t("bodyLabel")}</Label>
-        <Input className="border border-border" placeholder={t("bodyPlaceholder")} />
+        <Input placeholder={t("bodyPlaceholder")} />
       </TextField>
 
       <div className="flex gap-2">

@@ -29,7 +29,7 @@ export function SearchField({ defaultValue = "" }: { defaultValue?: string }) {
         // Clearing the box is a search for everything, not a dead end.
         onClear={() => router.push({ pathname: "/products" })}
       >
-        <HeroSearchField.Group className="border border-border">
+        <HeroSearchField.Group>
           <HeroSearchField.SearchIcon />
           <HeroSearchField.Input className="w-40 lg:w-56" placeholder={t("searchPlaceholder")} />
           <HeroSearchField.ClearButton />

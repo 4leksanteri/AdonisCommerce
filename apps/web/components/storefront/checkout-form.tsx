@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
@@ -14,7 +14,8 @@ import {
   ToggleButtonGroup,
   toast,
 } from "@heroui/react";
-import { getPathname, Link, useRouter } from "@/i18n/navigation";
+import { getPathname, Link } from "@/i18n/navigation";
+import { CheckoutSteps } from "@/components/storefront/checkout-steps";
 import { PaymentStep } from "@/components/storefront/payment-step";
 import { ShipToSelect } from "@/components/storefront/ship-to-select";
 import { useAuth } from "@/lib/auth/context";
@@ -64,10 +65,11 @@ function groupByShop(lines: CartLine[]) {
 /**
  * Optional is spelled out; required is left to HeroUI, which appends its own
  * `*` from the field's `isRequired`. Adding one here as well prints two.
+ * The label's own type is set globally — this only adds the suffix.
  */
 function FieldLabel({ children, optional }: { children: ReactNode; optional?: string }) {
   return (
-    <Label className="text-[13px] font-semibold text-foreground">
+    <Label>
       {children}
       {optional && <span className="font-medium text-muted-soft"> {optional}</span>}
     </Label>
@@ -94,14 +96,21 @@ function LockIcon({ className = "size-3.5" }: { className?: string }) {
 /** The orders exist and are holding stock; all that's left is paying. */
 type PlacedCheckout = { orders: Order[]; payments: Payment[] };
 
-export function CheckoutForm() {
+export function CheckoutForm({
+  paidReferences,
+  redirectFailed,
+}: {
+  /** Non-empty only when returning from a bank redirect that went through. */
+  paidReferences: string[];
+  redirectFailed: boolean;
+}) {
   const t = useTranslations("Checkout");
+  const tOrder = useTranslations("Order");
   const tAuth = useTranslations("AuthModal");
   const tValidation = useTranslations("Validation");
   const tApiMessages = useTranslations("ApiMessages");
   const format = useFormatter();
   const locale = useLocale();
-  const router = useRouter();
 
   const { user, setUser } = useAuth();
   const { items, lines, isLoading, clear } = useCart();
@@ -124,6 +133,25 @@ export function CheckoutForm() {
 
   const [checkout, setCheckout] = useState<PlacedCheckout | null>(null);
   const [paymentIndex, setPaymentIndex] = useState(0);
+
+  /**
+   * The references of the orders that were just paid for — the third step.
+   * Seeded from the URL so a buyer coming back from their bank lands on the
+   * same panel as one whose card never left the page.
+   */
+  const [done, setDone] = useState<string[] | null>(
+    paidReferences.length > 0 ? paidReferences : null
+  );
+
+  /**
+   * The basket became orders while the buyer was away at their bank, so
+   * nothing cleared it. Doing it here rather than in `finish` covers both
+   * ways back; `clear` is stable, so this runs once.
+   */
+  const arrivedPaid = paidReferences.length > 0;
+  useEffect(() => {
+    if (arrivedPaid) clear();
+  }, [arrivedPaid, clear]);
 
   const quantityOf = (variantId: string) =>
     items.find((item) => item.variantId === variantId)?.quantity ?? 0;
@@ -187,10 +215,7 @@ export function CheckoutForm() {
     // buyer already owns and let a second submit reserve the stock again.
     clear();
     toast.success(t("placed"));
-    router.push({
-      pathname: "/account/orders/[reference]",
-      params: { reference: orders[0].reference },
-    });
+    setDone(orders.map((order) => order.reference));
   }
 
   async function handleLogin() {
@@ -300,10 +325,6 @@ export function CheckoutForm() {
     finish(checkout.orders);
   }
 
-  /** 0 while the address is being filled in, 1 while paying. */
-  const currentStep = checkout ? 1 : 0;
-  const steps = [t("stepShipping"), t("stepPayment"), t("stepDone")];
-
   function header(showSteps: boolean) {
     return (
       <div>
@@ -330,39 +351,78 @@ export function CheckoutForm() {
         </h1>
 
         {showSteps && (
-          <ol className="mt-3 flex flex-wrap items-center gap-2" aria-label={t("stepsLabel")}>
-            {steps.map((label, index) => {
-              const isCurrent = index === currentStep;
-
-              return (
-                <li key={label} className="flex items-center gap-2">
-                  <span
-                    className={`flex size-5.5 items-center justify-center rounded-full border-[1.5px] text-[11.5px] font-bold ${
-                      isCurrent
-                        ? "border-accent bg-accent text-accent-foreground"
-                        : "border-border-strong text-muted-soft"
-                    }`}
-                    aria-current={isCurrent ? "step" : undefined}
-                  >
-                    {index + 1}
-                  </span>
-                  <span
-                    className={
-                      isCurrent
-                        ? "text-[13px] font-bold text-foreground"
-                        : "text-[13px] font-medium text-muted-soft"
-                    }
-                  >
-                    {label}
-                  </span>
-                  {index < steps.length - 1 && (
-                    <span aria-hidden className="mx-0.5 inline-block h-[1.5px] w-7 bg-border" />
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+          <div className="mt-3">
+            <CheckoutSteps current={done ? 2 : checkout ? 1 : 0} />
+          </div>
         )}
+      </div>
+    );
+  }
+
+  /**
+   * The third step. Checked before the empty-cart branch below, because
+   * finishing is precisely the case where the cart has just been emptied —
+   * ordering these the other way round replaces the receipt with "your cart
+   * is empty" the instant it succeeds.
+   */
+  if (done) {
+    return (
+      <div className="flex flex-col gap-6">
+        {header(true)}
+
+        <div className={`${CARD} flex flex-col items-start gap-4 p-6 md:max-w-xl md:p-8`}>
+          <span className="flex size-11 items-center justify-center rounded-full bg-accent-tint text-accent">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              aria-hidden
+            >
+              <polyline points="4,12.5 9.5,18 20,6.5" />
+            </svg>
+          </span>
+
+          <div>
+            <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground">
+              {t("doneHeading")}
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              {done.length === 1
+                ? tOrder("subheading", { reference: done[0], email: user?.email ?? "" })
+                : t("doneMultiple", { count: done.length, email: user?.email ?? "" })}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* One order gets a direct link; a split basket goes to the list,
+                since there is no single order to mean. A link rather than a
+                button — it goes somewhere. */}
+            <Link
+              href={
+                done.length === 1
+                  ? { pathname: "/account/orders/[reference]", params: { reference: done[0] } }
+                  : { pathname: "/account/orders" }
+              }
+              className="flex h-11 items-center rounded-full bg-accent px-6 text-[14.5px] font-semibold text-accent-foreground no-underline hover:bg-accent-hover"
+            >
+              {done.length === 1 ? t("viewOrder") : t("viewOrders")}
+            </Link>
+            <Link
+              href="/products"
+              className="flex h-11 items-center rounded-full border border-field-border bg-surface px-6 text-[14.5px] font-semibold text-muted-strong no-underline hover:bg-selected"
+            >
+              {t("backToShopping")}
+            </Link>
+          </div>
+        </div>
+
+        <p className="flex items-start gap-2 px-1 text-[12.5px] text-muted md:max-w-xl">
+          <LockIcon className="mt-0.5 size-3.5 text-secure" />
+          {t("secureNote")}
+        </p>
       </div>
     );
   }
@@ -497,17 +557,30 @@ export function CheckoutForm() {
     /**
      * Absolute, because Stripe hands it to the bank — a relative path would
      * be resolved against the bank's own domain. Built through the localized
-     * router so a Finnish buyer comes back to `/fi/tilaukset/...`.
+     * router so a Finnish buyer comes back to `/fi/kassa`.
+     *
+     * Back to checkout, not on to the order: a bank redirect is a detour in
+     * the middle of a checkout, not the end of one, and the buyer should
+     * finish where they started. The references travel in the URL because
+     * this component's state does not survive the round trip. Stripe appends
+     * its own `payment_intent` parameters and leaves these alone.
      */
+    /**
+     * Only the orders this payment actually settles. There is one payment per
+     * currency, so a basket priced in two of them pays twice — and naming all
+     * of the orders on the way out of the first would have the receipt thank
+     * the buyer for one they have not paid for yet.
+     */
+    const covered = checkout.orders
+      .filter((order) => order.currency === payment.currency)
+      .map((order) => order.reference);
+
     const returnUrl =
       typeof window === "undefined"
         ? ""
         : window.location.origin +
           getPathname({
-            href: {
-              pathname: "/account/orders/[reference]",
-              params: { reference: checkout.orders[0].reference },
-            },
+            href: { pathname: "/checkout", query: { paid: covered.join(",") } },
             locale,
           });
 
@@ -685,6 +758,16 @@ export function CheckoutForm() {
 
           <div className={`${CARD} flex flex-col gap-4 p-6`}>
             <h2 className="text-[15px] font-bold text-foreground">{t("addressHeading")}</h2>
+
+            {/* Came back from the bank without the money moving. The basket
+                is untouched and the abandoned orders get cancelled on the
+                next attempt, so the only thing to do is say so and let them
+                go round again. */}
+            {redirectFailed && (
+              <div className="rounded-lg bg-danger-soft p-3 text-[13px] text-danger-soft-foreground">
+                {t("paymentFailed")}
+              </div>
+            )}
 
             {errorMessages.length > 0 && (
               <div className="rounded-lg bg-danger-soft p-3 text-[13px] text-danger-soft-foreground">

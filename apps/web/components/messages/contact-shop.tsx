@@ -102,11 +102,7 @@ export function ContactShop({
                     value={body}
                     onChange={setBody}
                   >
-                    <TextArea
-                      className="border border-border"
-                      rows={5}
-                      placeholder={t("contactPlaceholder")}
-                    />
+                    <TextArea rows={5} placeholder={t("contactPlaceholder")} />
                   </TextField>
                 </div>
               </Modal.Body>

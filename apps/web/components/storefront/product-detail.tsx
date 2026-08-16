@@ -393,9 +393,7 @@ export function ProductDetail({ product, displayCurrency, rates, shipToCountry }
             value={quantity}
             onChange={(value) => setDesiredQuantity(Number.isNaN(value) ? 1 : value)}
           >
-            <Label className="text-[13px] font-semibold text-foreground">
-              {t("quantityLabel")}
-            </Label>
+            <Label>{t("quantityLabel")}</Label>
             {/* Sized in fixed pixels rather than by content: the box must not
                 change width between 1 and 10, or the button below it steps
                 sideways as you count up. */}

@@ -84,7 +84,7 @@ export function CloseAccount() {
                         onChange={setPassword}
                       >
                         <Label>{t("passwordLabel")}</Label>
-                        <Input className="border border-border" autoComplete="current-password" />
+                        <Input autoComplete="current-password" />
                       </TextField>
                     </div>
                   </AlertDialog.Body>

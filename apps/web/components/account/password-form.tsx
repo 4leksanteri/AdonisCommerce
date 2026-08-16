@@ -84,7 +84,7 @@ export function PasswordForm() {
 
             <TextField isRequired isDisabled={isPending} type="password" name="currentPassword">
               <Label>{t("currentLabel")}</Label>
-              <Input className="border border-border" autoComplete="current-password" />
+              <Input autoComplete="current-password" />
             </TextField>
 
             <TextField
@@ -95,7 +95,7 @@ export function PasswordForm() {
               minLength={MIN_LENGTH}
             >
               <Label>{t("newLabel")}</Label>
-              <Input className="border border-border" autoComplete="new-password" />
+              <Input autoComplete="new-password" />
               <Description>{t("newHint", { count: MIN_LENGTH })}</Description>
             </TextField>
 
@@ -107,7 +107,7 @@ export function PasswordForm() {
               minLength={MIN_LENGTH}
             >
               <Label>{t("confirmLabel")}</Label>
-              <Input className="border border-border" autoComplete="new-password" />
+              <Input autoComplete="new-password" />
             </TextField>
           </div>
         </Card.Content>

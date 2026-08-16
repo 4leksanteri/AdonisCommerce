@@ -72,13 +72,13 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
         validate={(value) => (value.length >= 8 ? null : tValidation("passwordTooShort"))}
       >
         <Label>{t("newPasswordLabel")}</Label>
-        <Input placeholder={t("newPasswordPlaceholder")} className="border border-border" />
+        <Input placeholder={t("newPasswordPlaceholder")} />
         <FieldError />
       </TextField>
 
       <TextField isRequired isDisabled={isPending} name="passwordConfirmation" type="password">
         <Label>{t("confirmNewPasswordLabel")}</Label>
-        <Input placeholder={t("confirmNewPasswordPlaceholder")} className="border border-border" />
+        <Input placeholder={t("confirmNewPasswordPlaceholder")} />
         <FieldError />
       </TextField>
 

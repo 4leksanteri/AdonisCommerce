@@ -78,7 +78,7 @@ export function ProfileForm({ fullName, locale }: { fullName: string | null; loc
 
             <TextField isDisabled={isPending} name="fullName" defaultValue={fullName ?? ""}>
               <Label>{t("nameLabel")}</Label>
-              <Input className="border border-border" />
+              <Input />
               <Description>{t("nameHint")}</Description>
             </TextField>
 

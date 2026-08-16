@@ -412,7 +412,7 @@ export function ProductForm({
           onChange={setTitle}
         >
           <Label>{t("titleLabel")}</Label>
-          <Input placeholder={t("titlePlaceholder")} className="border border-border" />
+          <Input placeholder={t("titlePlaceholder")} />
           <FieldError />
         </TextField>
 
@@ -423,10 +423,7 @@ export function ProductForm({
           onChange={setDescription}
         >
           <Label>{t("descriptionLabel")}</Label>
-          <TextArea
-            className="h-24 border border-border"
-            placeholder={t("descriptionPlaceholder")}
-          />
+          <TextArea className="h-24" placeholder={t("descriptionPlaceholder")} />
         </TextField>
       </div>
 
@@ -504,7 +501,7 @@ export function ProductForm({
                 onChange={(name) => updateOptionName(index, name)}
               >
                 <Label>{t("optionNameLabel")}</Label>
-                <Input placeholder={t("optionNamePlaceholder")} className="border border-border" />
+                <Input placeholder={t("optionNamePlaceholder")} />
               </TextField>
               <Button variant="outline" isDisabled={isPending} onPress={() => removeOption(index)}>
                 {t("removeOption")}
@@ -561,7 +558,6 @@ export function ProductForm({
               >
                 <Input
                   placeholder={t("valuePlaceholder")}
-                  className="border border-border"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -735,7 +731,7 @@ export function ProductForm({
                           value={draft.sku}
                           onChange={(value) => updateVariant(key, "sku", value)}
                         >
-                          <Input className="w-32 border border-border" />
+                          <Input className="w-32" />
                         </TextField>
                       </Table.Cell>
                     </Table.Row>

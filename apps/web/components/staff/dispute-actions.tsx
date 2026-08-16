@@ -70,7 +70,7 @@ export function DisputeActions({ dispute }: { dispute: StaffDispute }) {
 
       <TextField isDisabled={isPending} value={note} onChange={setNote}>
         <Label>{t("noteLabel")}</Label>
-        <Input className="border border-border" placeholder={t("notePlaceholder")} />
+        <Input placeholder={t("notePlaceholder")} />
       </TextField>
 
       <div className="flex flex-wrap gap-2">

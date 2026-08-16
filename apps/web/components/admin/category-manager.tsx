@@ -89,7 +89,7 @@ function CategoryEditor({
             }
           >
             <Label>{t("categoryName", { locale: locale.toUpperCase() })}</Label>
-            <Input className="border border-border" />
+            <Input />
           </TextField>
 
           <TextField
@@ -101,7 +101,7 @@ function CategoryEditor({
             }
           >
             <Label>{t("categorySlug", { locale: locale.toUpperCase() })}</Label>
-            <Input className="border border-border" placeholder={t("categorySlugAuto")} />
+            <Input placeholder={t("categorySlugAuto")} />
           </TextField>
         </div>
       ))}

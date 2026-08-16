@@ -121,7 +121,7 @@ export function OrderConversation({
             value={body}
             onChange={setBody}
           >
-            <TextArea className="border border-border" rows={3} placeholder={t("placeholder")} />
+            <TextArea rows={3} placeholder={t("placeholder")} />
           </TextField>
 
           <Button

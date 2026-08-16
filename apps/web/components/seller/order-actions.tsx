@@ -115,7 +115,7 @@ export function OrderActions({ order }: { order: SellerOrder }) {
               <p className="text-sm text-muted">{t("shipHint")}</p>
               <TextField isDisabled={isPending} value={trackingNumber} onChange={setTrackingNumber}>
                 <Label>{t("trackingLabel")}</Label>
-                <Input className="border border-border" placeholder={t("trackingPlaceholder")} />
+                <Input placeholder={t("trackingPlaceholder")} />
               </TextField>
             </Modal.Body>
             <Modal.Footer>
@@ -151,7 +151,7 @@ export function OrderActions({ order }: { order: SellerOrder }) {
               <p className="text-sm text-muted">{settling ? t("refundHint") : t("cancelHint")}</p>
               <TextField isDisabled={isPending} value={reason} onChange={setReason}>
                 <Label>{t("reasonLabel")}</Label>
-                <Input className="border border-border" placeholder={t("reasonPlaceholder")} />
+                <Input placeholder={t("reasonPlaceholder")} />
               </TextField>
             </Modal.Body>
             <Modal.Footer>

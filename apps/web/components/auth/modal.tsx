@@ -151,7 +151,7 @@ export function AuthModal() {
                     {mode === "register" && (
                       <TextField isRequired isDisabled={isPending} name="fullName" type="text">
                         <Label>{t("fullNameLabel")}</Label>
-                        <Input placeholder={t("fullNamePlaceholder")} className="border border-border" />
+                        <Input placeholder={t("fullNamePlaceholder")} />
                         <FieldError />
                       </TextField>
                     )}
@@ -161,10 +161,12 @@ export function AuthModal() {
                       isDisabled={isPending}
                       name="email"
                       type="email"
-                      validate={(value) => (EMAIL_PATTERN.test(value) ? null : tValidation("invalidEmail"))}
+                      validate={(value) =>
+                        EMAIL_PATTERN.test(value) ? null : tValidation("invalidEmail")
+                      }
                     >
                       <Label>{t("emailLabel")}</Label>
-                      <Input placeholder={t("emailPlaceholder")} className="border border-border" />
+                      <Input placeholder={t("emailPlaceholder")} />
                       <FieldError />
                     </TextField>
 
@@ -175,10 +177,12 @@ export function AuthModal() {
                         minLength={8}
                         name="password"
                         type="password"
-                        validate={(value) => (value.length >= 8 ? null : tValidation("passwordTooShort"))}
+                        validate={(value) =>
+                          value.length >= 8 ? null : tValidation("passwordTooShort")
+                        }
                       >
                         <Label>{t("passwordLabel")}</Label>
-                        <Input placeholder={t("passwordPlaceholder")} className="border border-border" />
+                        <Input placeholder={t("passwordPlaceholder")} />
                         <FieldError />
                         {mode === "login" && (
                           <button
@@ -194,9 +198,14 @@ export function AuthModal() {
                     )}
 
                     {mode === "register" && (
-                      <TextField isRequired isDisabled={isPending} name="passwordConfirmation" type="password">
+                      <TextField
+                        isRequired
+                        isDisabled={isPending}
+                        name="passwordConfirmation"
+                        type="password"
+                      >
                         <Label>{t("confirmPasswordLabel")}</Label>
-                        <Input placeholder={t("confirmPasswordPlaceholder")} className="border border-border" />
+                        <Input placeholder={t("confirmPasswordPlaceholder")} />
                         <FieldError />
                       </TextField>
                     )}

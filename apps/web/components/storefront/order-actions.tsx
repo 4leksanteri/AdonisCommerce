@@ -75,9 +75,7 @@ export function BuyerOrderActions({ order }: { order: Order }) {
         </div>
       )}
 
-      <p className="text-sm text-muted">
-        {canWithdrawProblem ? t("withdrawPrompt") : t("prompt")}
-      </p>
+      <p className="text-sm text-muted">{canWithdrawProblem ? t("withdrawPrompt") : t("prompt")}</p>
 
       <div className="flex flex-wrap gap-2">
         {canConfirmReceipt && (
@@ -152,7 +150,7 @@ export function BuyerOrderActions({ order }: { order: Order }) {
 
               <TextField isDisabled={isPending} value={detail} onChange={setDetail}>
                 <Label>{t("detailLabel")}</Label>
-                <Input className="border border-border" placeholder={t("detailPlaceholder")} />
+                <Input placeholder={t("detailPlaceholder")} />
               </TextField>
             </Modal.Body>
             <Modal.Footer>

@@ -85,7 +85,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               minLength={2}
             >
               <Label>{t("shopNameLabel")}</Label>
-              <Input className="border border-border" />
+              <Input />
             </TextField>
 
             <TextField
@@ -94,10 +94,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               defaultValue={seller.description ?? ""}
             >
               <Label>{t("descriptionLabel")}</Label>
-              <TextArea
-                className="h-32 border border-border"
-                placeholder={t("descriptionPlaceholder")}
-              />
+              <TextArea className="h-32" placeholder={t("descriptionPlaceholder")} />
             </TextField>
 
             <Select
@@ -129,7 +126,7 @@ export function SellerSettingsForm({ seller }: { seller: Seller }) {
               onChange={(value) => setCountry(value.toUpperCase().slice(0, 2))}
             >
               <Label>{t("countryLabel")}</Label>
-              <Input className="border border-border" placeholder="FI" />
+              <Input placeholder="FI" />
               <Description>{t("countryHint")}</Description>
             </TextField>
           </div>

@@ -93,7 +93,7 @@ export function Thread({ thread }: { thread: ConversationThread }) {
           value={body}
           onChange={setBody}
         >
-          <TextArea className="border border-border" rows={3} placeholder={t("replyPlaceholder")} />
+          <TextArea rows={3} placeholder={t("replyPlaceholder")} />
         </TextField>
 
         <Button

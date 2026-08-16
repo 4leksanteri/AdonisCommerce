@@ -193,7 +193,7 @@ export function ShippingProfiles({
         <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
           <TextField isDisabled={isPending} value={name} onChange={setName}>
             <Label>{t("nameLabel")}</Label>
-            <Input placeholder={t("namePlaceholder")} className="border border-border" />
+            <Input placeholder={t("namePlaceholder")} />
           </TextField>
 
           <div className="flex flex-col gap-2">
@@ -213,7 +213,7 @@ export function ShippingProfiles({
                   value={rate.destination}
                   onChange={(value) => updateRate(index, { destination: value.toUpperCase() })}
                 >
-                  <Input placeholder={ANY_DESTINATION} className="border border-border" />
+                  <Input placeholder={ANY_DESTINATION} />
                 </TextField>
 
                 <NumberField

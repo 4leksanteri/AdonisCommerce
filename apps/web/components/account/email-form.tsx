@@ -86,13 +86,13 @@ export function EmailForm({ email }: { email: string }) {
               defaultValue={email}
             >
               <Label>{t("emailLabel")}</Label>
-              <Input className="border border-border" />
+              <Input />
               <Description>{t("emailHint")}</Description>
             </TextField>
 
             <TextField isRequired isDisabled={isPending} type="password" name="currentPassword">
               <Label>{t("currentPasswordLabel")}</Label>
-              <Input className="border border-border" autoComplete="current-password" />
+              <Input autoComplete="current-password" />
             </TextField>
           </div>
         </Card.Content>
