@@ -1,7 +1,9 @@
 {
-  "name": "web",
+  "name": "@adonis-commerce/web",
   "version": "0.1.0",
   "private": true,
+  "author": "Ale Korhonen",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

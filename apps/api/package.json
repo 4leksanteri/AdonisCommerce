@@ -1,9 +1,10 @@
 {
-  "name": "@api-starter-kit/backend",
+  "name": "@adonis-commerce/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "author": "Ale Korhonen",
+  "license": "AGPL-3.0-only",
   "exports": {
     "./data": "./.adonisjs/client/data.d.ts",
     "./registry": "./.adonisjs/client/registry/index.ts"
